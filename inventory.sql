@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.2
+-- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1:3306
--- Generation Time: Apr 08, 2022 at 03:54 AM
--- Server version: 5.7.31
--- PHP Version: 7.3.21
+-- Host: localhost
+-- Generation Time: Apr 08, 2022 at 10:34 AM
+-- Server version: 10.4.22-MariaDB
+-- PHP Version: 7.4.27
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -27,8 +27,7 @@ SET time_zone = "+00:00";
 -- Table structure for table `identitas`
 --
 
-DROP TABLE IF EXISTS `identitas`;
-CREATE TABLE IF NOT EXISTS `identitas` (
+CREATE TABLE `identitas` (
   `kode` varchar(6) NOT NULL DEFAULT '0',
   `instansi` varchar(255) NOT NULL,
   `slogan` varchar(100) DEFAULT NULL,
@@ -40,10 +39,9 @@ CREATE TABLE IF NOT EXISTS `identitas` (
   `fax` varchar(35) DEFAULT NULL,
   `website` varchar(100) DEFAULT NULL,
   `email` varchar(150) DEFAULT NULL,
-  `logo` longtext,
+  `logo` longtext DEFAULT NULL,
   `lat` varchar(45) DEFAULT NULL,
-  `lon` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`kode`)
+  `lon` varchar(45) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -56,14 +54,32 @@ INSERT INTO `identitas` (`kode`, `instansi`, `slogan`, `tahun`, `pimpinan`, `ala
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `kapal`
+--
+
+CREATE TABLE `kapal` (
+  `idkapal` varchar(6) NOT NULL,
+  `nama_kapal` varchar(45) NOT NULL,
+  `gambar` varchar(150) NOT NULL,
+  `keterangan` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `kapal`
+--
+
+INSERT INTO `kapal` (`idkapal`, `nama_kapal`, `gambar`, `keterangan`) VALUES
+('K00001', 'Dewaruci', 'Dewaruci1.jpg', 'Gambar kapal dewaruci');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `korps`
 --
 
-DROP TABLE IF EXISTS `korps`;
-CREATE TABLE IF NOT EXISTS `korps` (
+CREATE TABLE `korps` (
   `idkorps` varchar(6) CHARACTER SET utf8mb4 NOT NULL,
-  `nama_korps` varchar(45) CHARACTER SET utf8mb4 NOT NULL,
-  PRIMARY KEY (`idkorps`)
+  `nama_korps` varchar(45) CHARACTER SET utf8mb4 NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -120,11 +136,9 @@ INSERT INTO `korps` (`idkorps`, `nama_korps`) VALUES
 -- Table structure for table `pangkat`
 --
 
-DROP TABLE IF EXISTS `pangkat`;
-CREATE TABLE IF NOT EXISTS `pangkat` (
+CREATE TABLE `pangkat` (
   `idpangkat` varchar(6) CHARACTER SET utf8mb4 NOT NULL,
-  `nama_pangkat` varchar(45) CHARACTER SET utf8mb4 NOT NULL,
-  PRIMARY KEY (`idpangkat`)
+  `nama_pangkat` varchar(45) CHARACTER SET utf8mb4 NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -153,11 +167,9 @@ INSERT INTO `pangkat` (`idpangkat`, `nama_pangkat`) VALUES
 -- Table structure for table `role`
 --
 
-DROP TABLE IF EXISTS `role`;
-CREATE TABLE IF NOT EXISTS `role` (
+CREATE TABLE `role` (
   `idrole` varchar(6) CHARACTER SET utf8mb4 NOT NULL,
-  `nama_role` varchar(45) CHARACTER SET utf8mb4 NOT NULL,
-  PRIMARY KEY (`idrole`)
+  `nama_role` varchar(45) CHARACTER SET utf8mb4 NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -166,7 +178,8 @@ CREATE TABLE IF NOT EXISTS `role` (
 
 INSERT INTO `role` (`idrole`, `nama_role`) VALUES
 ('R00001', 'ADMINISTRATOR'),
-('R00002', 'STAFF');
+('R00002', 'Komandan'),
+('R00003', 'Kepala gudang');
 
 -- --------------------------------------------------------
 
@@ -174,8 +187,7 @@ INSERT INTO `role` (`idrole`, `nama_role`) VALUES
 -- Table structure for table `users`
 --
 
-DROP TABLE IF EXISTS `users`;
-CREATE TABLE IF NOT EXISTS `users` (
+CREATE TABLE `users` (
   `idusers` varchar(20) CHARACTER SET utf8mb4 NOT NULL,
   `nrp` varchar(15) CHARACTER SET utf8mb4 NOT NULL,
   `pass` varchar(45) CHARACTER SET utf8mb4 NOT NULL,
@@ -187,11 +199,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `satuan_kerja` varchar(45) CHARACTER SET utf8mb4 DEFAULT NULL,
   `idrole` varchar(6) CHARACTER SET utf8mb4 NOT NULL,
   `idkorps` varchar(6) CHARACTER SET utf8mb4 NOT NULL,
-  `idpangkat` varchar(6) CHARACTER SET utf8mb4 NOT NULL,
-  PRIMARY KEY (`idusers`),
-  KEY `FK_users_role` (`idrole`),
-  KEY `FK_users_korps` (`idkorps`),
-  KEY `FK_users_pangkat` (`idpangkat`)
+  `idpangkat` varchar(6) CHARACTER SET utf8mb4 NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -200,6 +208,49 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 INSERT INTO `users` (`idusers`, `nrp`, `pass`, `nama`, `tgl_lahir`, `agama`, `kota_asal`, `foto`, `satuan_kerja`, `idrole`, `idkorps`, `idpangkat`) VALUES
 ('U00001', 'ADMIN', 'aGtq', 'ADMIN', '1991-01-30', 'Islam', 'Surabaya', './assets/images/e7118256aaf4d1de09199e2b6cbe667c.png', 'TNI ANGKATAN LAUT', 'R00001', 'K00007', 'P00014');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `identitas`
+--
+ALTER TABLE `identitas`
+  ADD PRIMARY KEY (`kode`);
+
+--
+-- Indexes for table `kapal`
+--
+ALTER TABLE `kapal`
+  ADD PRIMARY KEY (`idkapal`);
+
+--
+-- Indexes for table `korps`
+--
+ALTER TABLE `korps`
+  ADD PRIMARY KEY (`idkorps`);
+
+--
+-- Indexes for table `pangkat`
+--
+ALTER TABLE `pangkat`
+  ADD PRIMARY KEY (`idpangkat`);
+
+--
+-- Indexes for table `role`
+--
+ALTER TABLE `role`
+  ADD PRIMARY KEY (`idrole`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`idusers`),
+  ADD KEY `FK_users_role` (`idrole`),
+  ADD KEY `FK_users_korps` (`idkorps`),
+  ADD KEY `FK_users_pangkat` (`idpangkat`);
 
 --
 -- Constraints for dumped tables
