@@ -26,7 +26,7 @@
                     <ul class="nav flex-column sub-menu">
                         <li class="nav-item"> <a class="nav-link" href="<?php echo base_url(); ?>/korps">Korps</a></li>
                         <li class="nav-item"> <a class="nav-link" href="<?php echo base_url(); ?>/pangkat">Pangkat</a></li>
-                        <li class="nav-item"> <a class="nav-link" href="<?php echo base_url(); ?>/kategori">Kategori</a></li>
+                        <li class="nav-item"> <a class="nav-link" href="<?php echo base_url(); ?>/role">Divisi / Role</a></li>
                         <li class="nav-item"> <a class="nav-link" href="<?php echo base_url(); ?>/siswa">Pengguna</a></li>
                         
                     </ul>
