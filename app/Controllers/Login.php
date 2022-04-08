@@ -39,7 +39,8 @@ class Login extends BaseController {
                 
                 session()->set([
                     'username' => $data->idusers,
-                    'nama' => $data->nrp,
+                    'nrp' => $data->nrp,
+                    'nama' => $data->nama,
                     'role' => $data->idrole,
                     'logged_in' => TRUE
                 ]);

@@ -31,7 +31,7 @@ class Identitas extends BaseController {
             $foto = $this->model->getAllQR("select foto from users where idusers = '".session()->get("username")."';")->foto;
             if(strlen($foto) > 0){
                 if(file_exists(ROOTPATH.'public/uploads/'.$foto)){
-                    $def_foto = base_url().'/upload/'.$foto;
+                    $def_foto = base_url().'/uploads/'.$foto;
                 }
             }
             $data['foto_profile'] = $def_foto;
