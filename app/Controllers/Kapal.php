@@ -91,15 +91,14 @@ class Kapal extends BaseController {
     
     public function ajax_add() {
         if(session()->get("logged_in")){
-            $data = array(
-                'idrole' => $this->model->autokode("R","idrole","role", 2, 7),
-                'nama_role' => $this->request->getVar('nama')
-            );
-            $simpan = $this->model->add("role",$data);
-            if($simpan == 1){
-                $status = "Data tersimpan";
+            if (isset($_FILES['file']['name'])) {
+                if(0 < $_FILES['file']['error']) {
+                    $status = "Error during file upload ".$_FILES['file']['error'];
+                }else{
+                    $status = $this->simpandenganfoto();
+                }
             }else{
-                $status = "Data gagal tersimpan";
+                $status = $this->simpantanpafoto();
             }
             echo json_encode(array("status" => $status));
         }else{
@@ -107,10 +106,54 @@ class Kapal extends BaseController {
         }
     }
     
+    private function simpandenganfoto() {
+        $file = $this->request->getFile('file');
+        $info_file = $this->modul->info_file($file);
+        
+        if(file_exists(ROOTPATH.'public/uploads/'.$info_file['name'])){
+            $status = "Gunakan nama file lain";
+        }else{
+            $status_upload = $file->move(ROOTPATH.'public/uploads');
+            if($status_upload){
+                $data = array(
+                    'idkapal' => $this->model->autokode("K","idkapal","kapal", 2, 7),
+                    'nama_kapal' => $this->request->getVar('nama'),
+                    'keterangan' => $this->request->getVar('ket'),
+                    'gambar' => $info_file['name']
+                );
+                $simpan = $this->model->add("kapal",$data);
+                if($simpan == 1){
+                    $status = "Data tersimpan";
+                }else{
+                    $status = "Data gagal tersimpan";
+                }
+            }else{
+                $status = "File gagal terupload";
+            }
+        }
+                
+        return $status;
+    }
+    
+    private function simpantanpafoto() {
+        $data = array(
+            'idkapal' => $this->model->autokode("K","idkapal","kapal", 2, 7),
+            'nama_kapal' => $this->request->getVar('nama'),
+            'keterangan' => $this->request->getVar('ket')
+        );
+        $simpan = $this->model->add("kapal",$data);
+        if($simpan == 1){
+            $status = "Data tersimpan";
+        }else{
+            $status = "Data gagal tersimpan";
+        }
+        return $status;
+    }
+    
     public function ganti(){
         if(session()->get("logged_in")){
-            $kondisi['idrole'] = $this->request->uri->getSegment(3);
-            $data = $this->model->get_by_id("role", $kondisi);
+            $kondisi['idkapal'] = $this->request->uri->getSegment(3);
+            $data = $this->model->get_by_id("kapal", $kondisi);
             echo json_encode($data);
         }else{
             $this->modul->halaman('login');
@@ -119,15 +162,14 @@ class Kapal extends BaseController {
     
     public function ajax_edit() {
         if(session()->get("logged_in")){
-            $data = array(
-                'nama_role' => $this->request->getVar('nama')
-            );
-            $kond['idrole'] = $this->request->getVar('kode');
-            $update = $this->model->update("role",$data, $kond);
-            if($update == 1){
-                $status = "Data terupdate";
+            if (isset($_FILES['file']['name'])) {
+                if(0 < $_FILES['file']['error']) {
+                    $status = "Error during file upload ".$_FILES['file']['error'];
+                }else{
+                    $status = $this->updatedenganfoto();
+                }
             }else{
-                $status = "Data gagal terupdate";
+                $status = $this->updatetanpafoto();
             }
             echo json_encode(array("status" => $status));
         }else{
@@ -135,10 +177,71 @@ class Kapal extends BaseController {
         }
     }
     
+    private function updatedenganfoto() {
+        $file = $this->request->getFile('file');
+        $info_file = $this->modul->info_file($file);
+        
+        if(file_exists(ROOTPATH.'public/uploads/'.$info_file['name'])){
+            $status = "Gunakan nama file lain";
+        }else{
+            
+            $kond['idkapal'] = $this->request->getVar('kode');
+            $kapal = $this->model->get_by_id("kapal", $kond);
+            if(strlen($kapal->gambar) > 0){
+                if(file_exists(ROOTPATH.'public/uploads/'.$kapal->gambar)){
+                    unlink(ROOTPATH.'public/uploads/'.$kapal->gambar);
+                }
+            }
+        
+            $status_upload = $file->move(ROOTPATH.'public/uploads');
+            if($status_upload){
+                $data = array(
+                    'nama_kapal' => $this->request->getVar('nama'),
+                    'keterangan' => $this->request->getVar('ket'),
+                    'gambar' => $info_file['name']
+                );
+                $update = $this->model->update("kapal",$data, $kond);
+                if($update == 1){
+                    $status = "Data terupdate";
+                }else{
+                    $status = "Data gagal terupdate";
+                }
+            }else{
+                $status = "File gagal terupload";
+            }
+        }
+                
+        return $status;
+    }
+    
+    private function updatetanpafoto() {
+        $data = array(
+            'nama_kapal' => $this->request->getVar('nama'),
+            'keterangan' => $this->request->getVar('ket')
+        );
+        $kond['idkapal'] = $this->request->getVar('kode');
+        $update = $this->model->update("kapal",$data, $kond);
+        if($update == 1){
+            $status = "Data terupdate";
+        }else{
+            $status = "Data gagal terupdate";
+        }
+        return $status;
+    }
+    
     public function hapus() {
         if(session()->get("logged_in")){
-            $kondisi['idrole'] = $this->request->uri->getSegment(3);
-            $hapus = $this->model->delete("role",$kondisi);
+            $kondisi['idkapal'] = $this->request->uri->getSegment(3);
+            // membaca data kapal
+            $kapal = $this->model->get_by_id("kapal", $kondisi);
+            if(strlen($kapal->gambar) > 0){
+                if(file_exists(ROOTPATH.'public/uploads/'.$kapal->gambar)){
+                    unlink(ROOTPATH.'public/uploads/'.$kapal->gambar);
+                }
+            }
+            
+            // menghapus data
+            $hapus = $this->model->delete("kapal",$kondisi);
             if($hapus == 1){
                 $status = "Data terhapus";
             }else{

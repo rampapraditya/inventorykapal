@@ -22,7 +22,11 @@
     }
 
     function save() {
+        var kode = document.getElementById('kode').value;
         var nama = document.getElementById('nama').value;
+        var foto = $('#gambar').prop('files')[0];
+        var ket = document.getElementById('ket').value;
+        
         if (nama === '') {
             alert("Nama divisi tidak boleh kosong");
         } else {
@@ -35,12 +39,22 @@
             } else {
                 url = "<?php echo base_url(); ?>/kapal/ajax_edit";
             }
+            
+            var form_data = new FormData();
+            form_data.append('kode', kode);
+            form_data.append('nama', nama);
+            form_data.append('ket', ket);
+            form_data.append('file', foto);
+            
             // ajax adding data to database
             $.ajax({
                 url: url,
-                type: "POST",
-                data: $('#form').serialize(),
-                dataType: "JSON",
+                dataType: 'JSON',
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: form_data,
+                type: 'POST',
                 success: function (data) {
                     alert(data.status);
                     $('#modal_form').modal('hide');
@@ -59,9 +73,9 @@
     }
 
     function hapus(id, nama) {
-        if (confirm("Apakah anda yakin menghapus divisi " + nama + " ?")) {
+        if (confirm("Apakah anda yakin menghapus kapal " + nama + " ?")) {
             $.ajax({
-                url: "<?php echo base_url(); ?>/role/hapus/" + id,
+                url: "<?php echo base_url(); ?>/kapal/hapus/" + id,
                 type: "POST",
                 dataType: "JSON",
                 success: function (data) {
@@ -78,14 +92,15 @@
         save_method = 'update';
         $('#form')[0].reset();
         $('#modal_form').modal('show');
-        $('.modal-title').text('Ganti divisi / role');
+        $('.modal-title').text('Ganti kapal');
         $.ajax({
-            url: "<?php echo base_url(); ?>/role/ganti/" + id,
+            url: "<?php echo base_url(); ?>/kapal/ganti/" + id,
             type: "POST",
             dataType: "JSON",
             success: function (data) {
-                $('[name="kode"]').val(data.idrole);
-                $('[name="nama"]').val(data.nama_role);
+                $('[name="kode"]').val(data.idkapal);
+                $('[name="nama"]').val(data.nama_kapal);
+                $('[name="ket"]').val(data.keterangan);
             }, error: function (jqXHR, textStatus, errorThrown) {
                 alert('Error get data');
             }
@@ -104,10 +119,8 @@
                 <div class="card-body">
                     <h4 class="card-title">MASTER KAPAL</h4>
                     <p class="card-description">Maintenance data kapal</p>
-
                     <button type="button" class="btn btn-primary" onclick="add();">Tambah</button>
                     <button type="button" class="btn btn-secondary" onclick="reload();">Reload</button>
-
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
