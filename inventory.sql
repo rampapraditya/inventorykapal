@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Apr 13, 2022 at 01:35 PM
+-- Generation Time: Apr 14, 2022 at 04:01 AM
 -- Server version: 5.7.31
 -- PHP Version: 7.3.21
 
@@ -20,6 +20,31 @@ SET time_zone = "+00:00";
 --
 -- Database: `inventory`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `barang`
+--
+
+DROP TABLE IF EXISTS `barang`;
+CREATE TABLE IF NOT EXISTS `barang` (
+  `idbarang` varchar(6) NOT NULL,
+  `foto` varchar(150) DEFAULT NULL,
+  `deskripsi` varchar(65) NOT NULL,
+  `pn_nsn` varchar(45) DEFAULT NULL,
+  `ds_number` varchar(45) DEFAULT NULL,
+  `holding` varchar(45) DEFAULT NULL,
+  `equipment_desc` varchar(45) DEFAULT NULL,
+  `store_location` varchar(45) DEFAULT NULL,
+  `supplementary_location` varchar(45) DEFAULT NULL,
+  `qty` float DEFAULT '0',
+  `uoi` varchar(45) DEFAULT NULL,
+  `verwendung` varchar(150) DEFAULT NULL,
+  `idjenisbarang` varchar(6) NOT NULL,
+  PRIMARY KEY (`idbarang`),
+  KEY `FK_barang_jenis` (`idjenisbarang`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -52,6 +77,29 @@ CREATE TABLE IF NOT EXISTS `identitas` (
 
 INSERT INTO `identitas` (`kode`, `instansi`, `slogan`, `tahun`, `pimpinan`, `alamat`, `kdpos`, `tlp`, `fax`, `website`, `email`, `logo`, `lat`, `lon`) VALUES
 ('K00001', 'KOARMADA 2', 'Ghora Wira Madya Jala', 1985, 'Laksamana Muda TNI Iwan Isnurwanto, M.A.P., M.Tr.(Han).', 'Dermaga Ujung Surabaya, Jawa Timur', '60178', '08', '-', 'https://koarmada2.tnial.mil.id/', 'rampa@gmail.com', 'Koarmada2.png', '-7.4063726', '112.5841074');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `jenisbarang`
+--
+
+DROP TABLE IF EXISTS `jenisbarang`;
+CREATE TABLE IF NOT EXISTS `jenisbarang` (
+  `idjenisbarang` varchar(6) NOT NULL,
+  `nama_jenis` varchar(45) NOT NULL,
+  PRIMARY KEY (`idjenisbarang`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `jenisbarang`
+--
+
+INSERT INTO `jenisbarang` (`idjenisbarang`, `nama_jenis`) VALUES
+('J00001', 'Platform'),
+('J00002', 'Sewaco'),
+('J00003', 'Komaliwan'),
+('J00004', 'Barang Umum');
 
 -- --------------------------------------------------------
 
@@ -228,6 +276,12 @@ INSERT INTO `users` (`idusers`, `nrp`, `pass`, `nama`, `tgl_lahir`, `agama`, `ko
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `barang`
+--
+ALTER TABLE `barang`
+  ADD CONSTRAINT `FK_barang_jenis` FOREIGN KEY (`idjenisbarang`) REFERENCES `jenisbarang` (`idjenisbarang`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `users`
