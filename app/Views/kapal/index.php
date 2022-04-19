@@ -18,7 +18,7 @@
         save_method = 'add';
         $('#form')[0].reset();
         $('#modal_form').modal('show');
-        $('.modal-title').text('Tambah kapal');
+        $('.modal-title').text('Tambah KRI');
     }
 
     function save() {
@@ -28,7 +28,7 @@
         var ket = document.getElementById('ket').value;
         
         if (nama === '') {
-            alert("Nama divisi tidak boleh kosong");
+            alert("Nama KRI tidak boleh kosong");
         } else {
             $('#btnSave').text('Saving...'); //change button text
             $('#btnSave').attr('disabled', true); //set button disable 
@@ -73,7 +73,7 @@
     }
 
     function hapus(id, nama) {
-        if (confirm("Apakah anda yakin menghapus kapal " + nama + " ?")) {
+        if (confirm("Apakah anda yakin menghapus KRI " + nama + " ?")) {
             $.ajax({
                 url: "<?php echo base_url(); ?>/kapal/hapus/" + id,
                 type: "POST",
@@ -92,7 +92,7 @@
         save_method = 'update';
         $('#form')[0].reset();
         $('#modal_form').modal('show');
-        $('.modal-title').text('Ganti kapal');
+        $('.modal-title').text('Ganti KRI');
         $.ajax({
             url: "<?php echo base_url(); ?>/kapal/ganti/" + id,
             type: "POST",
@@ -117,8 +117,8 @@
         <div class="col-md-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">MASTER KAPAL</h4>
-                    <p class="card-description">Maintenance data kapal</p>
+                    <h4 class="card-title">MASTER KRI</h4>
+                    <p class="card-description">Maintenance data KRI</p>
                     <button type="button" class="btn btn-primary" onclick="add();">Tambah</button>
                     <button type="button" class="btn btn-secondary" onclick="reload();">Reload</button>
                 </div>

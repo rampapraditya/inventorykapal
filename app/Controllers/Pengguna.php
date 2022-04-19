@@ -48,8 +48,6 @@ class Pengguna extends BaseController{
             $data['logo'] = $def_logo;
             
             $data['role'] = $this->model->getAll("role");
-            $data['korps'] = $this->model->getAll("korps");
-            $data['pangkat'] = $this->model->getAll("pangkat");
             $data['kapal'] = $this->model->getAll("kapal");
             
             echo view('head', $data);
@@ -64,13 +62,11 @@ class Pengguna extends BaseController{
     public function ajaxlist() {
         if(session()->get("logged_in")){
             $data = array();
-            $list = $this->model->getAllQ("select a.idusers, a.nrp, d.nama_role, a.nama, b.nama_korps, c.nama_pangkat, a.idkapal from users a, korps b, pangkat c, role d where a.idkorps = b.idkorps and a.idpangkat = c.idpangkat and a.idrole = d.idrole;");
+            $list = $this->model->getAllQ("select a.idusers, a.nrp, b.nama_role, a.nama, a.idkapal from users a, role b where a.idrole = b.idrole;");
             foreach ($list->getResult() as $row) {
                 $val = array();
                 $val[] = $row->nrp;
                 $val[] = $row->nama_role;
-                $val[] = $row->nama_korps;
-                $val[] = $row->nama_pangkat;
                 $val[] = $row->nama;
                 if(strlen($row->idkapal)){
                     $val[] = $this->model->getAllQR("select nama_kapal from kapal where idkapal = '".$row->idkapal."';")->nama_kapal;
@@ -104,8 +100,6 @@ class Pengguna extends BaseController{
                     'pass' => $this->modul->enkrip_pass($this->request->getVar('pass')),
                     'nama' => $this->request->getVar('nama'),
                     'idrole' => $this->request->getVar('role'),
-                    'idkorps' => $this->request->getVar('korps'),
-                    'idpangkat' => $this->request->getVar('pangkat'),
                     'idkapal' => $this->request->getVar('kapal'),
                 );
                 $simpan = $this->model->add("users",$data);
@@ -132,8 +126,6 @@ class Pengguna extends BaseController{
                 "nama" => $data->nama,
                 "pass" => $this->modul->dekrip_pass($data->pass),
                 "idrole" => $data->idrole,
-                "idkorps" => $data->idkorps,
-                "idpangkat" => $data->idpangkat,
                 "idkapal" => $data->idkapal
             ));
         }else{
@@ -147,8 +139,6 @@ class Pengguna extends BaseController{
                 'pass' => $this->modul->enkrip_pass($this->request->getVar('pass')),
                 'nama' => $this->request->getVar('nama'),
                 'idrole' => $this->request->getVar('role'),
-                'idkorps' => $this->request->getVar('korps'),
-                'idpangkat' => $this->request->getVar('pangkat'),
                 'idkapal' => $this->request->getVar('kapal'),
             );
             $kond['idusers'] = $this->request->getVar('kode');

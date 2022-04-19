@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Apr 14, 2022 at 04:01 AM
+-- Generation Time: Apr 19, 2022 at 01:12 AM
 -- Server version: 5.7.31
 -- PHP Version: 7.3.21
 
@@ -257,21 +257,19 @@ CREATE TABLE IF NOT EXISTS `users` (
   `foto` varchar(150) CHARACTER SET utf8mb4 DEFAULT NULL,
   `satuan_kerja` varchar(45) CHARACTER SET utf8mb4 DEFAULT NULL,
   `idrole` varchar(6) CHARACTER SET utf8mb4 NOT NULL,
-  `idkorps` varchar(6) CHARACTER SET utf8mb4 NOT NULL,
-  `idpangkat` varchar(6) CHARACTER SET utf8mb4 NOT NULL,
   `idkapal` varchar(6) DEFAULT NULL,
   PRIMARY KEY (`idusers`),
-  KEY `FK_users_role` (`idrole`),
-  KEY `FK_users_korps` (`idkorps`),
-  KEY `FK_users_pangkat` (`idpangkat`)
+  KEY `FK_users_role` (`idrole`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`idusers`, `nrp`, `pass`, `nama`, `tgl_lahir`, `agama`, `kota_asal`, `foto`, `satuan_kerja`, `idrole`, `idkorps`, `idpangkat`, `idkapal`) VALUES
-('U00001', 'ADMIN', 'aGtq', 'ADMIN', '1991-01-30', 'Islam', 'Surabaya', './assets/images/e7118256aaf4d1de09199e2b6cbe667c.png', 'TNI ANGKATAN LAUT', 'R00001', 'K00007', 'P00014', NULL);
+INSERT INTO `users` (`idusers`, `nrp`, `pass`, `nama`, `tgl_lahir`, `agama`, `kota_asal`, `foto`, `satuan_kerja`, `idrole`, `idkapal`) VALUES
+('U00001', 'ADMIN', 'aGtq', 'ADMIN', '1991-01-30', 'Islam', 'Surabaya', './assets/images/e7118256aaf4d1de09199e2b6cbe667c.png', 'TNI ANGKATAN LAUT', 'R00001', NULL),
+('U00002', '111', 'aGtq', 'Rampa', NULL, NULL, NULL, NULL, NULL, 'R00003', 'K00001'),
+('U00003', '222', 'aGtq', 'Atika', NULL, NULL, NULL, NULL, NULL, 'R00002', 'K00001');
 
 --
 -- Constraints for dumped tables
@@ -287,8 +285,6 @@ ALTER TABLE `barang`
 -- Constraints for table `users`
 --
 ALTER TABLE `users`
-  ADD CONSTRAINT `FK_users_korps` FOREIGN KEY (`idkorps`) REFERENCES `korps` (`idkorps`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `FK_users_pangkat` FOREIGN KEY (`idpangkat`) REFERENCES `pangkat` (`idpangkat`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `FK_users_role` FOREIGN KEY (`idrole`) REFERENCES `role` (`idrole`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
