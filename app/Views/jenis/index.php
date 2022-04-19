@@ -18,7 +18,7 @@
         save_method = 'add';
         $('#form')[0].reset();
         $('#modal_form').modal('show');
-        $('.modal-title').text('Tambah jenis barang');
+        $('.modal-title').text('Tambah gudang');
     }
 
     function save() {
@@ -26,7 +26,7 @@
         var nama = document.getElementById('nama').value;
         
         if (nama === '') {
-            alert("Jenis barang tidak boleh kosong");
+            alert("Gudang tidak boleh kosong");
         } else {
             $('#btnSave').text('Saving...'); //change button text
             $('#btnSave').attr('disabled', true); //set button disable 
@@ -69,7 +69,7 @@
     }
 
     function hapus(id, nama) {
-        if (confirm("Apakah anda yakin menghapus jenis " + nama + " ?")) {
+        if (confirm("Apakah anda yakin menghapus gudang " + nama + " ?")) {
             $.ajax({
                 url: "<?php echo base_url(); ?>/jenis/hapus/" + id,
                 type: "POST",
@@ -88,7 +88,7 @@
         save_method = 'update';
         $('#form')[0].reset();
         $('#modal_form').modal('show');
-        $('.modal-title').text('Ganti jenis barang');
+        $('.modal-title').text('Ganti gudang');
         $.ajax({
             url: "<?php echo base_url(); ?>/jenis/ganti/" + id,
             type: "POST",
@@ -112,8 +112,8 @@
         <div class="col-md-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">MASTER JENIS BARANG</h4>
-                    <p class="card-description">Maintenance data kapal</p>
+                    <h4 class="card-title">MASTER GUDANG</h4>
+                    <p class="card-description">Maintenance data gudang</p>
                     <button type="button" class="btn btn-primary" onclick="add();">Tambah</button>
                     <button type="button" class="btn btn-secondary" onclick="reload();">Reload</button>
                 </div>
@@ -122,8 +122,8 @@
                         <table id="tb" class="table table-hover" style="width: 100%;">
                             <thead>
                                 <tr>
-                                    <th>JENIS BARANG</th>
-                                    <th style="text-align: center;">Aksi</th>
+                                    <th>GUDANG</th>
+                                    <th style="text-align: center;">AKSI</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -149,7 +149,7 @@
                 <form id="form" class="form-horizontal">
                     <input type="hidden" name="kode" id="kode">
                     <div class="form-group">
-                        <label>Jenis Barang</label>
+                        <label>Gudang</label>
                         <input id="nama" name="nama" class="form-control" type="text" autocomplete="off">
                     </div>
                 </form>

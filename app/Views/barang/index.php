@@ -15,37 +15,58 @@
     }
 
     function add() {
-//        save_method = 'add';
-//        $('#form')[0].reset();
-//        $('#modal_form').modal('show');
-//        $('.modal-title').text('Tambah kapal');
-        alert("Belum difungsikan");
+        save_method = 'add';
+        $('#form')[0].reset();
+        $('#modal_form').modal('show');
+        $('.modal-title').text('Tambah barang');
     }
 
     function save() {
         var kode = document.getElementById('kode').value;
-        var nama = document.getElementById('nama').value;
-        var foto = $('#gambar').prop('files')[0];
-        var ket = document.getElementById('ket').value;
+        var gudang = document.getElementById('gudang').value;
+        var gambar = $('#gambar').prop('files')[0];
+        var deskripsi = document.getElementById('deskripsi').value;
+        var pn_nsn = document.getElementById('pn_nsn').value;
+        var ds_number = document.getElementById('ds_number').value;
+        var holding = document.getElementById('holding').value;
+        var equipment = document.getElementById('equipment').value;
+        var store = document.getElementById('store').value;
+        var supplementary = document.getElementById('supplementary').value;
+        var quant = document.getElementById('quant').value;
+        var uoi = document.getElementById('uoi').value;
+        var verwendung = document.getElementById('verwendung').value;
         
-        if (nama === '') {
-            alert("Nama divisi tidak boleh kosong");
+        if (gudang === "") {
+            alert("Gudang tidak boleh kosong");
+        }else if(deskripsi === ""){
+            alert("Deskripsi tidak boleh kosong");
+        }else if(pn_nsn === ""){
+            alert("PN/NSN tidak boleh kosong");
         } else {
             $('#btnSave').text('Saving...'); //change button text
             $('#btnSave').attr('disabled', true); //set button disable 
 
             var url = "";
             if (save_method === 'add') {
-                url = "<?php echo base_url(); ?>/kapal/ajax_add";
+                url = "<?php echo base_url(); ?>/barang/ajax_add";
             } else {
-                url = "<?php echo base_url(); ?>/kapal/ajax_edit";
+                url = "<?php echo base_url(); ?>/barang/ajax_edit";
             }
             
             var form_data = new FormData();
             form_data.append('kode', kode);
-            form_data.append('nama', nama);
-            form_data.append('ket', ket);
-            form_data.append('file', foto);
+            form_data.append('gudang', gudang);
+            form_data.append('file', gambar);
+            form_data.append('deskripsi', deskripsi);
+            form_data.append('pn_nsn', pn_nsn);
+            form_data.append('ds_number', ds_number);
+            form_data.append('holding', holding);
+            form_data.append('equipment', equipment);
+            form_data.append('store', store);
+            form_data.append('supplementary', supplementary);
+            form_data.append('quant', quant);
+            form_data.append('uoi', uoi);
+            form_data.append('verwendung', verwendung);
             
             // ajax adding data to database
             $.ajax({
@@ -74,9 +95,9 @@
     }
 
     function hapus(id, nama) {
-        if (confirm("Apakah anda yakin menghapus kapal " + nama + " ?")) {
+        if (confirm("Apakah anda yakin menghapus barang " + nama + " ?")) {
             $.ajax({
-                url: "<?php echo base_url(); ?>/kapal/hapus/" + id,
+                url: "<?php echo base_url(); ?>/barang/hapus/" + id,
                 type: "POST",
                 dataType: "JSON",
                 success: function (data) {
@@ -95,13 +116,23 @@
         $('#modal_form').modal('show');
         $('.modal-title').text('Ganti kapal');
         $.ajax({
-            url: "<?php echo base_url(); ?>/kapal/ganti/" + id,
+            url: "<?php echo base_url(); ?>/barang/ganti/" + id,
             type: "POST",
             dataType: "JSON",
             success: function (data) {
-                $('[name="kode"]').val(data.idkapal);
-                $('[name="nama"]').val(data.nama_kapal);
-                $('[name="ket"]').val(data.keterangan);
+                $('[name="kode"]').val(data.idbarang);
+                $('[name="deskripsi"]').val(data.deskripsi);
+                $('[name="pn_nsn"]').val(data.pn_nsn);
+                $('[name="ds_number"]').val(data.ds_number);
+                $('[name="holding"]').val(data.holding);
+                $('[name="equipment"]').val(data.equipment_desc);
+                $('[name="store"]').val(data.store_location);
+                $('[name="supplementary"]').val(data.supplementary_location);
+                $('[name="quant"]').val(data.qty);
+                $('[name="uoi"]').val(data.uoi);
+                $('[name="verwendung"]').val(data.verwendung);
+                $('[name="gudang"]').val(data.idjenisbarang);
+                
             }, error: function (jqXHR, textStatus, errorThrown) {
                 alert('Error get data');
             }
@@ -119,7 +150,7 @@
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">MASTER BARANG</h4>
-                    <p class="card-description">Maintenance data kapal</p>
+                    <p class="card-description">Maintenance data barang</p>
                     <button type="button" class="btn btn-primary" onclick="add();">Tambah</button>
                     <button type="button" class="btn btn-secondary" onclick="reload();">Reload</button>
                 </div>
@@ -165,16 +196,61 @@
                 <form id="form" class="form-horizontal">
                     <input type="hidden" name="kode" id="kode">
                     <div class="form-group">
-                        <label>Nama Kapal</label>
-                        <input id="nama" name="nama" class="form-control" type="text" autocomplete="off">
+                        <label>GUDANG</label>
+                        <select id="gudang" name="gudang" class="form-control">
+                            <option value="-">- PILIH GUDANG -</option>
+                            <?php
+                            foreach ($gudang->getResult() as $row) {
+                                ?>
+                            <option value="<?php echo $row->idjenisbarang; ?>"><?php echo $row->nama_jenis; ?></option>
+                                <?php
+                            }
+                            ?>
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label>Gambar</label>
+                        <label>GAMBAR</label>
                         <input id="gambar" name="gambar" class="form-control" type="file" autocomplete="off">
                     </div>
                     <div class="form-group">
-                        <label>Keterangan</label>
-                        <input id="ket" name="ket" class="form-control" type="text" autocomplete="off">
+                        <label>DESKRIPSI</label>
+                        <input id="deskripsi" name="deskripsi" class="form-control" type="text" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label>PN/NSN</label>
+                        <input id="pn_nsn" name="pn_nsn" class="form-control" type="text" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label>DS NUMBER</label>
+                        <input id="ds_number" name="ds_number" class="form-control" type="text" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label>Holding</label>
+                        <input id="holding" name="holding" class="form-control" type="text" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label>EQUIPMENT DESCRIPTION</label>
+                        <input id="equipment" name="equipment" class="form-control" type="text" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label>STORE  LOCATION</label>
+                        <input id="store" name="store" class="form-control" type="text" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label>SUPPLEMENTARY LOCATION</label>
+                        <input id="supplementary" name="supplementary" class="form-control" type="text" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label>QUANT</label>
+                        <input id="quant" name="quant" class="form-control" type="text" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label>UOI</label>
+                        <input id="uoi" name="uoi" class="form-control" type="text" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label>Verwendung</label>
+                        <input id="verwendung" name="verwendung" class="form-control" type="text" autocomplete="off">
                     </div>
                 </form>
             </div>

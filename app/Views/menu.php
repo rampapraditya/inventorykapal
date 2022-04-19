@@ -31,7 +31,7 @@
                         <li class="nav-item"> <a class="nav-link" href="<?php echo base_url(); ?>/role">Divisi / Role</a></li>
                         <li class="nav-item"> <a class="nav-link" href="<?php echo base_url(); ?>/kapal">KRI</a></li>
                         <li class="nav-item"> <a class="nav-link" href="<?php echo base_url(); ?>/pengguna">Pengguna</a></li>
-                        <li class="nav-item"> <a class="nav-link" href="<?php echo base_url(); ?>/jenis">Jenis Barang</a></li>
+                        <li class="nav-item"> <a class="nav-link" href="<?php echo base_url(); ?>/jenis">Gudang</a></li>
                         <li class="nav-item"> <a class="nav-link" href="<?php echo base_url(); ?>/barang">Barang</a></li>
                     </ul>
                 </div>
