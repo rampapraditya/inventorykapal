@@ -36,7 +36,7 @@
                     </ul>
                 </div>
             </li>
-<!--            <li class="nav-item">
+            <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#trans" aria-expanded="false" aria-controls="trans">
                     <i class="icon-columns menu-icon"></i>
                     <span class="menu-title">TRANSAKSI</span>
@@ -44,11 +44,11 @@
                 </a>
                 <div class="collapse" id="trans">
                     <ul class="nav flex-column sub-menu">
-                        <li class="nav-item"><a class="nav-link" href="<?php // echo base_url(); ?>/penelitian">Entri Materi</a></li>
-                        <li class="nav-item"><a class="nav-link" href="<?php // echo base_url(); ?>/lappenelitian">List Materi</a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?php echo base_url(); ?>/brgmasuk">Barang Masuk</a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?php echo base_url(); ?>/brgkeluar">Barang Keluar</a></li>
                     </ul>
                 </div>
-            </li>-->
+            </li>
         </ul>
     </nav>
     <!-- partial -->

@@ -1,17 +1,32 @@
 <script type="text/javascript">
 
     var save_method; //for save method string
-    var table;
+    var tb_platform, tb_sewaco, tb_komaliwan, tb_br_umum;
 
     $(document).ready(function () {
-        table = $('#tb').DataTable({
-            ajax: "<?php echo base_url(); ?>/barang/ajaxlist",
+        tb_platform = $('#tb_platform').DataTable({
+            ajax: "<?php echo base_url(); ?>/barang/ajaxlistplatform",
+            ordering: false
+        });
+        
+        tb_sewaco = $('#tb_sewaco').DataTable({
+            ajax: "<?php echo base_url(); ?>/barang/ajaxlist_sewaco",
+            ordering: false
+        });
+        
+        tb_komaliwan = $('#tb_komaliwan').DataTable({
+            ajax: "<?php echo base_url(); ?>/barang/ajaxlist_komaliwan",
+            ordering: false
+        });
+        
+        tb_br_umum = $('#tb_br_umum').DataTable({
+            ajax: "<?php echo base_url(); ?>/barang/ajaxlist_br_umum",
             ordering: false
         });
     });
 
     function reload() {
-        table.ajax.reload(null, false); //reload datatable ajax
+        tb_platform.ajax.reload(null, false); //reload datatable ajax
     }
 
     function add() {
@@ -35,12 +50,12 @@
         var quant = document.getElementById('quant').value;
         var uoi = document.getElementById('uoi').value;
         var verwendung = document.getElementById('verwendung').value;
-        
-        if (gudang === "") {
+
+        if (gudang === "-") {
             alert("Gudang tidak boleh kosong");
-        }else if(deskripsi === ""){
+        } else if (deskripsi === "") {
             alert("Deskripsi tidak boleh kosong");
-        }else if(pn_nsn === ""){
+        } else if (pn_nsn === "") {
             alert("PN/NSN tidak boleh kosong");
         } else {
             $('#btnSave').text('Saving...'); //change button text
@@ -52,7 +67,7 @@
             } else {
                 url = "<?php echo base_url(); ?>/barang/ajax_edit";
             }
-            
+
             var form_data = new FormData();
             form_data.append('kode', kode);
             form_data.append('gudang', gudang);
@@ -67,7 +82,7 @@
             form_data.append('quant', quant);
             form_data.append('uoi', uoi);
             form_data.append('verwendung', verwendung);
-            
+
             // ajax adding data to database
             $.ajax({
                 url: url,
@@ -132,15 +147,64 @@
                 $('[name="uoi"]').val(data.uoi);
                 $('[name="verwendung"]').val(data.verwendung);
                 $('[name="gudang"]').val(data.idjenisbarang);
-                
+
             }, error: function (jqXHR, textStatus, errorThrown) {
                 alert('Error get data');
             }
         });
     }
-    
-    function closemodal(){
+
+    function closemodal() {
         $('#modal_form').modal('hide');
+    }
+
+    function uploadfile() {
+        $('#form_upload')[0].reset();
+        $('#modal_upload').modal('show');
+    }
+
+    function closemodal_upload() {
+        $('#modal_upload').modal('hide');
+    }
+
+    function save_upload() {
+        var gudang = document.getElementById('gudang_upload').value;
+        var file = $('#file_upload').prop('files')[0];
+
+        if (gudang === "-") {
+            alert("Gudang tidak boleh kosong");
+        } else {
+            $('#btnSaveUpload').text('Saving...'); //change button text
+            $('#btnSaveUpload').attr('disabled', true); //set button disable 
+
+            var form_data = new FormData();
+            form_data.append('gudang', gudang);
+            form_data.append('file', file);
+
+            // ajax adding data to database
+            $.ajax({
+                url: "<?php echo base_url(); ?>/barang/prosesfile",
+                dataType: 'JSON',
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: form_data,
+                type: 'POST',
+                success: function (data) {
+                    alert(data.status);
+                    $('#modal_upload').modal('hide');
+                    reload();
+
+                    $('#btnSaveUpload').text('Save'); //change button text
+                    $('#btnSaveUpload').attr('disabled', false); //set button enable 
+                }, error: function (jqXHR, textStatus, errorThrown) {
+                    alert("Error json " + errorThrown);
+
+                    $('#btnSaveUpload').text('Save'); //change button text
+                    $('#btnSaveUpload').attr('disabled', false); //set button enable 
+                }
+            });
+        }
     }
 
 </script>
@@ -152,30 +216,114 @@
                     <h4 class="card-title">MASTER BARANG</h4>
                     <p class="card-description">Maintenance data barang</p>
                     <button type="button" class="btn btn-primary" onclick="add();">Tambah</button>
-                    <button type="button" class="btn btn-secondary" onclick="reload();">Reload</button>
+                    <button type="button" class="btn btn-secondary" onclick="uploadfile();">Upload File</button>
                 </div>
                 <div class="card-body">
-                    <div class="table-responsive">
-                        <table id="tb" class="table table-hover" style="width: 100%;">
-                            <thead>
-                                <tr>
-                                    <th>JENIS</th>
-                                    <th>DESCRIPTION</th>
-                                    <th>PN/NSN</th>
-                                    <th>DS NUMBER</th>
-                                    <th>Holding</th>
-                                    <th style="text-align: center;">EQUIPMENT<br>DESCRIPTION</th>
-                                    <th style="text-align: center;">STORE<br>LOCATION</th>
-                                    <th style="text-align: center;">SUPPLEMENTARY<br>LOCATION</th>
-                                    <th style="text-align: center;">QUANT</th>
-                                    <th style="text-align: center;">UOI</th>
-                                    <th style="text-align: center;">Verwendung</th>
-                                    <th style="text-align: center;">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
+                    <nav>
+                        <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+                            <a class="nav-item nav-link active" id="head_nav_platform" data-toggle="tab" href="#nav_platform" role="tab" aria-controls="nav_platform" aria-selected="true">Platform</a>
+                            <a class="nav-item nav-link" id="head_nav_sewaco" data-toggle="tab" href="#nav_sewaco" role="tab" aria-controls="nav_sewaco" aria-selected="false">Sewaco</a>
+                            <a class="nav-item nav-link" id="head_nav_komaliwan" data-toggle="tab" href="#nav_komaliwan" role="tab" aria-controls="nav_komaliwan" aria-selected="false">Komaliwan</a>
+                            <a class="nav-item nav-link" id="head_nav_nav_barangumum" data-toggle="tab" href="#nav_barangumum" role="tab" aria-controls="nav_barangumum" aria-selected="false">Barang Umum</a>
+                        </div>
+                    </nav>
+                    <div class="tab-content" id="nav-tabContent">
+                        <div class="tab-pane fade show active" id="nav_platform" role="tabpanel" aria-labelledby="nav_platform">
+                            <div class="table-responsive">
+                                <table id="tb_platform" class="table table-bordered" style="width: 100%; font-size: 11px;">
+                                    <thead>
+                                        <tr>
+                                            <th>GAMBAR</th>
+                                            <th>DESCRIPTION</th>
+                                            <th>PN/NSN</th>
+                                            <th>DS NUMBER</th>
+                                            <th>Holding</th>
+                                            <th style="text-align: center;">EQUIPMENT<br>DESCRIPTION</th>
+                                            <th style="text-align: center;">STORE<br>LOCATION</th>
+                                            <th style="text-align: center;">SUPPLEMENTARY<br>LOCATION</th>
+                                            <th style="text-align: center;">QUANT</th>
+                                            <th style="text-align: center;">UOI</th>
+                                            <th style="text-align: center;">Verwendung</th>
+                                            <th style="text-align: center;">AKSI</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="nav_sewaco" role="tabpanel" aria-labelledby="nav_sewaco">
+                            <div class="table-responsive">
+                                <table id="tb_sewaco" class="table table-bordered" style="width: 100%; font-size: 11px;">
+                                    <thead>
+                                        <tr>
+                                            <th>GAMBAR</th>
+                                            <th>DESCRIPTION</th>
+                                            <th>PN/NSN</th>
+                                            <th>DS NUMBER</th>
+                                            <th>Holding</th>
+                                            <th style="text-align: center;">EQUIPMENT<br>DESCRIPTION</th>
+                                            <th style="text-align: center;">STORE<br>LOCATION</th>
+                                            <th style="text-align: center;">SUPPLEMENTARY<br>LOCATION</th>
+                                            <th style="text-align: center;">QUANT</th>
+                                            <th style="text-align: center;">UOI</th>
+                                            <th style="text-align: center;">Verwendung</th>
+                                            <th style="text-align: center;">AKSI</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="nav_komaliwan" role="tabpanel" aria-labelledby="nav_komaliwan">
+                            <div class="table-responsive">
+                                <table id="tb_komaliwan" class="table table-bordered" style="width: 100%; font-size: 11px;">
+                                    <thead>
+                                        <tr>
+                                            <th>GAMBAR</th>
+                                            <th>DESCRIPTION</th>
+                                            <th>PN/NSN</th>
+                                            <th>DS NUMBER</th>
+                                            <th>Holding</th>
+                                            <th style="text-align: center;">EQUIPMENT<br>DESCRIPTION</th>
+                                            <th style="text-align: center;">STORE<br>LOCATION</th>
+                                            <th style="text-align: center;">SUPPLEMENTARY<br>LOCATION</th>
+                                            <th style="text-align: center;">QUANT</th>
+                                            <th style="text-align: center;">UOI</th>
+                                            <th style="text-align: center;">Verwendung</th>
+                                            <th style="text-align: center;">AKSI</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="nav_barangumum" role="tabpanel" aria-labelledby="nav_barangumum">
+                            <div class="table-responsive">
+                                <table id="tb_br_umum" class="table table-bordered" style="width: 100%; font-size: 11px;">
+                                    <thead>
+                                        <tr>
+                                            <th>GAMBAR</th>
+                                            <th>DESCRIPTION</th>
+                                            <th>PN/NSN</th>
+                                            <th>DS NUMBER</th>
+                                            <th>Holding</th>
+                                            <th style="text-align: center;">EQUIPMENT<br>DESCRIPTION</th>
+                                            <th style="text-align: center;">STORE<br>LOCATION</th>
+                                            <th style="text-align: center;">SUPPLEMENTARY<br>LOCATION</th>
+                                            <th style="text-align: center;">QUANT</th>
+                                            <th style="text-align: center;">UOI</th>
+                                            <th style="text-align: center;">Verwendung</th>
+                                            <th style="text-align: center;">AKSI</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -202,7 +350,7 @@
                             <?php
                             foreach ($gudang->getResult() as $row) {
                                 ?>
-                            <option value="<?php echo $row->idjenisbarang; ?>"><?php echo $row->nama_jenis; ?></option>
+                                <option value="<?php echo $row->idjenisbarang; ?>"><?php echo $row->nama_jenis; ?></option>
                                 <?php
                             }
                             ?>
@@ -257,6 +405,44 @@
             <div class="modal-footer">
                 <button id="btnSave" type="button" class="btn btn-primary" onclick="save();">Save</button>
                 <button type="button" class="btn btn-secondary" onclick="closemodal();">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal_upload" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>Upload File</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closemodal();">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="form_upload" class="form-horizontal">
+                    <div class="form-group">
+                        <label>GUDANG</label>
+                        <select id="gudang_upload" name="gudang_upload" class="form-control">
+                            <option value="-">- PILIH GUDANG -</option>
+                            <?php
+                            foreach ($gudang->getResult() as $row) {
+                                ?>
+                                <option value="<?php echo $row->idjenisbarang; ?>"><?php echo $row->nama_jenis; ?></option>
+                                <?php
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>FILE</label>
+                        <input id="file_upload" name="file_upload" class="form-control" type="file" autocomplete="off" accept=".xls, .xlsx">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="btnSaveUpload" type="button" class="btn btn-primary" onclick="save_upload();">Upload</button>
+                <button type="button" class="btn btn-secondary" onclick="closemodal_upload();">Close</button>
             </div>
         </div>
     </div>

@@ -23,6 +23,11 @@ class Modul {
         $string_pesan = "<script type='text/javascript'> alert('" . $pesan . "');</script>";
         echo $string_pesan;
     }
+    
+    public function pesanlog($pesan) {
+        $string_pesan = "<script type='text/javascript'> console.log('".$pesan."') ;</script>";
+        echo $string_pesan;
+    }
 
     public function halaman($halaman) {
         $string_pesan = "<script type='text/javascript'> ";

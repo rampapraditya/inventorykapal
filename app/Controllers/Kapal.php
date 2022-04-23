@@ -59,20 +59,19 @@ class Kapal extends BaseController {
     
     public function ajaxlist() {
         if(session()->get("logged_in")){
-            $gambar = base_url().'/images/noimg.jpg';
-            
             $data = array();
             $list = $this->model->getAll("kapal");
             foreach ($list->getResult() as $row) {
                 $val = array();
                 // membaca gambar kapal
+                $gambar = base_url().'/images/noimg.jpg';
                 if(strlen($row->gambar) > 0){
                     if(file_exists(ROOTPATH.'public/uploads/'.$row->gambar)){
                         $gambar = base_url().'/uploads/'.$row->gambar;
                     }
                 }
             
-                $val[] = '<img src="'.$gambar.'"  class="img-thumbnail" style="width: 150px; height: auto;">';
+                $val[] = '<img src="'.$gambar.'"  class="img-thumbnail" style="width: 100px; height: auto;">';
                 $val[] = $row->nama_kapal;
                 $val[] = $row->keterangan;
                 $val[] = '<div style="text-align: center;">'
