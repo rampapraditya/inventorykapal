@@ -16,6 +16,26 @@
     function add() {
         window.location.href = "<?php echo base_url(); ?>/brgmasuk/detil";
     }
+    
+    function ganti(id) {
+        window.location.href = "<?php echo base_url(); ?>/brgmasuk/detil/"+id;
+    }
+    
+    function hapus(id, nama) {
+        if (confirm("Apakah anda yakin menghapus barang nomor " + nama + " ?")) {
+            $.ajax({
+                url: "<?php echo base_url(); ?>/brgmasuk/hapus/" + id,
+                type: "POST",
+                dataType: "JSON",
+                success: function (data) {
+                    alert(data.status);
+                    reload();
+                }, error: function (jqXHR, textStatus, errorThrown) {
+                    alert('Error hapus data');
+                }
+            });
+        }
+    }
 
 </script>
 <div class="content-wrapper">
