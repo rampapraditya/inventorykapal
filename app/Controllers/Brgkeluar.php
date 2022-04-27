@@ -9,7 +9,7 @@ use App\Libraries\Modul;
  *
  * @author RAMPA
  */
-class Brgmasuk extends BaseController {
+class Brgkeluar extends BaseController {
     
     private $model;
     private $modul;
@@ -49,7 +49,7 @@ class Brgmasuk extends BaseController {
 
             echo view('head', $data);
             echo view('menu');
-            echo view('barang_masuk/index');
+            echo view('barang_keluar/index');
             echo view('foot');
         } else {
             $this->modul->halaman('login');
@@ -60,7 +60,7 @@ class Brgmasuk extends BaseController {
         if (session()->get("logged_in")) {
             $no = 1;
             $data = array();
-            $list = $this->model->getAllQ("SELECT a.idbrg_masuk, date_format(tgl, '%d %M %Y') as tglf, b.nama_kapal FROM brg_masuk a, kapal b where a.idkapal = b.idkapal order by tgl desc;");
+            $list = $this->model->getAllQ("SELECT a.idbrg_keluar, date_format(tgl, '%d %M %Y') as tglf, b.nama_kapal FROM brg_keluar a, kapal b where a.idkapal = b.idkapal order by tgl desc;");
             foreach ($list->getResult() as $row) {
                 $val = array();
                 $val[] = $no;
@@ -75,7 +75,7 @@ class Brgmasuk extends BaseController {
                                 </tr>
                             </thead>
                             <tbody>';
-                $list_detil = $this->model->getAllQ("SELECT b.deskripsi, a.jumlah, a.satuan FROM brg_masuk_detil a, barang b where a.idbarang = b.idbarang and a.idbrg_masuk = '".$row->idbrg_masuk."';");
+                $list_detil = $this->model->getAllQ("SELECT b.deskripsi, a.jumlah, a.satuan FROM brg_keluar_detil a, barang b where a.idbarang = b.idbarang and a.idbrg_keluar = '".$row->idbrg_keluar."';");
                 foreach ($list_detil->getResult() as $row1) {
                     $detil .= '<tr>';
                     $detil .= '<td>'.$row1->deskripsi.'</td>';
@@ -86,8 +86,8 @@ class Brgmasuk extends BaseController {
                 $detil .= '</tbody></table>';
                 $val[] = $detil;
                 $val[] = '<div style="text-align: center;">'
-                        . '<button type="button" class="btn btn-outline-primary btn-fw" onclick="ganti('."'".$this->modul->enkrip_url($row->idbrg_masuk)."'".')">Ganti</button>&nbsp;'
-                        . '<button type="button" class="btn btn-outline-danger btn-fw" onclick="hapus(' . "'" . $row->idbrg_masuk . "'" . ',' . "'" . $no . "'" . ')">Hapus</button>'
+                        . '<button type="button" class="btn btn-outline-primary btn-fw" onclick="ganti('."'".$this->modul->enkrip_url($row->idbrg_keluar)."'".')">Ganti</button>&nbsp;'
+                        . '<button type="button" class="btn btn-outline-danger btn-fw" onclick="hapus(' . "'" . $row->idbrg_keluar . "'" . ',' . "'" . $no . "'" . ')">Hapus</button>'
                         . '</div>';
                 $data[] = $val;
                 

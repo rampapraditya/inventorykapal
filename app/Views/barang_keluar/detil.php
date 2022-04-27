@@ -6,7 +6,7 @@
 
     $(document).ready(function () {
         table = $('#tb').DataTable({
-            ajax: "<?php echo base_url(); ?>/brgmasuk/ajaxdetil/<?php echo $kode; ?>",
+            ajax: "<?php echo base_url(); ?>/brgkeluar/ajaxdetil/<?php echo $kode; ?>",
             ordering: false
         });
     });
@@ -19,7 +19,7 @@
         save_method = 'add';
         $('#form')[0].reset();
         $('#modal_form').modal('show');
-        $('.modal-title').text('Tambah Barang Datang');
+        $('.modal-title').text('Tambah Barang Keluar');
     }
     
     function closemodal(){
@@ -32,13 +32,13 @@
     
     function load_tb_platform(){
         tb_platform = $('#tb_platform').DataTable({
-            ajax: "<?php echo base_url(); ?>/brgmasuk/ajax_platform/<?php echo $kode; ?>",
+            ajax: "<?php echo base_url(); ?>/brgkeluar/ajax_platform/<?php echo $kode; ?>",
             ordering: false,
             retrieve:true
         });
         tb_platform.destroy();
         tb_platform = $('#tb_platform').DataTable({
-            ajax: "<?php echo base_url(); ?>/brgmasuk/ajax_platform/<?php echo $kode; ?>",
+            ajax: "<?php echo base_url(); ?>/brgkeluar/ajax_platform/<?php echo $kode; ?>",
             ordering: false,
             retrieve:true
         });
@@ -46,13 +46,13 @@
     
     function load_tb_sewaco(){
         tb_sewaco = $('#tb_sewaco').DataTable({
-            ajax: "<?php echo base_url(); ?>/brgmasuk/ajax_sewaco/<?php echo $kode; ?>",
+            ajax: "<?php echo base_url(); ?>/brgkeluar/ajax_sewaco/<?php echo $kode; ?>",
             ordering: false,
             retrieve:true
         });
         tb_sewaco.destroy();
         tb_sewaco = $('#tb_sewaco').DataTable({
-            ajax: "<?php echo base_url(); ?>/brgmasuk/ajax_sewaco/<?php echo $kode; ?>",
+            ajax: "<?php echo base_url(); ?>/brgkeluar/ajax_sewaco/<?php echo $kode; ?>",
             ordering: false,
             retrieve:true
         });
@@ -60,13 +60,13 @@
     
     function load_tb_komaliwan(){
         tb_komaliwan = $('#tb_komaliwan').DataTable({
-            ajax: "<?php echo base_url(); ?>/brgmasuk/ajax_komaliwan/<?php echo $kode; ?>",
+            ajax: "<?php echo base_url(); ?>/brgkeluar/ajax_komaliwan/<?php echo $kode; ?>",
             ordering: false,
             retrieve:true
         });
         tb_komaliwan.destroy();
         tb_komaliwan = $('#tb_komaliwan').DataTable({
-            ajax: "<?php echo base_url(); ?>/brgmasuk/ajax_komaliwan/<?php echo $kode; ?>",
+            ajax: "<?php echo base_url(); ?>/brgkeluar/ajax_komaliwan/<?php echo $kode; ?>",
             ordering: false,
             retrieve:true
         });
@@ -74,13 +74,13 @@
     
     function load_tb_br_umum(){
         tb_br_umum = $('#tb_br_umum').DataTable({
-            ajax: "<?php echo base_url(); ?>/brgmasuk/ajax_br_umum/<?php echo $kode; ?>",
+            ajax: "<?php echo base_url(); ?>/brgkeluar/ajax_br_umum/<?php echo $kode; ?>",
             ordering: false,
             retrieve:true
         });
         tb_br_umum.destroy();
         tb_br_umum = $('#tb_br_umum').DataTable({
-            ajax: "<?php echo base_url(); ?>/brgmasuk/ajax_br_umum/<?php echo $kode; ?>",
+            ajax: "<?php echo base_url(); ?>/brgkeluar/ajax_br_umum/<?php echo $kode; ?>",
             ordering: false,
             retrieve:true
         });
@@ -237,7 +237,7 @@
         <div class="col-md-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">TRANSAKSI BARANG MASUK</h4>
+                    <h4 class="card-title">TRANSAKSI BARANG KELUAR</h4>
                     <p class="card-description"><?php echo $ket; ?></p>
                 </div>
                 <div class="card-body">
