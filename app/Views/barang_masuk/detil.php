@@ -16,10 +16,15 @@
     }
 
     function add() {
-        save_method = 'add';
-        $('#form')[0].reset();
-        $('#modal_form').modal('show');
-        $('.modal-title').text('Tambah Barang Datang');
+        var kri = document.getElementById('kri').value;
+        if(kri === "-"){
+            alert("Pilih KRI terlebih dahulu");
+        }else{
+            save_method = 'add';
+            $('#form')[0].reset();
+            $('#modal_form').modal('show');
+            $('.modal-title').text('Tambah Barang Datang');
+        }
     }
     
     function closemodal(){

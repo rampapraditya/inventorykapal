@@ -370,6 +370,7 @@
                                         <th>PN/NSN</th>
                                         <th>DS NUMBER</th>
                                         <th>Holding</th>
+                                        <th>STOK</th>
                                         <th style="text-align: center;">AKSI</th>
                                     </tr>
                                 </thead>

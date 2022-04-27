@@ -196,7 +196,7 @@ class Brgkeluar extends BaseController {
     
     public function ajax_platform() {
         if (session()->get("logged_in")) {
-            // load dari barang datang
+            // load dari barang datang khusus yang jenis platform
             $kode_trans = $this->request->uri->getSegment(3);
             // load data
             $data = array();
@@ -215,6 +215,8 @@ class Brgkeluar extends BaseController {
                 $val[] = $row->deskripsi;
                 $val[] = $row->pn_nsn;
                 $val[] = $row->ds_number;
+                $val[] = $row->holding;
+                $val[] = $this->getStok($row->idbarang);
                 $val[] = $row->holding;
                 $val[] = '<div style="text-align: center;">'
                         . '<button type="button" class="btn btn-outline-primary btn-fw" onclick="pilih_platform('."'".$row->idbarang."'".','."'".$row->deskripsi."'".','."'Platform'".')">Pilih</button>'
@@ -362,7 +364,6 @@ class Brgkeluar extends BaseController {
         }
     }
     
-    
     private function simpan_head($username) {
         $data = array(
             'idbrg_masuk' => $this->request->getVar('kode'),
@@ -455,5 +456,12 @@ class Brgkeluar extends BaseController {
         }else{
             $this->modul->halaman('login');
         }
+    }
+    
+    private function getStok($idbarang) {
+        $masuk = $this->model->getAllQR("SELECT ifnull(sum(jumlah),0) as masuk FROM brg_masuk_detil where idbarang = '".$idbarang."';")->masuk;
+        $keluar = $this->model->getAllQR("SELECT ifnull(sum(jumlah),0) as keluar FROM brg_keluar_detil where idbarang = '".$idbarang."';")->keluar;
+        $stok = $masuk - $keluar;
+        return $stok;
     }
 }
