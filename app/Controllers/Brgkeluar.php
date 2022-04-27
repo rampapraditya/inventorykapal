@@ -130,35 +130,35 @@ class Brgkeluar extends BaseController {
             $temp = $this->request->uri->getSegment(3);
             if(strlen($temp) > 0){
                 $kode = $this->modul->dekrip_url($temp);
-                $jml = $this->model->getAllQR("select count(*) as jml from brg_masuk where idbrg_masuk = '".$kode."';")->jml;
+                $jml = $this->model->getAllQR("select count(*) as jml from brg_keluar where idbrg_keluar = '".$kode."';")->jml;
                 if($jml > 0){
-                    $kondisi['idbrg_masuk'] = $kode;
-                    $tersimpan = $this->model->get_by_id("brg_masuk", $kondisi);
+                    $kondisi['idbrg_keluar'] = $kode;
+                    $tersimpan = $this->model->get_by_id("brg_keluar", $kondisi);
                             
                     $data['kode'] = $kode;
                     $data['kri'] = $this->model->getAll("kapal");
                     $data['kri_tersimpan'] = $tersimpan->idkapal;
                     $data['tgl_def'] = $tersimpan->tgl;
-                    $data['ket'] = "Ganti barang datang";
+                    $data['ket'] = "Ganti barang keluar";
 
                     echo view('head', $data);
                     echo view('menu');
-                    echo view('barang_masuk/detil');
+                    echo view('barang_keluar/detil');
                     echo view('foot');
                 
                 }else{
-                    $this->modul->halaman('brgmasuk');
+                    $this->modul->halaman('brgkeluar');
                 }
             }else{
-                $data['kode'] = $this->model->autokode('M','idbrg_masuk', 'brg_masuk', 2, 7);
+                $data['kode'] = $this->model->autokode('K','idbrg_keluar', 'brg_keluar', 2, 7);
                 $data['kri'] = $this->model->getAll("kapal");
                 $data['kri_tersimpan'] = "";
                 $data['tgl_def'] = $this->modul->TanggalSekarang();
-                $data['ket'] = "Tambah barang datang";
+                $data['ket'] = "Tambah barang keluar";
 
                 echo view('head', $data);
                 echo view('menu');
-                echo view('barang_masuk/detil');
+                echo view('barang_keluar/detil');
                 echo view('foot');
             }
         } else {
@@ -172,7 +172,7 @@ class Brgkeluar extends BaseController {
             // load data
             $no = 1;
             $data = array();
-            $list = $this->model->getAllQ("select a.idbrg_m_detil, b.deskripsi, a.jumlah, a.satuan from brg_masuk_detil a, barang b, brg_masuk c where a.idbarang = b.idbarang and a.idbrg_masuk = c.idbrg_masuk and a.idbrg_masuk = '".$kode."';");
+            $list = $this->model->getAllQ("select a.idbrg_k_detil, b.deskripsi, a.jumlah, a.satuan from brg_keluar_detil a, barang b, brg_keluar c where a.idbarang = b.idbarang and a.idbrg_keluar = c.idbrg_keluar and a.idbrg_keluar = '".$kode."';");
             foreach ($list->getResult() as $row) {
                 $val = array();
                 $val[] = $no;
@@ -180,8 +180,8 @@ class Brgkeluar extends BaseController {
                 $val[] = $row->jumlah;
                 $val[] = $row->satuan;
                 $val[] = '<div style="text-align: center;">'
-                        . '<button type="button" class="btn btn-outline-primary btn-fw" onclick="ganti(' . "'" . $row->idbrg_m_detil . "'" . ')">Ganti</button>&nbsp;'
-                        . '<button type="button" class="btn btn-outline-danger btn-fw" onclick="hapus(' . "'" . $row->idbrg_m_detil . "'" . ',' . "'" . $no . "'" . ')">Hapus</button>'
+                        . '<button type="button" class="btn btn-outline-primary btn-fw" onclick="ganti(' . "'" . $row->idbrg_k_detil . "'" . ')">Ganti</button>&nbsp;'
+                        . '<button type="button" class="btn btn-outline-danger btn-fw" onclick="hapus(' . "'" . $row->idbrg_k_detil . "'" . ',' . "'" . $no . "'" . ')">Hapus</button>'
                         . '</div>';
                 $data[] = $val;
                 
@@ -196,6 +196,7 @@ class Brgkeluar extends BaseController {
     
     public function ajax_platform() {
         if (session()->get("logged_in")) {
+            // load dari barang datang
             $kode_trans = $this->request->uri->getSegment(3);
             // load data
             $data = array();
