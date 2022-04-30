@@ -96,6 +96,10 @@
                 padding-bottom: 15px;
             }
             
+            .modal {
+                overflow-y:auto;
+            }
+            
         </style>
         
         <script type="text/javascript">

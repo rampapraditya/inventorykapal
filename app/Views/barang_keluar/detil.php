@@ -16,10 +16,15 @@
     }
 
     function add() {
-        save_method = 'add';
-        $('#form')[0].reset();
-        $('#modal_form').modal('show');
-        $('.modal-title').text('Tambah Barang Keluar');
+        var kri = document.getElementById('kri').value;
+        if(kri === "-"){
+            alert("KRI tidak boleh kosong");
+        }else{
+            save_method = 'add';
+            $('#form')[0].reset();
+            $('#modal_form').modal('show');
+            $('.modal-title').text('Tambah Barang Keluar');
+        }
     }
     
     function closemodal(){
@@ -95,35 +100,10 @@
         load_tb_br_umum();
     }
     
-    function pilih_platform(kode, nama, jenis){
+    function pilih(kode, nama, stok){
         $('[name="kode_barang"]').val(kode);
-        $('[name="jenis_barang"]').val(jenis);
         $('[name="nama"]').val(nama);
-        
-        $('#modal_barang').modal('hide');
-    }
-    
-    function pilih_sewaco(kode, nama, jenis){
-        $('[name="kode_barang"]').val(kode);
-        $('[name="jenis_barang"]').val(jenis);
-        $('[name="nama"]').val(nama);
-        
-        $('#modal_barang').modal('hide');
-    }
-    
-    function pilih_komaliwan(kode, nama, jenis){
-        $('[name="kode_barang"]').val(kode);
-        $('[name="jenis_barang"]').val(jenis);
-        $('[name="nama"]').val(nama);
-        
-        $('#modal_barang').modal('hide');
-    }
-    
-    function pilih_umum(kode, nama, jenis){
-        $('[name="kode_barang"]').val(kode);
-        $('[name="jenis_barang"]').val(jenis);
-        $('[name="nama"]').val(nama);
-        
+        $('[name="stok"]').val(stok);
         $('#modal_barang').modal('hide');
     }
     
@@ -133,6 +113,7 @@
         var kri = document.getElementById('kri').value;
         var kode_detil = document.getElementById('kode_detil').value;
         var kode_barang = document.getElementById('kode_barang').value;
+        var stok = document.getElementById('stok').value;
         var jumlah = document.getElementById('jumlah').value;
         var satuan = document.getElementById('satuan').value;
         
@@ -149,48 +130,56 @@
         }else if(satuan === ""){
             alert("Satuan tidak boleh kosong");
         } else {
-            $('#btnSave').text('Saving...');
-            $('#btnSave').attr('disabled', true);
-
-            var url = "";
-            if (save_method === 'add') {
-                url = "<?php echo base_url(); ?>/brgmasuk/ajax_add";
-            } else {
-                url = "<?php echo base_url(); ?>/brgmasuk/ajax_edit";
-            }
+            // cek stok
+            var a = parseInt(stok);
+            var b = parseInt(jumlah);
             
-            var form_data = new FormData();
-            form_data.append('kode', kode);
-            form_data.append('tgl', tgl);
-            form_data.append('kri', kri);
-            form_data.append('kode_detil', kode_detil);
-            form_data.append('kode_barang', kode_barang);
-            form_data.append('jumlah', jumlah);
-            form_data.append('satuan', satuan);
-            
-            // ajax adding data to database
-            $.ajax({
-                url: url,
-                dataType: 'JSON',
-                cache: false,
-                contentType: false,
-                processData: false,
-                data: form_data,
-                type: 'POST',
-                success: function (data) {
-                    alert(data.status);
-                    $('#modal_form').modal('hide');
-                    reload();
+            if(a >= b){
+                $('#btnSave').text('Saving...');
+                $('#btnSave').attr('disabled', true);
 
-                    $('#btnSave').text('Save');
-                    $('#btnSave').attr('disabled', false);
-                }, error: function (jqXHR, textStatus, errorThrown) {
-                    alert("Error json " + errorThrown);
-
-                    $('#btnSave').text('Save');
-                    $('#btnSave').attr('disabled', false);
+                var url = "";
+                if (save_method === 'add') {
+                    url = "<?php echo base_url(); ?>/brgkeluar/ajax_add";
+                } else {
+                    url = "<?php echo base_url(); ?>/brgkeluar/ajax_edit";
                 }
-            });
+
+                var form_data = new FormData();
+                form_data.append('kode', kode);
+                form_data.append('tgl', tgl);
+                form_data.append('kri', kri);
+                form_data.append('kode_detil', kode_detil);
+                form_data.append('kode_barang', kode_barang);
+                form_data.append('jumlah', jumlah);
+                form_data.append('satuan', satuan);
+
+                // ajax adding data to database
+                $.ajax({
+                    url: url,
+                    dataType: 'JSON',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    data: form_data,
+                    type: 'POST',
+                    success: function (data) {
+                        alert(data.status);
+                        $('#modal_form').modal('hide');
+                        reload();
+
+                        $('#btnSave').text('Save');
+                        $('#btnSave').attr('disabled', false);
+                    }, error: function (jqXHR, textStatus, errorThrown) {
+                        alert("Error json " + errorThrown);
+
+                        $('#btnSave').text('Save');
+                        $('#btnSave').attr('disabled', false);
+                    }
+                });
+            }else{
+                alert("Stok tidak mencukupi");
+            }
         }
     }
 
@@ -316,12 +305,15 @@
                         <label>Barang</label>
                         <div class="input-group mb-3">
                             <input type="hidden" id="kode_barang" name="kode_barang">
-                            <input type="hidden" id="jenis_barang" name="jenis_barang">
                             <input type="text" class="form-control" aria-describedby="btnShow" id="nama" name="nama" readonly>
                             <div class="input-group-append">
                                 <button class="btn btn-outline-secondary" type="button" id="btnShow" onclick="showBarang()">...</button>
                             </div>
                         </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Stok</label>
+                        <input id="stok" name="stok" class="form-control" type="text" autocomplete="off" onkeypress="return hanyaAngka(event,false);" readonly>
                     </div>
                     <div class="form-group">
                         <label>Jumlah</label>
@@ -370,7 +362,7 @@
                                         <th>PN/NSN</th>
                                         <th>DS NUMBER</th>
                                         <th>Holding</th>
-                                        <th>STOK</th>
+                                        <th>Stok</th>
                                         <th style="text-align: center;">AKSI</th>
                                     </tr>
                                 </thead>
@@ -389,6 +381,7 @@
                                         <th>PN/NSN</th>
                                         <th>DS NUMBER</th>
                                         <th>Holding</th>
+                                        <th>Stok</th>
                                         <th style="text-align: center;">AKSI</th>
                                     </tr>
                                 </thead>
@@ -407,6 +400,7 @@
                                         <th>PN/NSN</th>
                                         <th>DS NUMBER</th>
                                         <th>Holding</th>
+                                        <th>Stok</th>
                                         <th style="text-align: center;">AKSI</th>
                                     </tr>
                                 </thead>
@@ -425,6 +419,7 @@
                                         <th>PN/NSN</th>
                                         <th>DS NUMBER</th>
                                         <th>Holding</th>
+                                        <th>Stok</th>
                                         <th style="text-align: center;">AKSI</th>
                                     </tr>
                                 </thead>

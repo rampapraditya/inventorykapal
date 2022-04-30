@@ -196,11 +196,8 @@ class Brgkeluar extends BaseController {
     
     public function ajax_platform() {
         if (session()->get("logged_in")) {
-            // load dari barang datang khusus yang jenis platform
-            $kode_trans = $this->request->uri->getSegment(3);
-            // load data
             $data = array();
-            $list = $this->model->getAllQ("select * from barang where idjenisbarang = 'J00001' and idbarang not in(select idbarang from brg_masuk_detil where idbrg_masuk = '".$kode_trans."');");
+            $list = $this->model->getAllQ("select a.idbarang, b.foto, b.deskripsi, b.pn_nsn, b.ds_number, b.holding from brg_masuk_detil a, barang b, jenisbarang c where a.idbarang = b.idbarang and b.idjenisbarang = c.idjenisbarang and c.idjenisbarang = 'J00001';");
             foreach ($list->getResult() as $row) {
                 $val = array();
                 // mencari default foto
@@ -216,10 +213,10 @@ class Brgkeluar extends BaseController {
                 $val[] = $row->pn_nsn;
                 $val[] = $row->ds_number;
                 $val[] = $row->holding;
-                $val[] = $this->getStok($row->idbarang);
-                $val[] = $row->holding;
+                $stok = $this->getStok($row->idbarang);
+                $val[] = $stok;
                 $val[] = '<div style="text-align: center;">'
-                        . '<button type="button" class="btn btn-outline-primary btn-fw" onclick="pilih_platform('."'".$row->idbarang."'".','."'".$row->deskripsi."'".','."'Platform'".')">Pilih</button>'
+                        . '<button type="button" class="btn btn-outline-primary btn-fw" onclick="pilih('."'".$row->idbarang."'".','."'".$row->deskripsi."'".','."'".$stok."'".')">Pilih</button>'
                         . '</div>';
 
                 $data[] = $val;
@@ -233,10 +230,8 @@ class Brgkeluar extends BaseController {
     
     public function ajax_sewaco() {
         if (session()->get("logged_in")) {
-            $kode_trans = $this->request->uri->getSegment(3);
-            // load data
             $data = array();
-            $list = $this->model->getAllQ("select * from barang where idjenisbarang = 'J00002' and idbarang not in(select idbarang from brg_masuk_detil where idbrg_masuk = '".$kode_trans."');");
+            $list = $this->model->getAllQ("select a.idbarang, b.foto, b.deskripsi, b.pn_nsn, b.ds_number, b.holding from brg_masuk_detil a, barang b, jenisbarang c where a.idbarang = b.idbarang and b.idjenisbarang = c.idjenisbarang and c.idjenisbarang = 'J00002';");
             foreach ($list->getResult() as $row) {
                 $val = array();
                 // mencari default foto
@@ -252,8 +247,10 @@ class Brgkeluar extends BaseController {
                 $val[] = $row->pn_nsn;
                 $val[] = $row->ds_number;
                 $val[] = $row->holding;
+                $stok = $this->getStok($row->idbarang);
+                $val[] = $stok;
                 $val[] = '<div style="text-align: center;">'
-                        . '<button type="button" class="btn btn-outline-primary btn-fw" onclick="pilih_sewaco('."'".$row->idbarang."'".','."'".$row->deskripsi."'".','."'Sewaco'".')">Pilih</button>'
+                        . '<button type="button" class="btn btn-outline-primary btn-fw" onclick="pilih('."'".$row->idbarang."'".','."'".$row->deskripsi."'".','."'".$stok."'".')">Pilih</button>'
                         . '</div>';
 
                 $data[] = $val;
@@ -267,13 +264,11 @@ class Brgkeluar extends BaseController {
     
     public function ajax_komaliwan() {
         if (session()->get("logged_in")) {
-            $kode_trans = $this->request->uri->getSegment(3);
-            // load data
             $data = array();
-            $list = $this->model->getAllQ("select * from barang where idjenisbarang = 'J00003' and idbarang not in(select idbarang from brg_masuk_detil where idbrg_masuk = '".$kode_trans."');");
+            $list = $this->model->getAllQ("select a.idbarang, b.foto, b.deskripsi, b.pn_nsn, b.ds_number, b.holding from brg_masuk_detil a, barang b, jenisbarang c where a.idbarang = b.idbarang and b.idjenisbarang = c.idjenisbarang and c.idjenisbarang = 'J00003';");
             foreach ($list->getResult() as $row) {
                 $val = array();
-                
+                // mencari default foto
                 $def_foto = base_url() . '/images/noimg.jpg';
                 if (strlen($row->foto) > 0) {
                     if (file_exists(ROOTPATH.'public/uploads/'.$row->foto)) {
@@ -286,8 +281,10 @@ class Brgkeluar extends BaseController {
                 $val[] = $row->pn_nsn;
                 $val[] = $row->ds_number;
                 $val[] = $row->holding;
+                $stok = $this->getStok($row->idbarang);
+                $val[] = $stok;
                 $val[] = '<div style="text-align: center;">'
-                        . '<button type="button" class="btn btn-outline-primary btn-fw" onclick="pilih_komaliwan('."'".$row->idbarang."'".','."'".$row->deskripsi."'".','."'Komaliwan'".')">Pilih</button>'
+                        . '<button type="button" class="btn btn-outline-primary btn-fw" onclick="pilih('."'".$row->idbarang."'".','."'".$row->deskripsi."'".','."'".$stok."'".')">Pilih</button>'
                         . '</div>';
 
                 $data[] = $val;
@@ -301,12 +298,11 @@ class Brgkeluar extends BaseController {
     
     public function ajax_br_umum() {
         if (session()->get("logged_in")) {
-            $kode_trans = $this->request->uri->getSegment(3);
-            // load data
             $data = array();
-            $list = $this->model->getAllQ("select * from barang where idjenisbarang = 'J00004' and idbarang not in(select idbarang from brg_masuk_detil where idbrg_masuk = '".$kode_trans."');");
+            $list = $this->model->getAllQ("select a.idbarang, b.foto, b.deskripsi, b.pn_nsn, b.ds_number, b.holding from brg_masuk_detil a, barang b, jenisbarang c where a.idbarang = b.idbarang and b.idjenisbarang = c.idjenisbarang and c.idjenisbarang = 'J00004';");
             foreach ($list->getResult() as $row) {
                 $val = array();
+                // mencari default foto
                 $def_foto = base_url() . '/images/noimg.jpg';
                 if (strlen($row->foto) > 0) {
                     if (file_exists(ROOTPATH.'public/uploads/'.$row->foto)) {
@@ -319,8 +315,10 @@ class Brgkeluar extends BaseController {
                 $val[] = $row->pn_nsn;
                 $val[] = $row->ds_number;
                 $val[] = $row->holding;
+                $stok = $this->getStok($row->idbarang);
+                $val[] = $stok;
                 $val[] = '<div style="text-align: center;">'
-                        . '<button type="button" class="btn btn-outline-primary btn-fw" onclick="pilih_umum('."'".$row->idbarang."'".','."'".$row->deskripsi."'".','."'Umum'".')">Pilih</button>'
+                        . '<button type="button" class="btn btn-outline-primary btn-fw" onclick="pilih('."'".$row->idbarang."'".','."'".$row->deskripsi."'".','."'".$stok."'".')">Pilih</button>'
                         . '</div>';
 
                 $data[] = $val;
@@ -337,7 +335,7 @@ class Brgkeluar extends BaseController {
             $username = session()->get("username");
             
             // cek head ada apa endak
-            $jml = $this->model->getAllQR("SELECT count(*) as jml FROM brg_masuk where idbrg_masuk = '".$this->request->getVar('kode')."';")->jml;
+            $jml = $this->model->getAllQR("SELECT count(*) as jml FROM brg_keluar where idbrg_keluar = '".$this->request->getVar('kode')."';")->jml;
             if($jml > 0){
                 $hasil3 = $this->simpan_detil();
                 if($hasil3 == 1){
@@ -366,24 +364,24 @@ class Brgkeluar extends BaseController {
     
     private function simpan_head($username) {
         $data = array(
-            'idbrg_masuk' => $this->request->getVar('kode'),
+            'idbrg_keluar' => $this->request->getVar('kode'),
             'idkapal' => $this->request->getVar('kri'),
             'tgl' => $this->request->getVar('tgl'),
             'idusers' => $username
         );
-        $simpan = $this->model->add("brg_masuk",$data);
+        $simpan = $this->model->add("brg_keluar",$data);
         return  $simpan;
     }
     
     private function simpan_detil() {
         $data = array(
-            'idbrg_m_detil' => $this->model->autokode("MD","idbrg_m_detil","brg_masuk_detil", 3, 9),
+            'idbrg_k_detil' => $this->model->autokode("KD","idbrg_k_detil","brg_keluar_detil", 3, 9),
             'idbarang' => $this->request->getVar('kode_barang'),
             'jumlah' => $this->request->getVar('jumlah'),
             'satuan' => $this->request->getVar('satuan'),
-            'idbrg_masuk' => $this->request->getVar('kode')
+            'idbrg_keluar' => $this->request->getVar('kode')
         );
-        $simpan = $this->model->add("brg_masuk_detil",$data);
+        $simpan = $this->model->add("brg_keluar_detil",$data);
         return  $simpan;
     }
     

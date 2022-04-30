@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Apr 25, 2022 at 03:10 PM
+-- Generation Time: Apr 30, 2022 at 03:30 PM
 -- Server version: 5.7.31
 -- PHP Version: 7.3.21
 
@@ -2226,6 +2226,13 @@ CREATE TABLE IF NOT EXISTS `brg_keluar` (
   KEY `FK_brg_keluar_usr` (`idusers`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `brg_keluar`
+--
+
+INSERT INTO `brg_keluar` (`idbrg_keluar`, `idkapal`, `tgl`, `idusers`) VALUES
+('K00001', 'K00001', '2022-04-30', 'U00001');
+
 -- --------------------------------------------------------
 
 --
@@ -2244,6 +2251,13 @@ CREATE TABLE IF NOT EXISTS `brg_keluar_detil` (
   KEY `FK_brg_keluar_detil_key` (`idbrg_keluar`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `brg_keluar_detil`
+--
+
+INSERT INTO `brg_keluar_detil` (`idbrg_k_detil`, `idbarang`, `jumlah`, `satuan`, `idbrg_keluar`) VALUES
+('KD000001', 'B00001', 1, 'Pcs', 'K00001');
+
 -- --------------------------------------------------------
 
 --
@@ -2260,6 +2274,13 @@ CREATE TABLE IF NOT EXISTS `brg_masuk` (
   KEY `FK_brg_masuk_kapal` (`idkapal`),
   KEY `FK_brg_masuk_users` (`idusers`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `brg_masuk`
+--
+
+INSERT INTO `brg_masuk` (`idbrg_masuk`, `idkapal`, `tgl`, `idusers`) VALUES
+('M00001', 'K00001', '2022-04-27', 'U00001');
 
 -- --------------------------------------------------------
 
@@ -2278,6 +2299,14 @@ CREATE TABLE IF NOT EXISTS `brg_masuk_detil` (
   KEY `FK_brg_masuk_detil_brg` (`idbarang`),
   KEY `FK_brg_masuk_detil_key` (`idbrg_masuk`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `brg_masuk_detil`
+--
+
+INSERT INTO `brg_masuk_detil` (`idbrg_m_detil`, `idbarang`, `jumlah`, `satuan`, `idbrg_masuk`) VALUES
+('MD000001', 'B00001', 1, 'Pcs', 'M00001'),
+('MD000002', 'B01332', 2, 'Pcs', 'M00001');
 
 -- --------------------------------------------------------
 
