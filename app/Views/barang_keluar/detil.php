@@ -186,7 +186,7 @@
     function hapus(id, nama) {
         if (confirm("Apakah anda yakin menghapus barang nomor " + nama + " ?")) {
             $.ajax({
-                url: "<?php echo base_url(); ?>/brgmasuk/hapusdetil/" + id,
+                url: "<?php echo base_url(); ?>/brgkeluar/hapusdetil/" + id,
                 type: "POST",
                 dataType: "JSON",
                 success: function (data) {
@@ -200,24 +200,30 @@
     }
 
     function ganti(id) {
-        save_method = 'update';
-        $('#form')[0].reset();
-        $('#modal_form').modal('show');
-        $('.modal-title').text('Ganti gudang');
-        $.ajax({
-            url: "<?php echo base_url(); ?>/brgmasuk/gantidetil/" + id,
-            type: "POST",
-            dataType: "JSON",
-            success: function (data) {
-                $('[name="kode_detil"]').val(data.idbrg_m_detil);
-                $('[name="kode_barang"]').val(data.idbarang);
-                $('[name="nama"]').val(data.deskripsi);
-                $('[name="jumlah"]').val(data.jumlah);
-                $('[name="satuan"]').val(data.satuan);
-            }, error: function (jqXHR, textStatus, errorThrown) {
-                alert('Error get data');
-            }
-        });
+        var kri = document.getElementById('kri').value;
+        if(kri === "-"){
+            alert("KRI tidak boleh kosong");
+        }else{
+            save_method = 'update';
+            $('#form')[0].reset();
+            $('#modal_form').modal('show');
+            $('.modal-title').text('Ganti barang keluar');
+            $.ajax({
+                url: "<?php echo base_url(); ?>/brgkeluar/gantidetil/" + id,
+                type: "POST",
+                dataType: "JSON",
+                success: function (data) {
+                    $('[name="kode_detil"]').val(data.idbrg_k_detil);
+                    $('[name="kode_barang"]').val(data.idbarang);
+                    $('[name="nama"]').val(data.deskripsi);
+                    $('[name="jumlah"]').val(data.jumlah);
+                    $('[name="satuan"]').val(data.satuan);
+                    $('[name="stok"]').val(data.stok);
+                }, error: function (jqXHR, textStatus, errorThrown) {
+                    alert('Error get data');
+                }
+            });
+        }
     }
 
 </script>

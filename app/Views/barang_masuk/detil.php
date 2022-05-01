@@ -23,7 +23,7 @@
             save_method = 'add';
             $('#form')[0].reset();
             $('#modal_form').modal('show');
-            $('.modal-title').text('Tambah Barang Datang');
+            $('.modal-title').text('Tambah barang datang');
         }
     }
     
@@ -219,7 +219,7 @@
         save_method = 'update';
         $('#form')[0].reset();
         $('#modal_form').modal('show');
-        $('.modal-title').text('Ganti gudang');
+        $('.modal-title').text('Ganti barang datang');
         $.ajax({
             url: "<?php echo base_url(); ?>/brgmasuk/gantidetil/" + id,
             type: "POST",

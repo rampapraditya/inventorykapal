@@ -387,8 +387,8 @@ class Brgkeluar extends BaseController {
     
     public function hapusdetil() {
         if(session()->get("logged_in")){
-            $kond['idbrg_m_detil'] = $this->request->uri->getSegment(3);
-            $hapus = $this->model->delete("brg_masuk_detil",$kond);
+            $kond['idbrg_k_detil'] = $this->request->uri->getSegment(3);
+            $hapus = $this->model->delete("brg_keluar_detil",$kond);
             if($hapus == 1){
                 $status = "Data terhapus";
             }else{
@@ -403,8 +403,18 @@ class Brgkeluar extends BaseController {
     public function gantidetil(){
         if(session()->get("logged_in")){
             $kode_detil = $this->request->uri->getSegment(3);
-            $data = $this->model->getAllQR("SELECT a.idbrg_m_detil, a.idbarang, b.deskripsi, a.jumlah, a.satuan FROM brg_masuk_detil a, barang b where a.idbarang = b.idbarang and a.idbrg_m_detil = '".$kode_detil."';");
-            echo json_encode($data);
+            $data = $this->model->getAllQR("SELECT a.idbrg_k_detil, a.idbarang, b.deskripsi, a.jumlah, a.satuan FROM brg_keluar_detil a, barang b where a.idbarang = b.idbarang and a.idbrg_k_detil = '".$kode_detil."';");
+            // mencari stok
+            $stok = $this->getStok($data->idbarang) + $data->jumlah;
+            
+            echo json_encode(array(
+                "idbrg_k_detil" => $data->idbrg_k_detil,
+                "idbarang" => $data->idbarang,
+                "deskripsi" => $data->deskripsi,
+                "jumlah" => $data->jumlah,
+                "satuan" => $data->satuan,
+                "stok" => $stok
+            ));
         }else{
             $this->modul->halaman('login');
         }
@@ -443,8 +453,8 @@ class Brgkeluar extends BaseController {
     
     public function hapus() {
         if(session()->get("logged_in")){
-            $kond['idbrg_masuk'] = $this->request->uri->getSegment(3);
-            $hapus = $this->model->delete("brg_masuk",$kond);
+            $kond['idbrg_keluar'] = $this->request->uri->getSegment(3);
+            $hapus = $this->model->delete("brg_keluar",$kond);
             if($hapus == 1){
                 $status = "Data terhapus";
             }else{
