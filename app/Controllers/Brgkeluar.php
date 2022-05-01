@@ -196,8 +196,10 @@ class Brgkeluar extends BaseController {
     
     public function ajax_platform() {
         if (session()->get("logged_in")) {
+            $kri = $this->request->uri->getSegment(4);
+            // load data
             $data = array();
-            $list = $this->model->getAllQ("select a.idbarang, b.foto, b.deskripsi, b.pn_nsn, b.ds_number, b.holding from brg_masuk_detil a, barang b, jenisbarang c where a.idbarang = b.idbarang and b.idjenisbarang = c.idjenisbarang and c.idjenisbarang = 'J00001';");
+            $list = $this->model->getAllQ("select a.idbarang, b.foto, b.deskripsi, b.pn_nsn, b.ds_number, b.holding from brg_masuk_detil a, barang b, jenisbarang c, brg_masuk d where a.idbrg_masuk = d.idbrg_masuk and a.idbarang = b.idbarang and b.idjenisbarang = c.idjenisbarang and c.idjenisbarang = 'J00001' and d.idkapal = '".$kri."';");
             foreach ($list->getResult() as $row) {
                 $val = array();
                 // mencari default foto
@@ -230,8 +232,10 @@ class Brgkeluar extends BaseController {
     
     public function ajax_sewaco() {
         if (session()->get("logged_in")) {
+            $kri = $this->request->uri->getSegment(4);
+            // load data
             $data = array();
-            $list = $this->model->getAllQ("select a.idbarang, b.foto, b.deskripsi, b.pn_nsn, b.ds_number, b.holding from brg_masuk_detil a, barang b, jenisbarang c where a.idbarang = b.idbarang and b.idjenisbarang = c.idjenisbarang and c.idjenisbarang = 'J00002';");
+            $list = $this->model->getAllQ("select a.idbarang, b.foto, b.deskripsi, b.pn_nsn, b.ds_number, b.holding from brg_masuk_detil a, barang b, jenisbarang c, brg_masuk d where a.idbrg_masuk = d.idbrg_masuk and a.idbarang = b.idbarang and b.idjenisbarang = c.idjenisbarang and c.idjenisbarang = 'J00002' and d.idkapal = '".$kri."';");
             foreach ($list->getResult() as $row) {
                 $val = array();
                 // mencari default foto
@@ -264,8 +268,10 @@ class Brgkeluar extends BaseController {
     
     public function ajax_komaliwan() {
         if (session()->get("logged_in")) {
+            $kri = $this->request->uri->getSegment(4);
+            // load data
             $data = array();
-            $list = $this->model->getAllQ("select a.idbarang, b.foto, b.deskripsi, b.pn_nsn, b.ds_number, b.holding from brg_masuk_detil a, barang b, jenisbarang c where a.idbarang = b.idbarang and b.idjenisbarang = c.idjenisbarang and c.idjenisbarang = 'J00003';");
+            $list = $this->model->getAllQ("select a.idbarang, b.foto, b.deskripsi, b.pn_nsn, b.ds_number, b.holding from brg_masuk_detil a, barang b, jenisbarang c, brg_masuk d where a.idbrg_masuk = d.idbrg_masuk and a.idbarang = b.idbarang and b.idjenisbarang = c.idjenisbarang and c.idjenisbarang = 'J00003' and d.idkapal = '".$kri."';");
             foreach ($list->getResult() as $row) {
                 $val = array();
                 // mencari default foto
@@ -298,8 +304,10 @@ class Brgkeluar extends BaseController {
     
     public function ajax_br_umum() {
         if (session()->get("logged_in")) {
+            $kri = $this->request->uri->getSegment(4);
+            // load data
             $data = array();
-            $list = $this->model->getAllQ("select a.idbarang, b.foto, b.deskripsi, b.pn_nsn, b.ds_number, b.holding from brg_masuk_detil a, barang b, jenisbarang c where a.idbarang = b.idbarang and b.idjenisbarang = c.idjenisbarang and c.idjenisbarang = 'J00004';");
+            $list = $this->model->getAllQ("select a.idbarang, b.foto, b.deskripsi, b.pn_nsn, b.ds_number, b.holding from brg_masuk_detil a, barang b, jenisbarang c, brg_masuk d where a.idbrg_masuk = d.idbrg_masuk and a.idbarang = b.idbarang and b.idjenisbarang = c.idjenisbarang and c.idjenisbarang = 'J00004' and d.idkapal = '".$kri."';");
             foreach ($list->getResult() as $row) {
                 $val = array();
                 // mencari default foto

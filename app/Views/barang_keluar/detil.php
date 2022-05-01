@@ -36,56 +36,60 @@
     }
     
     function load_tb_platform(){
+        var kri = document.getElementById('kri').value;
         tb_platform = $('#tb_platform').DataTable({
-            ajax: "<?php echo base_url(); ?>/brgkeluar/ajax_platform/<?php echo $kode; ?>",
+            ajax: "<?php echo base_url(); ?>/brgkeluar/ajax_platform/<?php echo $kode; ?>/" + kri,
             ordering: false,
             retrieve:true
         });
         tb_platform.destroy();
         tb_platform = $('#tb_platform').DataTable({
-            ajax: "<?php echo base_url(); ?>/brgkeluar/ajax_platform/<?php echo $kode; ?>",
+            ajax: "<?php echo base_url(); ?>/brgkeluar/ajax_platform/<?php echo $kode; ?>/" + kri,
             ordering: false,
             retrieve:true
         });
     }
     
     function load_tb_sewaco(){
+        var kri = document.getElementById('kri').value;
         tb_sewaco = $('#tb_sewaco').DataTable({
-            ajax: "<?php echo base_url(); ?>/brgkeluar/ajax_sewaco/<?php echo $kode; ?>",
+            ajax: "<?php echo base_url(); ?>/brgkeluar/ajax_sewaco/<?php echo $kode; ?>/" + kri,
             ordering: false,
             retrieve:true
         });
         tb_sewaco.destroy();
         tb_sewaco = $('#tb_sewaco').DataTable({
-            ajax: "<?php echo base_url(); ?>/brgkeluar/ajax_sewaco/<?php echo $kode; ?>",
+            ajax: "<?php echo base_url(); ?>/brgkeluar/ajax_sewaco/<?php echo $kode; ?>/" + kri,
             ordering: false,
             retrieve:true
         });
     }
     
     function load_tb_komaliwan(){
+        var kri = document.getElementById('kri').value;
         tb_komaliwan = $('#tb_komaliwan').DataTable({
-            ajax: "<?php echo base_url(); ?>/brgkeluar/ajax_komaliwan/<?php echo $kode; ?>",
+            ajax: "<?php echo base_url(); ?>/brgkeluar/ajax_komaliwan/<?php echo $kode; ?>/" + kri,
             ordering: false,
             retrieve:true
         });
         tb_komaliwan.destroy();
         tb_komaliwan = $('#tb_komaliwan').DataTable({
-            ajax: "<?php echo base_url(); ?>/brgkeluar/ajax_komaliwan/<?php echo $kode; ?>",
+            ajax: "<?php echo base_url(); ?>/brgkeluar/ajax_komaliwan/<?php echo $kode; ?>/" + kri,
             ordering: false,
             retrieve:true
         });
     }
     
     function load_tb_br_umum(){
+        var kri = document.getElementById('kri').value;
         tb_br_umum = $('#tb_br_umum').DataTable({
-            ajax: "<?php echo base_url(); ?>/brgkeluar/ajax_br_umum/<?php echo $kode; ?>",
+            ajax: "<?php echo base_url(); ?>/brgkeluar/ajax_br_umum/<?php echo $kode; ?>/" + kri,
             ordering: false,
             retrieve:true
         });
         tb_br_umum.destroy();
         tb_br_umum = $('#tb_br_umum').DataTable({
-            ajax: "<?php echo base_url(); ?>/brgkeluar/ajax_br_umum/<?php echo $kode; ?>",
+            ajax: "<?php echo base_url(); ?>/brgkeluar/ajax_br_umum/<?php echo $kode; ?>/" + kri,
             ordering: false,
             retrieve:true
         });
