@@ -36,17 +36,25 @@ class Login extends BaseController {
             $jml1 = $this->model->getAllQR("select count(*) as jml from users where nrp = '".$user."' and pass = '".$enkrip_pass."';")->jml;
             if($jml1 > 0){
                 $data = $this->model->getAllQR("select idusers, nrp, nama, idrole from users where nrp = '".$user."';");
-                
-                session()->set([
-                    'username' => $data->idusers,
-                    'nrp' => $data->nrp,
-                    'nama' => $data->nama,
-                    'role' => $data->idrole,
-                    'logged_in' => TRUE
-                ]);
-                
-                $status = "ok";
-                
+                if($data->idrole == "R00001"){
+                    session()->set([
+                        'username' => $data->idusers,
+                        'nrp' => $data->nrp,
+                        'nama' => $data->nama,
+                        'role' => $data->idrole,
+                        'logged_in' => TRUE
+                    ]);
+                    $status = "ok";
+                }else{
+                    session()->set([
+                        'username' => $data->idusers,
+                        'nrp' => $data->nrp,
+                        'nama' => $data->nama,
+                        'role' => $data->idrole,
+                        'logged_no_admin' => TRUE
+                    ]);
+                    $status = "ok_no_admin";
+                }
             }else{
                 $status = "Anda tidak berhak mengakses !";
             }

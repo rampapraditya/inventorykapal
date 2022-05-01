@@ -5,11 +5,11 @@ use App\Models\Mcustom;
 use App\Libraries\Modul;
 
 /**
- * Description of Gantipass
+ * Description of Gantipassnoadmin
  *
  * @author RAMPA
  */
-class Gantipass extends BaseController {
+class Gantipassnoadmin extends BaseController {
     
     private $model;
     private $modul;
@@ -20,7 +20,7 @@ class Gantipass extends BaseController {
     }
     
     public function index(){
-        if(session()->get("logged_in")){
+        if(session()->get("logged_no_admin")){
             $data['username'] = session()->get("username");
             $data['nrp'] = session()->get('nrp');
             $data['nama'] = session()->get("nama");
@@ -48,8 +48,8 @@ class Gantipass extends BaseController {
             $data['logo'] = $def_logo;
             
             echo view('head', $data);
-            echo view('menu');
-            echo view('gantipass/index');
+            echo view('menu_no_admin');
+            echo view('gantipass/no_admin');
             echo view('foot');
         }else{
             $this->modul->halaman('login');
@@ -57,7 +57,7 @@ class Gantipass extends BaseController {
     }
     
     public function proses() {
-        if(session()->get("logged_in")){
+        if(session()->get("logged_no_admin")){
             $idusers = session()->get("username");
             
             $lama = $this->modul->enkrip_pass($this->request->getVar('lama'));
