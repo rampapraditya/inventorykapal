@@ -70,7 +70,7 @@ class Barang extends BaseController {
                     }
                 }
                 
-                $val[] = '<img src="'.$def_foto.'" style="width: 100px; height: auto;">';
+                $val[] = '<img src="'.$def_foto.'" style="width: 50px; height: auto;">';
                 $val[] = $row->deskripsi;
                 $val[] = $row->pn_nsn;
                 $val[] = $row->ds_number;
@@ -78,7 +78,6 @@ class Barang extends BaseController {
                 $val[] = $row->equipment_desc;
                 $val[] = $row->store_location;
                 $val[] = $row->supplementary_location;
-                $val[] = $row->qty;
                 $val[] = $row->uoi;
                 $val[] = $row->verwendung;
                 $val[] = '<div style="text-align: center;">'
@@ -109,7 +108,7 @@ class Barang extends BaseController {
                     }
                 }
                 
-                $val[] = '<img src="'.$def_foto.'" style="width: 100px; height: auto;">';
+                $val[] = '<img src="'.$def_foto.'" style="width: 50px; height: auto;">';
                 $val[] = $row->deskripsi;
                 $val[] = $row->pn_nsn;
                 $val[] = $row->ds_number;
@@ -148,7 +147,7 @@ class Barang extends BaseController {
                     }
                 }
                 
-                $val[] = '<img src="'.$def_foto.'" style="width: 100px; height: auto;">';
+                $val[] = '<img src="'.$def_foto.'" style="width: 50px; height: auto;">';
                 $val[] = $row->deskripsi;
                 $val[] = $row->pn_nsn;
                 $val[] = $row->ds_number;
@@ -186,7 +185,7 @@ class Barang extends BaseController {
                     }
                 }
                 
-                $val[] = '<img src="'.$def_foto.'" style="width: 100px; height: auto;">';
+                $val[] = '<img src="'.$def_foto.'" style="width: 50px; height: auto;">';
                 $val[] = $row->deskripsi;
                 $val[] = $row->pn_nsn;
                 $val[] = $row->ds_number;

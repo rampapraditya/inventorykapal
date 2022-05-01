@@ -26,7 +26,10 @@
     });
 
     function reload() {
-        tb_platform.ajax.reload(null, false); //reload datatable ajax
+        tb_platform.ajax.reload(null, false);
+        tb_sewaco.ajax.reload(null, false);
+        tb_komaliwan.ajax.reload(null, false);
+        tb_br_umum.ajax.reload(null, false);
     }
 
     function add() {
@@ -241,7 +244,6 @@
                                             <th style="text-align: center;">EQUIPMENT<br>DESCRIPTION</th>
                                             <th style="text-align: center;">STORE<br>LOCATION</th>
                                             <th style="text-align: center;">SUPPLEMENTARY<br>LOCATION</th>
-                                            <th style="text-align: center;">QUANT</th>
                                             <th style="text-align: center;">UOI</th>
                                             <th style="text-align: center;">Verwendung</th>
                                             <th style="text-align: center;">AKSI</th>
