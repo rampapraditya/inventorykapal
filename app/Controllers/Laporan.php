@@ -45,6 +45,7 @@ class Laporan extends BaseController {
                 }
             }
             $data['logo'] = $def_logo;
+            $data['kri'] = $this->model->getAll("kapal");
 
             echo view('head', $data);
             echo view('menu');
@@ -57,6 +58,8 @@ class Laporan extends BaseController {
 
     public function ajax_platform() {
         if (session()->get("logged_in")) {
+            $kri = $this->request->uri->getSegment(3);
+            
             $data = array();
             $list = $this->model->getAllQ("select * from barang where idjenisbarang = 'J00001';");
             foreach ($list->getResult() as $row) {
@@ -191,5 +194,12 @@ class Laporan extends BaseController {
         } else {
             $this->modul->halaman('login');
         }
+    }
+    
+    private function getStok($idbarang, $kri) {
+        $masuk = $this->model->getAllQR("SELECT ifnull(sum(b.jumlah),0) as masuk FROM brg_masuk a, brg_masuk_detil b where a.idbrg_masuk = b.idbrg_masuk and a.idkapal = '".$kri."' and b.idbarang = '".$idbarang."';")->masuk;
+        $keluar = $this->model->getAllQR("SELECT ifnull(sum(b.jumlah),0) as keluar FROM brg_keluar a, brg_keluar_detil b where a.idbrg_keluar = b.idbrg_keluar and a.idkapal = '".$kri."' and b.idbarang = '".$idbarang."';")->keluar;
+        $stok = $masuk - $keluar;
+        return $stok;
     }
 }

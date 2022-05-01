@@ -215,7 +215,7 @@ class Brgkeluar extends BaseController {
                 $val[] = $row->pn_nsn;
                 $val[] = $row->ds_number;
                 $val[] = $row->holding;
-                $stok = $this->getStok($row->idbarang);
+                $stok = $this->getStok($row->idbarang, $kri);
                 $val[] = $stok;
                 $val[] = '<div style="text-align: center;">'
                         . '<button type="button" class="btn btn-outline-primary btn-fw" onclick="pilih('."'".$row->idbarang."'".','."'".$row->deskripsi."'".','."'".$stok."'".')">Pilih</button>'
@@ -251,7 +251,7 @@ class Brgkeluar extends BaseController {
                 $val[] = $row->pn_nsn;
                 $val[] = $row->ds_number;
                 $val[] = $row->holding;
-                $stok = $this->getStok($row->idbarang);
+                $stok = $this->getStok($row->idbarang, $kri);
                 $val[] = $stok;
                 $val[] = '<div style="text-align: center;">'
                         . '<button type="button" class="btn btn-outline-primary btn-fw" onclick="pilih('."'".$row->idbarang."'".','."'".$row->deskripsi."'".','."'".$stok."'".')">Pilih</button>'
@@ -287,7 +287,7 @@ class Brgkeluar extends BaseController {
                 $val[] = $row->pn_nsn;
                 $val[] = $row->ds_number;
                 $val[] = $row->holding;
-                $stok = $this->getStok($row->idbarang);
+                $stok = $this->getStok($row->idbarang, $kri);
                 $val[] = $stok;
                 $val[] = '<div style="text-align: center;">'
                         . '<button type="button" class="btn btn-outline-primary btn-fw" onclick="pilih('."'".$row->idbarang."'".','."'".$row->deskripsi."'".','."'".$stok."'".')">Pilih</button>'
@@ -323,7 +323,7 @@ class Brgkeluar extends BaseController {
                 $val[] = $row->pn_nsn;
                 $val[] = $row->ds_number;
                 $val[] = $row->holding;
-                $stok = $this->getStok($row->idbarang);
+                $stok = $this->getStok($row->idbarang, $kri);
                 $val[] = $stok;
                 $val[] = '<div style="text-align: center;">'
                         . '<button type="button" class="btn btn-outline-primary btn-fw" onclick="pilih('."'".$row->idbarang."'".','."'".$row->deskripsi."'".','."'".$stok."'".')">Pilih</button>'
@@ -411,9 +411,11 @@ class Brgkeluar extends BaseController {
     public function gantidetil(){
         if(session()->get("logged_in")){
             $kode_detil = $this->request->uri->getSegment(3);
-            $data = $this->model->getAllQR("SELECT a.idbrg_k_detil, a.idbarang, b.deskripsi, a.jumlah, a.satuan FROM brg_keluar_detil a, barang b where a.idbarang = b.idbarang and a.idbrg_k_detil = '".$kode_detil."';");
+            $data = $this->model->getAllQR("SELECT a.idbrg_k_detil, a.idbarang, b.deskripsi, a.jumlah, a.satuan, a.idbrg_keluar FROM brg_keluar_detil a, barang b where a.idbarang = b.idbarang and a.idbrg_k_detil = '".$kode_detil."';");
+            // mencari kri
+            $kri = $this->model->getAllQR("select idkapal from brg_keluar where idbrg_keluar = '".$data->idbrg_keluar."';")->idkapal;
             // mencari stok
-            $stok = $this->getStok($data->idbarang) + $data->jumlah;
+            $stok = $this->getStok($data->idbarang, $kri) + $data->jumlah;
             
             echo json_encode(array(
                 "idbrg_k_detil" => $data->idbrg_k_detil,
@@ -474,9 +476,9 @@ class Brgkeluar extends BaseController {
         }
     }
     
-    private function getStok($idbarang) {
-        $masuk = $this->model->getAllQR("SELECT ifnull(sum(jumlah),0) as masuk FROM brg_masuk_detil where idbarang = '".$idbarang."';")->masuk;
-        $keluar = $this->model->getAllQR("SELECT ifnull(sum(jumlah),0) as keluar FROM brg_keluar_detil where idbarang = '".$idbarang."';")->keluar;
+    private function getStok($idbarang, $kri) {
+        $masuk = $this->model->getAllQR("SELECT ifnull(sum(b.jumlah),0) as masuk FROM brg_masuk a, brg_masuk_detil b where a.idbrg_masuk = b.idbrg_masuk and a.idkapal = '".$kri."' and b.idbarang = '".$idbarang."';")->masuk;
+        $keluar = $this->model->getAllQR("SELECT ifnull(sum(b.jumlah),0) as keluar FROM brg_keluar a, brg_keluar_detil b where a.idbrg_keluar = b.idbrg_keluar and a.idkapal = '".$kri."' and b.idbarang = '".$idbarang."';")->keluar;
         $stok = $masuk - $keluar;
         return $stok;
     }

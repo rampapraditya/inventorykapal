@@ -3,32 +3,54 @@
     var tb_platform, tb_sewaco, tb_komaliwan, tb_br_umum;
 
     $(document).ready(function () {
+        tb_platform = $('#tb_platform').DataTable();
+        tb_sewaco = $('#tb_sewaco').DataTable();
+        tb_komaliwan = $('#tb_komaliwan').DataTable();
+        tb_br_umum = $('#tb_br_umum').DataTable();
+    });
+
+    function reload() {
+        var kri = document.getElementById('kri').value;
+        if(kri <> "-"){
+            reload1(kri);
+        }else{
+           alert("Pilih KRI terlebih dahulu"); 
+        }
+    }
+    
+    function reload1(kri){
         tb_platform = $('#tb_platform').DataTable({
-            ajax: "<?php echo base_url(); ?>/laporan/ajax_platform",
-            ordering: false
+            ajax: "<?php echo base_url(); ?>/laporan/ajax_platform/" + kri,
+            ordering: false,
+            retrieve:true
         });
-        
+        tb_platform.destroy();
+        tb_platform = $('#tb_platform').DataTable({
+            ajax: "<?php echo base_url(); ?>/laporan/ajax_platform/" + kri,
+            ordering: false,
+            retrieve:true
+        });
+    }
+    
+    function reload2(){
         tb_sewaco = $('#tb_sewaco').DataTable({
             ajax: "<?php echo base_url(); ?>/laporan/ajax_sewaco",
             ordering: false
         });
-        
+    }
+    
+    function reload3(){
         tb_komaliwan = $('#tb_komaliwan').DataTable({
             ajax: "<?php echo base_url(); ?>/laporan/ajax_komaliwan",
             ordering: false
         });
-        
+    }
+    
+    function reload4(){
         tb_br_umum = $('#tb_br_umum').DataTable({
             ajax: "<?php echo base_url(); ?>/laporan/ajax_br_umum",
             ordering: false
         });
-    });
-
-    function reload() {
-        tb_platform.ajax.reload(null, false);
-        tb_sewaco.ajax.reload(null, false);
-        tb_komaliwan.ajax.reload(null, false);
-        tb_br_umum.ajax.reload(null, false);
     }
 
 </script>
@@ -38,6 +60,22 @@
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">LAPORAN STOK</h4>
+                </div>
+                <div class="card-body">
+                    <div class="forms-sample">
+                        <div class="form-group">
+                            <select id="kri" name="kri" class="form-control" onchange="reload()">
+                                <option value="-">- PILIH KRI -</option>
+                                <?php
+                                foreach ($kri->getResult() as $row) {
+                                    ?>
+                                <option value="<?php echo $row->idkapal; ?>"><?php echo $row->nama_kapal; ?></option>
+                                    <?php
+                                }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-body">
                     <nav>
