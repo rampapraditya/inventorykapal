@@ -11,11 +11,10 @@
 
     function reload() {
         var kri = document.getElementById('kri').value;
-        if(kri <> "-"){
-            reload1(kri);
-        }else{
-           alert("Pilih KRI terlebih dahulu"); 
-        }
+        reload1(kri);
+        reload2(kri);
+        reload3(kri);
+        reload4(kri);
     }
     
     function reload1(kri){
@@ -32,24 +31,44 @@
         });
     }
     
-    function reload2(){
+    function reload2(kri){
         tb_sewaco = $('#tb_sewaco').DataTable({
-            ajax: "<?php echo base_url(); ?>/laporan/ajax_sewaco",
-            ordering: false
+            ajax: "<?php echo base_url(); ?>/laporan/ajax_sewaco/" + kri,
+            ordering: false,
+            retrieve:true
+        });
+        tb_sewaco.destroy();
+        tb_sewaco = $('#tb_sewaco').DataTable({
+            ajax: "<?php echo base_url(); ?>/laporan/ajax_sewaco/" + kri,
+            ordering: false,
+            retrieve:true
         });
     }
     
-    function reload3(){
+    function reload3(kri){
         tb_komaliwan = $('#tb_komaliwan').DataTable({
-            ajax: "<?php echo base_url(); ?>/laporan/ajax_komaliwan",
-            ordering: false
+            ajax: "<?php echo base_url(); ?>/laporan/ajax_komaliwan/" + kri,
+            ordering: false,
+            retrieve:true
+        });
+        tb_komaliwan = $('#tb_komaliwan').DataTable({
+            ajax: "<?php echo base_url(); ?>/laporan/ajax_komaliwan/" + kri,
+            ordering: false,
+            retrieve:true
         });
     }
     
-    function reload4(){
+    function reload4(kri){
         tb_br_umum = $('#tb_br_umum').DataTable({
-            ajax: "<?php echo base_url(); ?>/laporan/ajax_br_umum",
-            ordering: false
+            ajax: "<?php echo base_url(); ?>/laporan/ajax_br_umum/" + kri,
+            ordering: false,
+            retrieve:true
+        });
+        tb_br_umum.destroy();
+        tb_br_umum = $('#tb_br_umum').DataTable({
+            ajax: "<?php echo base_url(); ?>/laporan/ajax_br_umum/" + kri,
+            ordering: false,
+            retrieve:true
         });
     }
 
@@ -100,6 +119,7 @@
                                             <th style="text-align: center;">EQUIPMENT<br>DESCRIPTION</th>
                                             <th style="text-align: center;">STORE<br>LOCATION</th>
                                             <th style="text-align: center;">SUPPLEMENTARY<br>LOCATION</th>
+                                            <th style="text-align: center;">QUANT</th>
                                             <th style="text-align: center;">UOI</th>
                                             <th style="text-align: center;">Verwendung</th>
                                         </tr>

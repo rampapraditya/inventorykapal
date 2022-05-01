@@ -47,8 +47,8 @@ class Profile extends BaseController {
             }
             $data['logo'] = $def_logo;
             
-            $data['korps'] = $this->model->getAll("korps");
-            $data['pangkat'] = $this->model->getAll("pangkat");
+            //$data['korps'] = $this->model->getAll("korps");
+            //$data['pangkat'] = $this->model->getAll("pangkat");
             
             $kondisi['idusers'] = $data['username'];
             $data['tersimpan'] = $this->model->get_by_id("users", $kondisi);
@@ -72,9 +72,7 @@ class Profile extends BaseController {
                 'tgl_lahir' => $this->request->getVar('tgllahir'),
                 'agama' => $this->request->getVar('agama'),
                 'kota_asal' => $this->request->getVar('kota'),
-                'satuan_kerja' => $this->request->getVar('satker'),
-                'idkorps' => $this->request->getVar('korps'),
-                'idpangkat' => $this->request->getVar('pangkat')
+                'satuan_kerja' => $this->request->getVar('satker')
             );
             $kond['idusers'] = $idusers;
             $update = $this->model->update("users",$data,$kond);

@@ -80,6 +80,7 @@ class Laporan extends BaseController {
                 $val[] = $row->equipment_desc;
                 $val[] = $row->store_location;
                 $val[] = $row->supplementary_location;
+                $val[] = $this->getStok($row->idbarang, $kri);
                 $val[] = $row->uoi;
                 $val[] = $row->verwendung;
 
@@ -94,6 +95,8 @@ class Laporan extends BaseController {
     
     public function ajax_sewaco() {
         if (session()->get("logged_in")) {
+            $kri = $this->request->uri->getSegment(3);
+            
             $data = array();
             $list = $this->model->getAllQ("select * from barang where idjenisbarang = 'J00002';");
             foreach ($list->getResult() as $row) {
@@ -114,7 +117,7 @@ class Laporan extends BaseController {
                 $val[] = $row->equipment_desc;
                 $val[] = $row->store_location;
                 $val[] = $row->supplementary_location;
-                $val[] = $row->qty;
+                $val[] = $this->getStok($row->idbarang, $kri);
                 $val[] = $row->uoi;
                 $val[] = $row->verwendung;
 
@@ -129,6 +132,8 @@ class Laporan extends BaseController {
     
     public function ajax_komaliwan() {
         if (session()->get("logged_in")) {
+            $kri = $this->request->uri->getSegment(3);
+            
             $data = array();
             $list = $this->model->getAllQ("select * from barang where idjenisbarang = 'J00003';");
             foreach ($list->getResult() as $row) {
@@ -149,7 +154,7 @@ class Laporan extends BaseController {
                 $val[] = $row->equipment_desc;
                 $val[] = $row->store_location;
                 $val[] = $row->supplementary_location;
-                $val[] = $row->qty;
+                $val[] = $this->getStok($row->idbarang, $kri);
                 $val[] = $row->uoi;
                 $val[] = $row->verwendung;
 
@@ -164,6 +169,8 @@ class Laporan extends BaseController {
     
     public function ajax_br_umum() {
         if (session()->get("logged_in")) {
+            $kri = $this->request->uri->getSegment(3);
+            
             $data = array();
             $list = $this->model->getAllQ("select * from barang where idjenisbarang = 'J00004';");
             foreach ($list->getResult() as $row) {
@@ -183,7 +190,7 @@ class Laporan extends BaseController {
                 $val[] = $row->equipment_desc;
                 $val[] = $row->store_location;
                 $val[] = $row->supplementary_location;
-                $val[] = $row->qty;
+                $val[] = $this->getStok($row->idbarang, $kri);
                 $val[] = $row->uoi;
                 $val[] = $row->verwendung;
 

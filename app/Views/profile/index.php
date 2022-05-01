@@ -11,17 +11,11 @@
         var agama = document.getElementById('agama').value;
         var kota = document.getElementById('kota').value;
         var satker = document.getElementById('satker').value;
-        var korps = document.getElementById('korps').value;
-        var pangkat = document.getElementById('pangkat').value;
         
         if(nrp === ""){
             alert("NRP tidak boleh kosong");
         }else if(nama === ""){
             alert("Nama tidak boleh kosong");
-        }else if(korps === "-"){
-            alert("Pilih korps terlebih dahulu");
-        }else if(pangkat === "-"){
-            alert("Pilih pangkat terlebih dahulu");
         }else{
             $('#btnSave').html('<i class="mdi mdi-content-save"></i> Proses... ');
             $('#btnSave').attr('disabled',true);
@@ -33,9 +27,6 @@
             form_data.append('agama', agama);
             form_data.append('kota', kota);
             form_data.append('satker', satker);
-            form_data.append('korps', korps);
-            form_data.append('pangkat', pangkat);
-            
             
             $.ajax({
                 url: "<?php echo base_url(); ?>/profile/proses",
@@ -103,32 +94,6 @@
                         <div class="form-group">
                             <label>SATUAN KERJA</label>
                             <input type="text" class="form-control" id="satker" name="satker" autocomplete="off" value="<?php echo $tersimpan->satuan_kerja; ?>">
-                        </div>
-                        <div class="form-group">
-                            <label>KORPS</label>
-                            <select id="korps" name="korps" class="form-control">
-                                <option value="-">- Pilih Korps -</option>
-                                <?php
-                                 foreach ($korps->getResult() as $row) {
-                                     ?>
-                                <option <?php if($row->idkorps == $tersimpan->idkorps){ echo 'selected'; } ?>  value="<?php echo $row->idkorps; ?>"><?php echo $row->nama_korps; ?></option>
-                                     <?php
-                                 }
-                                ?>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>PANGKAT</label>
-                            <select id="pangkat" name="pangkat" class="form-control">
-                                <option value="-">- Pilih Pangkat -</option>
-                                <?php
-                                 foreach ($pangkat->getResult() as $row) {
-                                     ?>
-                                <option <?php if($row->idpangkat == $tersimpan->idpangkat){ echo 'selected'; } ?>  value="<?php echo $row->idpangkat; ?>"><?php echo $row->nama_pangkat; ?></option>
-                                     <?php
-                                 }
-                                ?>
-                            </select>
                         </div>
                         <button id="btnSave" class="btn btn-primary" onclick="save()"><i class="mdi mdi-content-save"></i> Simpan </button>
                     </div>
