@@ -23,8 +23,8 @@
                 </a>
                 <div class="collapse" id="trans">
                     <ul class="nav flex-column sub-menu">
-                        <li class="nav-item"><a class="nav-link" href="<?php echo base_url(); ?>/brgmasuk">Barang Masuk</a></li>
-                        <li class="nav-item"><a class="nav-link" href="<?php echo base_url(); ?>/brgkeluar">Barang Keluar</a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?php echo base_url(); ?>/brgmnadmin">Barang Masuk</a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?php echo base_url(); ?>/brgknadmin">Barang Keluar</a></li>
                     </ul>
                 </div>
             </li>
