@@ -129,6 +129,9 @@ class Brgmnadmin extends BaseController {
                 }
             }
             $data['logo'] = $def_logo;
+            // mengetahui kri default
+            $data['kri'] = $this->model->getAllQR("select idkapal from users where idusers = '".$data['username']."';")->idkapal;
+            
             
             $temp = $this->request->uri->getSegment(3);
             if(strlen($temp) > 0){
@@ -139,10 +142,8 @@ class Brgmnadmin extends BaseController {
                     $tersimpan = $this->model->get_by_id("brg_masuk", $kondisi);
                             
                     $data['kode'] = $kode;
-                    $data['kri'] = $this->model->getAll("kapal");
-                    $data['kri_tersimpan'] = $tersimpan->idkapal;
                     $data['tgl_def'] = $tersimpan->tgl;
-                    $data['ket'] = "Ganti barang datang";
+                    $data['ket'] = "GANTI";
 
                     echo view('head', $data);
                     echo view('menu_no_admin');
@@ -154,10 +155,8 @@ class Brgmnadmin extends BaseController {
                 }
             }else{
                 $data['kode'] = $this->model->autokode('M','idbrg_masuk', 'brg_masuk', 2, 7);
-                $data['kri'] = $this->model->getAll("kapal");
-                $data['kri_tersimpan'] = "";
                 $data['tgl_def'] = $this->modul->TanggalSekarang();
-                $data['ket'] = "Tambah barang datang";
+                $data['ket'] = "TAMBAH";
 
                 echo view('head', $data);
                 echo view('menu_no_admin');

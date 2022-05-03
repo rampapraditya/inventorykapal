@@ -242,32 +242,17 @@
         <div class="col-md-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">TRANSAKSI BARANG MASUK</h4>
-                    <p class="card-description"><?php echo $ket; ?></p>
+                    <h4 class="card-title">TRANSAKSI BARANG MASUK (<?php echo $ket; ?>)</h4>
                 </div>
                 <div class="card-body">
                     <input type="hidden" id="kode" name="kode" value="<?php echo $kode; ?>">
+                    <input type="hidden" id="kri" name="kri" value="<?php echo $kri; ?>">
                     <div class="forms-sample">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <div class="form-group">
                                     <label>TANGGAL</label>
                                     <input type="date" class="form-control" id="tgl" name="tgl" autofocus="" autocomplete="off" value="<?php echo $tgl_def; ?>">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>KRI</label>
-                                    <select id="kri" name="kri" class="form-control">
-                                        <option value="-">- PILIH KRI -</option>
-                                        <?php
-                                        foreach ($kri->getResult() as $row) {
-                                            ?>
-                                        <option <?php if($row->idkapal == $kri_tersimpan){ echo 'selected'; } ?> value="<?php echo $row->idkapal; ?>"><?php echo $row->nama_kapal; ?></option>
-                                            <?php
-                                        }
-                                        ?>
-                                    </select>
                                 </div>
                             </div>
                         </div>
