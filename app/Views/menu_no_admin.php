@@ -36,7 +36,7 @@
                 </a>
                 <div class="collapse" id="report">
                     <ul class="nav flex-column sub-menu">
-                        <li class="nav-item"><a class="nav-link" href="<?php echo base_url(); ?>/laporan">Stok</a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?php echo base_url(); ?>/lapstoknadm">Stok</a></li>
                     </ul>
                 </div>
             </li>

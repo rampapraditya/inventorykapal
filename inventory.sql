@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Apr 30, 2022 at 03:30 PM
+-- Generation Time: May 03, 2022 at 02:56 AM
 -- Server version: 5.7.31
 -- PHP Version: 7.3.21
 
@@ -2231,7 +2231,8 @@ CREATE TABLE IF NOT EXISTS `brg_keluar` (
 --
 
 INSERT INTO `brg_keluar` (`idbrg_keluar`, `idkapal`, `tgl`, `idusers`) VALUES
-('K00001', 'K00001', '2022-04-30', 'U00001');
+('K00001', 'K00001', '2022-05-03', 'U00002'),
+('K00002', 'K00001', '2022-05-03', 'U00002');
 
 -- --------------------------------------------------------
 
@@ -2256,7 +2257,8 @@ CREATE TABLE IF NOT EXISTS `brg_keluar_detil` (
 --
 
 INSERT INTO `brg_keluar_detil` (`idbrg_k_detil`, `idbarang`, `jumlah`, `satuan`, `idbrg_keluar`) VALUES
-('KD000001', 'B00001', 1, 'Pcs', 'K00001');
+('KD000001', 'B00001', 1, 'Pcs', 'K00001'),
+('KD000002', 'B01332', 1, 'Pcs', 'K00002');
 
 -- --------------------------------------------------------
 
@@ -2306,7 +2308,8 @@ CREATE TABLE IF NOT EXISTS `brg_masuk_detil` (
 
 INSERT INTO `brg_masuk_detil` (`idbrg_m_detil`, `idbarang`, `jumlah`, `satuan`, `idbrg_masuk`) VALUES
 ('MD000001', 'B00001', 1, 'Pcs', 'M00001'),
-('MD000002', 'B01332', 2, 'Pcs', 'M00001');
+('MD000002', 'B01332', 2, 'Pcs', 'M00001'),
+('MD000003', 'B02151', 1, 'Buah', 'M00001');
 
 -- --------------------------------------------------------
 
@@ -2531,8 +2534,9 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 INSERT INTO `users` (`idusers`, `nrp`, `pass`, `nama`, `tgl_lahir`, `agama`, `kota_asal`, `foto`, `satuan_kerja`, `idrole`, `idkapal`) VALUES
 ('U00001', 'ADMIN', 'aGtq', 'ADMIN', '1991-01-30', 'Islam', 'Surabaya', './assets/images/e7118256aaf4d1de09199e2b6cbe667c.png', 'TNI ANGKATAN LAUT', 'R00001', NULL),
-('U00002', '111', 'aGtq', 'Rampa', NULL, NULL, NULL, NULL, NULL, 'R00003', 'K00001'),
-('U00003', '222', 'aGtq', 'Atika', NULL, NULL, NULL, NULL, NULL, 'R00002', 'K00001');
+('U00002', '111', 'aGtq', 'Rampa', '1989-08-02', 'Islam', 'Surabaya', NULL, 'TNI', 'R00003', 'K00001'),
+('U00003', '222', 'aGtq', 'Atika', NULL, NULL, NULL, NULL, NULL, 'R00002', 'K00001'),
+('U00004', '333', 'aGtq', 'Putri Hapsari', NULL, NULL, NULL, NULL, NULL, 'R00003', 'K00002');
 
 --
 -- Constraints for dumped tables
