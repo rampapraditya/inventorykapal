@@ -1,16 +1,17 @@
 <?php
+
 namespace App\Controllers;
 
 use App\Models\Mcustom;
 use App\Libraries\Modul;
 
 /**
- * Description of Barang
+ * Description of Barangnoadmin
  *
  * @author RAMPA
  */
-class Barang extends BaseController {
-
+class Barangnoadmin extends BaseController {
+    
     private $model;
     private $modul;
 
@@ -20,7 +21,7 @@ class Barang extends BaseController {
     }
 
     public function index() {
-        if (session()->get("logged_in")) {
+        if (session()->get("logged_no_admin")) {
             $data['username'] = session()->get("username");
             $data['nrp'] = session()->get('nrp');
             $data['nama'] = session()->get("nama");
@@ -46,21 +47,27 @@ class Barang extends BaseController {
             }
             $data['logo'] = $def_logo;
             $data['gudang'] = $this->model->getAll("jenisbarang");
-            $data['kapal'] = $this->model->getAll("kapal");
 
             echo view('head', $data);
-            echo view('menu');
-            echo view('barang/index');
+            echo view('menu_no_admin');
+            echo view('barang_non_admin/index');
             echo view('foot');
         } else {
             $this->modul->halaman('login');
         }
     }
 
+    private function getKapal() {
+        $username = session()->get("username");
+        $idkapal = $this->model->getAllQR("select idkapal from users where idusers = '".$username."';")->idkapal;
+        return $idkapal;
+    }
+    
     public function ajaxlistplatform() {
-        if (session()->get("logged_in")) {
+        if (session()->get("logged_no_admin")) {
+            
             $data = array();
-            $list = $this->model->getAllQ("select * from barang where idjenisbarang = 'J00001';");
+            $list = $this->model->getAllQ("select * from barang where idjenisbarang = 'J00001' and idkapal = '".$this->getKapal()."';");
             foreach ($list->getResult() as $row) {
                 $val = array();
                 // mencari default foto
@@ -96,9 +103,9 @@ class Barang extends BaseController {
     }
     
     public function ajaxlist_sewaco() {
-        if (session()->get("logged_in")) {
+        if (session()->get("logged_no_admin")) {
             $data = array();
-            $list = $this->model->getAllQ("select * from barang where idjenisbarang = 'J00002';");
+            $list = $this->model->getAllQ("select * from barang where idjenisbarang = 'J00002' and idkapal = '".$this->getKapal()."';");
             foreach ($list->getResult() as $row) {
                 $val = array();
                 // mencari default foto
@@ -135,9 +142,9 @@ class Barang extends BaseController {
     }
     
     public function ajaxlist_komaliwan() {
-        if (session()->get("logged_in")) {
+        if (session()->get("logged_no_admin")) {
             $data = array();
-            $list = $this->model->getAllQ("select * from barang where idjenisbarang = 'J00003';");
+            $list = $this->model->getAllQ("select * from barang where idjenisbarang = 'J00003' and idkapal = '".$this->getKapal()."';");
             foreach ($list->getResult() as $row) {
                 $val = array();
                 
@@ -174,9 +181,9 @@ class Barang extends BaseController {
     }
     
     public function ajaxlist_br_umum() {
-        if (session()->get("logged_in")) {
+        if (session()->get("logged_no_admin")) {
             $data = array();
-            $list = $this->model->getAllQ("select * from barang where idjenisbarang = 'J00004';");
+            $list = $this->model->getAllQ("select * from barang where idjenisbarang = 'J00004' and idkapal = '".$this->getKapal()."';");
             foreach ($list->getResult() as $row) {
                 $val = array();
                 $def_foto = base_url() . '/images/noimg.jpg';
@@ -212,7 +219,7 @@ class Barang extends BaseController {
     }
 
     public function ajax_add() {
-        if (session()->get("logged_in")) {
+        if (session()->get("logged_no_admin")) {
             if (isset($_FILES['file']['name'])) {
                 if (0 < $_FILES['file']['error']) {
                     $status = "Error during file upload " . $_FILES['file']['error'];
@@ -251,7 +258,7 @@ class Barang extends BaseController {
                     'uoi' => $this->request->getVar('uoi'),
                     'verwendung' => $this->request->getVar('verwendung'),
                     'idjenisbarang' => $this->request->getVar('gudang'),
-                    'idkapal' => $this->request->getVar('idkapal')
+                    'idkapal' => $this->getKapal()
                 );
                 $simpan = $this->model->add("barang", $data);
                 if ($simpan == 1) {
@@ -281,7 +288,7 @@ class Barang extends BaseController {
             'uoi' => $this->request->getVar('uoi'),
             'verwendung' => $this->request->getVar('verwendung'),
             'idjenisbarang' => $this->request->getVar('gudang'),
-            'idkapal' => $this->request->getVar('idkapal')
+            'idkapal' => $this->getKapal()
         );
         $simpan = $this->model->add("barang", $data);
         if ($simpan == 1) {
@@ -289,11 +296,12 @@ class Barang extends BaseController {
         } else {
             $status = "Data gagal tersimpan";
         }
+        
         return $status;
     }
 
     public function ganti() {
-        if (session()->get("logged_in")) {
+        if (session()->get("logged_no_admin")) {
             $kondisi['idbarang'] = $this->request->uri->getSegment(3);
             $data = $this->model->get_by_id("barang", $kondisi);
             echo json_encode($data);
@@ -303,7 +311,7 @@ class Barang extends BaseController {
     }
 
     public function ajax_edit() {
-        if (session()->get("logged_in")) {
+        if (session()->get("logged_no_admin")) {
             if (isset($_FILES['file']['name'])) {
                 if (0 < $_FILES['file']['error']) {
                     $status = "Error during file upload " . $_FILES['file']['error'];
@@ -350,7 +358,7 @@ class Barang extends BaseController {
                     'uoi' => $this->request->getVar('uoi'),
                     'verwendung' => $this->request->getVar('verwendung'),
                     'idjenisbarang' => $this->request->getVar('gudang'),
-                    'idkapal' => $this->request->getVar('idkapal')
+                    'idkapal' => $this->getKapal()
                 );
                 $kond['idbarang'] = $this->request->getVar('kode');
                 $update = $this->model->update("barang", $data, $kond);
@@ -379,7 +387,7 @@ class Barang extends BaseController {
             'uoi' => $this->request->getVar('uoi'),
             'verwendung' => $this->request->getVar('verwendung'),
             'idjenisbarang' => $this->request->getVar('gudang'),
-            'idkapal' => $this->request->getVar('idkapal')
+            'idkapal' => $this->getKapal()
         );
         $kond['idbarang'] = $this->request->getVar('kode');
         $update = $this->model->update("barang", $data, $kond);
@@ -392,7 +400,7 @@ class Barang extends BaseController {
     }
 
     public function hapus() {
-        if (session()->get("logged_in")) {
+        if (session()->get("logged_no_admin")) {
             $idbarang = $this->request->uri->getSegment(3);
 
             $logo = $this->model->getAllQR("SELECT foto FROM barang where idbarang = '" . $idbarang . "';")->foto;
@@ -416,7 +424,7 @@ class Barang extends BaseController {
     }
 
     public function prosesfile() {
-        if (session()->get("logged_in")) {
+        if (session()->get("logged_no_admin")) {
             if (isset($_FILES['file']['name'])) {
                 if (0 < $_FILES['file']['error']) {
                     $status = "Error during file upload " . $_FILES['file']['error'];
@@ -473,7 +481,7 @@ class Barang extends BaseController {
                             'uoi' => addslashes($row[8]),
                             'verwendung' => addslashes($row[9]),
                             'idjenisbarang' => $this->request->getVar('gudang'),
-                            'idkapal' => $this->request->getVar('idkapal')
+                            'idkapal' => $this->getKapal()
                         );
                         $this->model->add("barang", $data);
                     }
@@ -489,5 +497,4 @@ class Barang extends BaseController {
         }
         return $hasil;
     }
-
 }

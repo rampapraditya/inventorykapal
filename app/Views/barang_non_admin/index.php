@@ -5,22 +5,22 @@
 
     $(document).ready(function () {
         tb_platform = $('#tb_platform').DataTable({
-            ajax: "<?php echo base_url(); ?>/barang/ajaxlistplatform",
+            ajax: "<?php echo base_url(); ?>/barangnoadmin/ajaxlistplatform",
             ordering: false
         });
         
         tb_sewaco = $('#tb_sewaco').DataTable({
-            ajax: "<?php echo base_url(); ?>/barang/ajaxlist_sewaco",
+            ajax: "<?php echo base_url(); ?>/barangnoadmin/ajaxlist_sewaco",
             ordering: false
         });
         
         tb_komaliwan = $('#tb_komaliwan').DataTable({
-            ajax: "<?php echo base_url(); ?>/barang/ajaxlist_komaliwan",
+            ajax: "<?php echo base_url(); ?>/barangnoadmin/ajaxlist_komaliwan",
             ordering: false
         });
         
         tb_br_umum = $('#tb_br_umum').DataTable({
-            ajax: "<?php echo base_url(); ?>/barang/ajaxlist_br_umum",
+            ajax: "<?php echo base_url(); ?>/barangnoadmin/ajaxlist_br_umum",
             ordering: false
         });
     });
@@ -41,7 +41,6 @@
 
     function save() {
         var kode = document.getElementById('kode').value;
-        var kapal = document.getElementById('kapal').value;
         var gudang = document.getElementById('gudang').value;
         var gambar = $('#gambar').prop('files')[0];
         var deskripsi = document.getElementById('deskripsi').value;
@@ -55,9 +54,7 @@
         var uoi = document.getElementById('uoi').value;
         var verwendung = document.getElementById('verwendung').value;
         
-        if(kapal === "-"){
-            alert("KRI tidak boleh kosong");
-        }else if (gudang === "-") {
+        if (gudang === "-") {
             alert("Gudang tidak boleh kosong");
         } else if (deskripsi === "") {
             alert("Deskripsi tidak boleh kosong");
@@ -69,9 +66,9 @@
 
             var url = "";
             if (save_method === 'add') {
-                url = "<?php echo base_url(); ?>/barang/ajax_add";
+                url = "<?php echo base_url(); ?>/barangnoadmin/ajax_add";
             } else {
-                url = "<?php echo base_url(); ?>/barang/ajax_edit";
+                url = "<?php echo base_url(); ?>/barangnoadmin/ajax_edit";
             }
 
             var form_data = new FormData();
@@ -88,7 +85,6 @@
             form_data.append('quant', quant);
             form_data.append('uoi', uoi);
             form_data.append('verwendung', verwendung);
-            form_data.append('idkapal', kapal);
 
             // ajax adding data to database
             $.ajax({
@@ -119,7 +115,7 @@
     function hapus(id, nama) {
         if (confirm("Apakah anda yakin menghapus barang " + nama + " ?")) {
             $.ajax({
-                url: "<?php echo base_url(); ?>/barang/hapus/" + id,
+                url: "<?php echo base_url(); ?>/barangnoadmin/hapus/" + id,
                 type: "POST",
                 dataType: "JSON",
                 success: function (data) {
@@ -138,12 +134,11 @@
         $('#modal_form').modal('show');
         $('.modal-title').text('Ganti barang');
         $.ajax({
-            url: "<?php echo base_url(); ?>/barang/ganti/" + id,
+            url: "<?php echo base_url(); ?>/barangnoadmin/ganti/" + id,
             type: "POST",
             dataType: "JSON",
             success: function (data) {
                 $('[name="kode"]').val(data.idbarang);
-                $('[name="kapal"]').val(data.idkapal);
                 $('[name="deskripsi"]').val(data.deskripsi);
                 $('[name="pn_nsn"]').val(data.pn_nsn);
                 $('[name="ds_number"]').val(data.ds_number);
@@ -176,13 +171,10 @@
     }
 
     function save_upload() {
-        var kri = document.getElementById('kri').value;
         var gudang = document.getElementById('gudang_upload').value;
         var file = $('#file_upload').prop('files')[0];
 
-        if(kri === "-"){
-            alert("KRI tidak boleh kosong");
-        }else if (gudang === "-") {
+        if (gudang === "-") {
             alert("Gudang tidak boleh kosong");
         } else {
             $('#btnSaveUpload').text('Saving...');
@@ -191,11 +183,10 @@
             var form_data = new FormData();
             form_data.append('gudang', gudang);
             form_data.append('file', file);
-            form_data.append('idkapal', kri);
 
             // ajax adding data to database
             $.ajax({
-                url: "<?php echo base_url(); ?>/barang/prosesfile",
+                url: "<?php echo base_url(); ?>/barangnoadmin/prosesfile",
                 dataType: 'JSON',
                 cache: false,
                 contentType: false,
@@ -355,19 +346,6 @@
                 <form id="form" class="form-horizontal">
                     <input type="hidden" name="kode" id="kode">
                     <div class="form-group">
-                        <label>KRI</label>
-                        <select id="kapal" name="kapal" class="form-control">
-                            <option value="-">- PILIH KRI -</option>
-                            <?php
-                            foreach ($kapal->getResult() as $row) {
-                                ?>
-                                <option value="<?php echo $row->idkapal; ?>"><?php echo $row->nama_kapal; ?></option>
-                                <?php
-                            }
-                            ?>
-                        </select>
-                    </div>
-                    <div class="form-group">
                         <label>GUDANG</label>
                         <select id="gudang" name="gudang" class="form-control">
                             <option value="-">- PILIH GUDANG -</option>
@@ -445,19 +423,6 @@
             </div>
             <div class="modal-body">
                 <form id="form_upload" class="form-horizontal">
-                    <div class="form-group">
-                        <label>KRI</label>
-                        <select id="kri" name="kri" class="form-control">
-                            <option value="-">- PILIH KRI -</option>
-                            <?php
-                            foreach ($kapal->getResult() as $row) {
-                                ?>
-                                <option value="<?php echo $row->idkapal; ?>"><?php echo $row->nama_kapal; ?></option>
-                                <?php
-                            }
-                            ?>
-                        </select>
-                    </div>
                     <div class="form-group">
                         <label>GUDANG</label>
                         <select id="gudang_upload" name="gudang_upload" class="form-control">
