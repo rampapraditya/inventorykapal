@@ -44,9 +44,8 @@
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">TRANSAKSI BARANG MASUK</h4>
-                    <p class="card-description">Maintenance Data Barang Masuk</p>
-                    <button type="button" class="btn btn-primary" onclick="add();">Tambah</button>
-                    <button type="button" class="btn btn-secondary" onclick="reload();">Reload</button>
+                    <button type="button" class="btn btn-primary btn-sm" onclick="add();">Tambah</button>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="reload();">Reload</button>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">

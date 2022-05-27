@@ -259,8 +259,8 @@
         <div class="col-md-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-header">
-                    <button type="button" class="btn btn-primary" onclick="add();">Tambah</button>
-                    <button type="button" class="btn btn-secondary" onclick="reload();">Reload</button>
+                    <button type="button" class="btn btn-primary btn-sm" onclick="add();">Tambah</button>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="reload();">Reload</button>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">

@@ -457,4 +457,87 @@ class Brgmnadmin extends BaseController {
             $this->modul->halaman('login');
         }
     }
+    
+    public function uploadmasuk() {
+        if(session()->get("logged_no_admin")){
+            $username = session()->get("username");
+            
+            if (isset($_FILES['file']['name'])) {
+                if (0 < $_FILES['file']['error']) {
+                    $status = "Error during file upload " . $_FILES['file']['error'];
+                } else {
+                    $status = $this->simpan_dengan_file($username);
+                }
+            } else {
+                $status = "File tidak ditemukan";
+            }
+            echo json_encode(array("status" => $status));
+        }else{
+            $this->modul->halaman('login');
+        }
+    }
+    
+    private function simpan_dengan_file($username) {
+        $file = $this->request->getFile('file');
+        $info_file = $this->modul->info_file($file);
+
+        if (file_exists(ROOTPATH . 'public/uploads/' . $info_file['name'])) {
+            $status = "Gunakan nama file lain";
+        } else {
+            $status = false;
+            // mengetahui ext
+            if ($info_file['ext'] == "xls") {
+                $render = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
+                $status = true;
+            } else if ($info_file['ext'] == "xlsx") {
+                $render = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+                $status = true;
+            }else{
+                $status = false;
+            }
+
+            if($status){
+                $status_upload = $file->move(ROOTPATH . 'public/uploads');
+                if ($status_upload) {
+                    // upload header terlebih dahulu
+                    $this->simpan_head($username);
+                    $kri = $this->request->getVar('kri');
+                    
+                    // extrak kulit manggis
+                    $path = ROOTPATH.'public/uploads/'.$info_file['name'];
+                    $spreadsheet = $render->load($path);
+                    $data = $spreadsheet->getActiveSheet()->toArray();
+                    foreach ($data as $x => $row) {
+                        // masukkan ke database
+                        $nama_brg = trim(addslashes($row[0]));
+                        $jumlah = trim(addslashes($row[7]));
+                        
+                        
+                        // cek barang ini sudah masuk master apa belum
+                        $jml = $this->model->getAllQR("select count(*) as jml from barang where idkapal = '".$kri."' and deskripsi = '".$nama_brg."';")->jml;
+                        if($jml > 0){
+                            $idbrg = $this->model->getAllQR("select idbarang from barang where idkapal = '".$kri."' and deskripsi = '".$nama_brg."';")->idbarang;
+                            // klo barangnya sudah ada baru di masukkan ke stok
+                            $data_detil = array(
+                                'idbrg_m_detil' => $this->model->autokode("MD","idbrg_m_detil","brg_masuk_detil", 3, 9),
+                                'idbarang' => $idbrg,
+                                'jumlah' => $jumlah,
+                                'satuan' => '',
+                                'idbrg_masuk' => $this->request->getVar('kode')
+                            );
+                            $this->model->add("brg_masuk_detil",$data_detil);
+                        }
+                    }
+                    unlink(ROOTPATH.'public/uploads/'.$info_file['name']);
+                    
+                    $hasil = "Terupload";
+                } else {
+                    $hasil = "File gagal terupload";
+                }
+            }else{
+                $hasil = "Harus berupa file excel";
+            }
+        }
+        return $hasil;
+    }
 }

@@ -156,10 +156,21 @@
                     <ul class="navbar-nav navbar-nav-right">
                         <li class="nav-item nav-profile dropdown">
                             <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
-                                <img src="<?php echo $foto_profile; ?>" alt="profile"/>
+                                <img src="<?php echo $foto_profile; ?>" alt="foto  profile"/>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
+                                <?php
+                                if (session()->get("logged_in")) {
+                                    ?>
                                 <a href="<?php echo base_url(); ?>/profile" class="dropdown-item"><i class="ti-settings text-primary"></i>Profile</a>
+                                    <?php
+                                }else if (session()->get("logged_no_admin")) {
+                                    ?>
+                                <a href="<?php echo base_url(); ?>/profilenoadmin" class="dropdown-item"><i class="ti-settings text-primary"></i>Profile</a>
+                                    <?php
+                                }
+                                ?>
+                                
                                 <a href="<?php echo base_url(); ?>/login/logout" class="dropdown-item"><i class="ti-power-off text-primary"></i>Logout</a>
                             </div>
                         </li>

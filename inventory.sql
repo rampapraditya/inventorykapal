@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: May 18, 2022 at 03:35 AM
+-- Generation Time: May 27, 2022 at 07:55 AM
 -- Server version: 5.7.31
 -- PHP Version: 7.3.21
 
@@ -99,6 +99,13 @@ CREATE TABLE IF NOT EXISTS `brg_masuk` (
   KEY `FK_brg_masuk_kapal` (`idkapal`),
   KEY `FK_brg_masuk_users` (`idusers`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `brg_masuk`
+--
+
+INSERT INTO `brg_masuk` (`idbrg_masuk`, `idkapal`, `tgl`, `idusers`) VALUES
+('M00001', 'K00001', '2022-05-27', 'U00001');
 
 -- --------------------------------------------------------
 

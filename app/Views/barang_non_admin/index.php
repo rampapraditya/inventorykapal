@@ -218,8 +218,8 @@
                 <div class="card-body">
                     <h4 class="card-title">MASTER BARANG</h4>
                     <p class="card-description">Maintenance data barang</p>
-                    <button type="button" class="btn btn-primary" onclick="add();">Tambah</button>
-                    <button type="button" class="btn btn-secondary" onclick="uploadfile();">Upload File</button>
+                    <button type="button" class="btn btn-primary btn-sm" onclick="add();">Tambah</button>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="uploadfile();">Upload File</button>
                 </div>
                 <div class="card-body">
                     <nav>
@@ -405,8 +405,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button id="btnSave" type="button" class="btn btn-primary" onclick="save();">Save</button>
-                <button type="button" class="btn btn-secondary" onclick="closemodal();">Close</button>
+                <button id="btnSave" type="button" class="btn btn-primary btn-sm" onclick="save();">Save</button>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="closemodal();">Close</button>
             </div>
         </div>
     </div>
@@ -443,8 +443,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button id="btnSaveUpload" type="button" class="btn btn-primary" onclick="save_upload();">Upload</button>
-                <button type="button" class="btn btn-secondary" onclick="closemodal_upload();">Close</button>
+                <button id="btnSaveUpload" type="button" class="btn btn-primary btn-sm" onclick="save_upload();">Upload</button>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="closemodal_upload();">Close</button>
             </div>
         </div>
     </div>
