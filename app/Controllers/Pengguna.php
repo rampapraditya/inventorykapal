@@ -68,12 +68,12 @@ class Pengguna extends BaseController{
                 $val[] = $row->nrp;
                 $val[] = $row->nama_role;
                 $val[] = $row->nama;
-                if(strlen($row->idkapal)){
+                $jml_kapal = $this->model->getAllQR("select count(*) as jml from kapal where idkapal = '".$row->idkapal."';")->jml;
+                if($jml_kapal > 0){
                     $val[] = $this->model->getAllQR("select nama_kapal from kapal where idkapal = '".$row->idkapal."';")->nama_kapal;
                 }else{
                     $val[] = "";
                 }
-                
                 $val[] = '<div style="text-align: center;">'
                         . '<button type="button" class="btn btn-outline-primary btn-fw" onclick="ganti('."'".$row->idusers."'".')">Ganti</button>&nbsp;'
                         . '<button type="button" class="btn btn-outline-danger btn-fw" onclick="hapus('."'".$row->idusers."'".','."'".$row->nrp."'".','."'".$row->nama."'".')">Hapus</button>'
