@@ -25,7 +25,7 @@
                                     <form id="form">
                                         <?php csrf_field(); ?>
                                         <div class="form-group">
-                                            <input type="text" class="form-control form-control-lg" id="nrp" name="nrp" placeholder="NRP" autocomplete="off" autofocus="">
+                                            <input type="text" class="form-control form-control-lg" id="nrp" name="nrp" placeholder="Username" autocomplete="off" autofocus="">
                                         </div>
                                         <div class="form-group">
                                             <input type="password" class="form-control form-control-lg" id="pass" name="pass" placeholder="Password">

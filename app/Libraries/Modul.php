@@ -414,4 +414,15 @@ class Modul {
         
         return $data;
     }
+    
+    public function getPathApp() {
+        $mode = "local";
+        if($mode == "local"){
+            $path = 'uploads/';
+        }else if($mode == "online"){
+            $path = '../inventory.pramediaenginering.com/uploads/';
+        }
+        
+        return $path;
+    }
 }

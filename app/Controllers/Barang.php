@@ -40,8 +40,8 @@ class Barang extends BaseController {
             $def_logo = base_url() . '/images/noimg.jpg';
             $logo = $this->model->getAllQR("select logo from identitas;")->logo;
             if (strlen($logo) > 0) {
-                if (file_exists(ROOTPATH . 'public/uploads/' . $logo)) {
-                    $def_logo = base_url() . '/uploads/' . $logo;
+                if (file_exists(ROOTPATH . 'uploads/' . $logo)) {
+                    $def_logo = base_url() . 'uploads/' . $logo;
                 }
             }
             $data['logo'] = $def_logo;
@@ -489,5 +489,7 @@ class Barang extends BaseController {
         }
         return $hasil;
     }
+   
+    
 
 }
