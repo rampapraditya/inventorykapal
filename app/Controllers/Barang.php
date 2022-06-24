@@ -30,8 +30,8 @@ class Barang extends BaseController {
             $def_foto = base_url() . '/images/noimg.jpg';
             $foto = $this->model->getAllQR("select foto from users where idusers = '" . session()->get("username") . "';")->foto;
             if (strlen($foto) > 0) {
-                if (file_exists(ROOTPATH . 'public/uploads/' . $foto)) {
-                    $def_foto = base_url() . '/uploads/' . $foto;
+                if (file_exists($this->modul->getPathApp().$foto)) {
+                    $def_foto = base_url().'/uploads/'.$foto;
                 }
             }
             $data['foto_profile'] = $def_foto;
@@ -40,8 +40,8 @@ class Barang extends BaseController {
             $def_logo = base_url() . '/images/noimg.jpg';
             $logo = $this->model->getAllQR("select logo from identitas;")->logo;
             if (strlen($logo) > 0) {
-                if (file_exists(ROOTPATH . 'uploads/' . $logo)) {
-                    $def_logo = base_url() . 'uploads/' . $logo;
+                if (file_exists($this->modul->getPathApp(). $logo)) {
+                    $def_logo = base_url().'/uploads/'. $logo;
                 }
             }
             $data['logo'] = $def_logo;
@@ -66,7 +66,7 @@ class Barang extends BaseController {
                 // mencari default foto
                 $def_foto = base_url() . '/images/noimg.jpg';
                 if (strlen($row->foto) > 0) {
-                    if (file_exists(ROOTPATH.'public/uploads/'.$row->foto)) {
+                    if (file_exists($this->modul->getPathApp().$row->foto)) {
                         $def_foto = base_url().'/uploads/'.$row->foto;
                     }
                 }
@@ -104,7 +104,7 @@ class Barang extends BaseController {
                 // mencari default foto
                 $def_foto = base_url() . '/images/noimg.jpg';
                 if (strlen($row->foto) > 0) {
-                    if (file_exists(ROOTPATH.'public/uploads/'.$row->foto)) {
+                    if (file_exists($this->modul->getPathApp().$row->foto)) {
                         $def_foto = base_url().'/uploads/'.$row->foto;
                     }
                 }
@@ -143,7 +143,7 @@ class Barang extends BaseController {
                 
                 $def_foto = base_url() . '/images/noimg.jpg';
                 if (strlen($row->foto) > 0) {
-                    if (file_exists(ROOTPATH.'public/uploads/'.$row->foto)) {
+                    if (file_exists($this->modul->getPathApp().$row->foto)) {
                         $def_foto = base_url().'/uploads/'.$row->foto;
                     }
                 }
@@ -181,7 +181,7 @@ class Barang extends BaseController {
                 $val = array();
                 $def_foto = base_url() . '/images/noimg.jpg';
                 if (strlen($row->foto) > 0) {
-                    if (file_exists(ROOTPATH.'public/uploads/'.$row->foto)) {
+                    if (file_exists($this->modul->getPathApp().$row->foto)) {
                         $def_foto = base_url().'/uploads/'.$row->foto;
                     }
                 }
@@ -230,16 +230,17 @@ class Barang extends BaseController {
 
     private function simpan_dengan_foto() {
         $file = $this->request->getFile('file');
+        $namaFile = $file->getRandomName();
         $info_file = $this->modul->info_file($file);
 
-        if (file_exists(ROOTPATH . 'public/uploads/' . $info_file['name'])) {
+        if (file_exists($this->modul->getPathApp().$namaFile)) {
             $status = "Gunakan nama file lain";
         } else {
-            $status_upload = $file->move(ROOTPATH . 'public/uploads');
+            $status_upload = $file->move($this->modul->getPathApp(), $namaFile);
             if ($status_upload) {
                 $data = array(
                     'idbarang' => $this->model->autokode("B", "idbarang", "barang", 2, 7),
-                    'foto' => $info_file['name'],
+                    'foto' => $namaFile,
                     'deskripsi' => $this->request->getVar('deskripsi'),
                     'pn_nsn' => $this->request->getVar('pn_nsn'),
                     'ds_number' => $this->request->getVar('ds_number'),
@@ -324,21 +325,22 @@ class Barang extends BaseController {
     private function update_dengan_foto() {
         $logo = $this->model->getAllQR("SELECT foto FROM barang where idbarang = '" . $this->request->getVar('kode') . "';")->foto;
         if (strlen($logo) > 0) {
-            if (file_exists(ROOTPATH . 'public/uploads/' . $logo)) {
-                unlink(ROOTPATH . 'public/uploads/' . $logo);
+            if (file_exists($this->modul->getPathApp().$logo)) {
+                unlink($this->modul->getPathApp().$logo);
             }
         }
 
         $file = $this->request->getFile('file');
+        $namaFile = $file->getRandomName();
         $info_file = $this->modul->info_file($file);
 
-        if (file_exists(ROOTPATH . 'public/uploads/' . $info_file['name'])) {
+        if (file_exists($this->modul->getPathApp().$namaFile)) {
             $status = "Gunakan nama file lain";
         } else {
-            $status_upload = $file->move(ROOTPATH . 'public/uploads');
+            $status_upload = $file->move($this->modul->getPathApp(), $namaFile);
             if ($status_upload) {
                 $data = array(
-                    'foto' => $info_file['name'],
+                    'foto' => $namaFile,
                     'deskripsi' => $this->request->getVar('deskripsi'),
                     'pn_nsn' => $this->request->getVar('pn_nsn'),
                     'ds_number' => $this->request->getVar('ds_number'),
@@ -397,8 +399,8 @@ class Barang extends BaseController {
 
             $logo = $this->model->getAllQR("SELECT foto FROM barang where idbarang = '" . $idbarang . "';")->foto;
             if (strlen($logo) > 0) {
-                if (file_exists(ROOTPATH . 'public/uploads/' . $logo)) {
-                    unlink(ROOTPATH . 'public/uploads/' . $logo);
+                if (file_exists($this->modul->getPathApp(). $logo)) {
+                    unlink($this->modul->getPathApp(). $logo);
                 }
             }
 
@@ -434,8 +436,9 @@ class Barang extends BaseController {
 
     private function upload_file() {
         $file = $this->request->getFile('file');
+        $namaFile = $file->getRandomName();
         $info_file = $this->modul->info_file($file);
-        if (file_exists(ROOTPATH . 'public/uploads/' . $info_file['name'])) {
+        if (file_exists($this->modul->getPathApp().$namaFile)) {
             $hasil = "Gunakan nama file lain";
         } else {
             $status = false;
@@ -451,10 +454,10 @@ class Barang extends BaseController {
             }
 
             if($status){
-                $status_upload = $file->move(ROOTPATH . 'public/uploads');
+                $status_upload = $file->move($this->modul->getPathApp(), $namaFile);
                 if ($status_upload) {
                     // extrak kulit manggis
-                    $path = ROOTPATH.'public/uploads/'.$info_file['name'];
+                    $path = $this->modul->getPathApp().$namaFile;
                     $spreadsheet = $render->load($path);
                     $data = $spreadsheet->getActiveSheet()->toArray();
                     foreach ($data as $x => $row) {
@@ -477,7 +480,7 @@ class Barang extends BaseController {
                         );
                         $this->model->add("barang", $data);
                     }
-                    unlink(ROOTPATH.'public/uploads/'.$info_file['name']);
+                    unlink($this->modul->getPathApp().$namaFile);
                     
                     $hasil = "Terupload";
                 } else {

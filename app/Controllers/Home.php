@@ -25,7 +25,7 @@ class Home extends BaseController{
             $def_foto = base_url().'/images/noimg.jpg';
             $foto = $this->model->getAllQR("select foto from users where idusers = '".session()->get("username")."';")->foto;
             if(strlen($foto) > 0){
-                if(file_exists(ROOTPATH.'public/uploads/'.$foto)){
+                if(file_exists($this->modul->getPathApp().$foto)){
                     $def_foto = base_url().'/uploads/'.$foto;
                 }
             }
@@ -41,7 +41,7 @@ class Home extends BaseController{
                 $data['website'] = $tersimpan->website;
                 $deflogo = base_url().'/images/noimg.jpg';
                 if(strlen($tersimpan->logo) > 0){
-                    if(file_exists(ROOTPATH.'public/uploads/'.$tersimpan->logo)){
+                    if(file_exists($this->modul->getPathApp().$tersimpan->logo)){
                         $deflogo = base_url().'/uploads/'.$tersimpan->logo;
                     }
                 }

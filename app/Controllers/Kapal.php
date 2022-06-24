@@ -31,7 +31,7 @@ class Kapal extends BaseController {
             $def_foto = base_url().'/images/noimg.jpg';
             $foto = $this->model->getAllQR("select foto from users where idusers = '".session()->get("username")."';")->foto;
             if(strlen($foto) > 0){
-                if(file_exists(ROOTPATH.'public/uploads/'.$foto)){
+                if(file_exists($this->modul->getPathApp().$foto)){
                     $def_foto = base_url().'/uploads/'.$foto;
                 }
             }
@@ -42,7 +42,7 @@ class Kapal extends BaseController {
             $def_logo = base_url().'/images/noimg.jpg';
             $logo = $this->model->getAllQR("select logo from identitas;")->logo;
             if(strlen($logo) > 0){
-                if(file_exists(ROOTPATH.'public/uploads/'.$logo)){
+                if(file_exists($this->modul->getPathApp().$logo)){
                     $def_logo = base_url().'/uploads/'.$logo;
                 }
             }
@@ -66,7 +66,7 @@ class Kapal extends BaseController {
                 // membaca gambar kapal
                 $gambar = base_url().'/images/noimg.jpg';
                 if(strlen($row->gambar) > 0){
-                    if(file_exists(ROOTPATH.'public/uploads/'.$row->gambar)){
+                    if(file_exists($this->modul->getPathApp().$row->gambar)){
                         $gambar = base_url().'/uploads/'.$row->gambar;
                     }
                 }
@@ -107,18 +107,19 @@ class Kapal extends BaseController {
     
     private function simpandenganfoto() {
         $file = $this->request->getFile('file');
+        $namaFile = $file->getRandomName();
         $info_file = $this->modul->info_file($file);
         
-        if(file_exists(ROOTPATH.'public/uploads/'.$info_file['name'])){
+        if(file_exists($this->modul->getPathApp().$info_file['name'])){
             $status = "Gunakan nama file lain";
         }else{
-            $status_upload = $file->move(ROOTPATH.'public/uploads');
+            $status_upload = $file->move($this->modul->getPathApp(), $namaFile);
             if($status_upload){
                 $data = array(
                     'idkapal' => $this->model->autokode("K","idkapal","kapal", 2, 7),
                     'nama_kapal' => $this->request->getVar('nama'),
                     'keterangan' => $this->request->getVar('ket'),
-                    'gambar' => $info_file['name']
+                    'gambar' => $namaFile
                 );
                 $simpan = $this->model->add("kapal",$data);
                 if($simpan == 1){
@@ -178,26 +179,27 @@ class Kapal extends BaseController {
     
     private function updatedenganfoto() {
         $file = $this->request->getFile('file');
+        $namaFile = $file->getRandomName();
         $info_file = $this->modul->info_file($file);
         
-        if(file_exists(ROOTPATH.'public/uploads/'.$info_file['name'])){
+        if(file_exists($this->modul->getPathApp().$namaFile)){
             $status = "Gunakan nama file lain";
         }else{
             
             $kond['idkapal'] = $this->request->getVar('kode');
             $kapal = $this->model->get_by_id("kapal", $kond);
             if(strlen($kapal->gambar) > 0){
-                if(file_exists(ROOTPATH.'public/uploads/'.$kapal->gambar)){
-                    unlink(ROOTPATH.'public/uploads/'.$kapal->gambar);
+                if(file_exists($this->modul->getPathApp().$kapal->gambar)){
+                    unlink($this->modul->getPathApp().$kapal->gambar);
                 }
             }
         
-            $status_upload = $file->move(ROOTPATH.'public/uploads');
+            $status_upload = $file->move($this->modul->getPathApp(), $namaFile);
             if($status_upload){
                 $data = array(
                     'nama_kapal' => $this->request->getVar('nama'),
                     'keterangan' => $this->request->getVar('ket'),
-                    'gambar' => $info_file['name']
+                    'gambar' => $namaFile
                 );
                 $update = $this->model->update("kapal",$data, $kond);
                 if($update == 1){
@@ -234,8 +236,8 @@ class Kapal extends BaseController {
             // membaca data kapal
             $kapal = $this->model->get_by_id("kapal", $kondisi);
             if(strlen($kapal->gambar) > 0){
-                if(file_exists(ROOTPATH.'public/uploads/'.$kapal->gambar)){
-                    unlink(ROOTPATH.'public/uploads/'.$kapal->gambar);
+                if(file_exists($this->modul->getPathApp().$kapal->gambar)){
+                    unlink($this->modul->getPathApp().$kapal->gambar);
                 }
             }
             
