@@ -500,6 +500,111 @@ class Barang extends BaseController {
         return $hasil;
     }
    
-    
+    public function display_tab() {
+        if (session()->get("logged_in")) {
+            $idkapal = $this->request->getVar('kapal');
+            // set tab atas
+            $counter = 1;
+            $str = '<nav><div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">';
+            $list1 = $this->model->getAllQ("select idjenisbarang, nama_jenis from jenisbarang where idkapal = '".$idkapal."';");
+            foreach ($list1->getResult() as $row) {
+                if($counter == 1){
+                    $str .= '<a class="nav-item nav-link active" id="head_nav_'.$row->idjenisbarang.'" data-toggle="tab" href="#nav_'.$row->idjenisbarang.'" role="tab" aria-controls="nav_'.$row->idjenisbarang.'" aria-selected="true">'.$row->nama_jenis.'</a>';
+                }else{
+                    $str .= '<a class="nav-item nav-link" id="head_nav_'.$row->idjenisbarang.'" data-toggle="tab" href="#nav_'.$row->idjenisbarang.'" role="tab" aria-controls="nav_'.$row->idjenisbarang.'" aria-selected="false">'.$row->nama_jenis.'</a>';
+                }
+                $counter++;
+                
+            }
+            $str .= '</div></nav>';
+            
+            // set tab bawah
+            $counter = 1;
+            $str .= '<div class="tab-content" id="nav-tabContent">';
+            foreach ($list1->getResult() as $row) {
+                if($counter == 1){
+                    $str .= '<div class="tab-pane fade show active" id="nav_'.$row->idjenisbarang.'" role="tabpanel" aria-labelledby="nav_'.$row->idjenisbarang.'">';
+                    $str .= '<div class="table-responsive">';
+                    $str .= '<table class="table table-bordered" style="width: 100%; font-size: 11px;">
+                                <thead>
+                                    <tr>
+                                        <th>GAMBAR</th>
+                                        <th>DESCRIPTION</th>
+                                        <th>PN/NSN</th>
+                                        <th>DS NUMBER</th>
+                                        <th>Holding</th>
+                                        <th style="text-align: center;">EQUIPMENT<br>DESCRIPTION</th>
+                                        <th style="text-align: center;">STORE<br>LOCATION</th>
+                                        <th style="text-align: center;">SUPPLEMENTARY<br>LOCATION</th>
+                                        <th style="text-align: center;">UOI</th>
+                                        <th style="text-align: center;">Verwendung</th>
+                                        <th style="text-align: center;">AKSI</th>
+                                    </tr>
+                                </thead>
+                                <tbody>';
+                    // menampilkan isi table
+                    $list_brg = $this->model->getAllQ("select * from barang where idjenisbarang = '".$row->idjenisbarang."' and idkapal = '".$idkapal."';");
+                    foreach ($list_brg->getResult() as $row1) {
+                        $str .= '<tr>';
+                            $def_foto = base_url() . '/images/noimg.jpg';
+                            if (strlen($row1->foto) > 0) {
+                                if (file_exists($this->modul->getPathApp().$row1->foto)) {
+                                    $def_foto = base_url().'/uploads/'.$row1->foto;
+                                }
+                            }
+                            $str .= '<td><img src="'.$def_foto.'" style="width: 50px; height: auto;"></td>';
+                            $str .= '<td>'.$row1->deskripsi.'</td>';
+                            $str .= '<td>'.$row1->pn_nsn.'</td>';
+                            $str .= '<td>'.$row1->ds_number.'</td>';
+                            $str .= '<td>'.$row1->holding.'</td>';
+                            $str .= '<td>'.$row1->equipment_desc.'</td>';
+                            $str .= '<td>'.$row1->store_location.'</td>';
+                            $str .= '<td>'.$row1->supplementary_location.'</td>';
+                            $str .= '<td>'.$row1->uoi.'</td>';
+                            $str .= '<td>'.$row1->verwendung.'</td>';
+                            $str .= '<td><div style="text-align: center;">'
+                                    . '<button type="button" class="btn btn-xs btn-outline-primary btn-fw" onclick="ganti(' . "'" . $row1->idbarang . "'" . ')">Ganti</button>&nbsp;'
+                                    . '<button type="button" class="btn btn-xs btn-outline-danger btn-fw" onclick="hapus(' . "'" . $row1->idbarang . "'" . ',' . "'" . $row1->deskripsi . "'" . ')">Hapus</button>'
+                                    . '</div></td>';
+                        $str .= '</tr>';
+                    }
+                    $str .= '</tbody></table>';
+                    $str .= '</div>';
+                    $str .= '</div>';
+                }else{
+                    $str .= '<div class="tab-pane fade" id="nav_'.$row->idjenisbarang.'" role="tabpanel" aria-labelledby="nav_'.$row->idjenisbarang.'">';
+                    $str .= '<div class="table-responsive">';
+                    $str .= '<table class="table table-bordered" style="width: 100%; font-size: 11px;">
+                                <thead>
+                                    <tr>
+                                        <th>GAMBAR</th>
+                                        <th>DESCRIPTION</th>
+                                        <th>PN/NSN</th>
+                                        <th>DS NUMBER</th>
+                                        <th>Holding</th>
+                                        <th style="text-align: center;">EQUIPMENT<br>DESCRIPTION</th>
+                                        <th style="text-align: center;">STORE<br>LOCATION</th>
+                                        <th style="text-align: center;">SUPPLEMENTARY<br>LOCATION</th>
+                                        <th style="text-align: center;">UOI</th>
+                                        <th style="text-align: center;">Verwendung</th>
+                                        <th style="text-align: center;">AKSI</th>
+                                    </tr>
+                                </thead>
+                                <tbody>';
+                    $str .= '</tbody></table>';
+                    $str .= '</div>';
+                    $str .= '</div>';
+                }
+                $counter++;
+                
+            }
+            $str .= '</div>';
+            
+            $hasil = $str;
+            echo json_encode(array("hasil" => $hasil));
+        } else {
+            $this->modul->halaman('login');
+        }
+    }
 
 }

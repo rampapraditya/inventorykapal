@@ -46,6 +46,7 @@ class Jenis extends BaseController {
                 }
             }
             $data['logo'] = $def_logo;
+            $data['kri'] = $this->model->getAll("kapal");
             
             echo view('head', $data);
             echo view('menu');
@@ -59,9 +60,40 @@ class Jenis extends BaseController {
     public function ajaxlist() {
         if(session()->get("logged_in")){
             $data = array();
-            $list = $this->model->getAll("jenisbarang");
+            $list = $this->model->getAllQ("select b.*, a.nama_kapal from kapal a, jenisbarang b where a.idkapal = b.idkapal order by a.nama_kapal;");
             foreach ($list->getResult() as $row) {
                 $val = array();
+                $val[] = $row->nama_kapal;
+                $val[] = $row->nama_jenis;
+                $val[] = '<div style="text-align: center;">'
+                        . '<button type="button" class="btn btn-outline-primary btn-fw" onclick="ganti('."'".$row->idjenisbarang."'".')">Ganti</button>&nbsp;'
+                        . '<button type="button" class="btn btn-outline-danger btn-fw" onclick="hapus('."'".$row->idjenisbarang."'".','."'".$row->nama_jenis."'".')">Hapus</button>'
+                        . '</div>';
+                
+                $data[] = $val;
+            }
+            $output = array("data" => $data);
+            echo json_encode($output);
+        }else{
+            $this->modul->halaman('login');
+        }
+    }
+    
+    public function ajaxlistby() {
+        if(session()->get("logged_in")){
+            $idkapal = $this->request->uri->getSegment(3);
+            
+            if($idkapal == "-"){
+                $str = "select b.*, a.nama_kapal from kapal a, jenisbarang b where a.idkapal = b.idkapal order by a.nama_kapal;";
+            }else{
+                $str = "select b.*, a.nama_kapal from kapal a, jenisbarang b where a.idkapal = b.idkapal and a.idkapal = '".$idkapal."' order by a.nama_kapal;";
+            }
+            // load data
+            $data = array();
+            $list = $this->model->getAllQ($str);
+            foreach ($list->getResult() as $row) {
+                $val = array();
+                $val[] = $row->nama_kapal;
                 $val[] = $row->nama_jenis;
                 $val[] = '<div style="text-align: center;">'
                         . '<button type="button" class="btn btn-outline-primary btn-fw" onclick="ganti('."'".$row->idjenisbarang."'".')">Ganti</button>&nbsp;'
@@ -81,7 +113,8 @@ class Jenis extends BaseController {
         if(session()->get("logged_in")){
             $data = array(
                 'idjenisbarang' => $this->model->autokode("J","idjenisbarang","jenisbarang", 2, 7),
-                'nama_jenis' => $this->request->getVar('nama')
+                'nama_jenis' => $this->request->getVar('nama'),
+                'idkapal' => $this->request->getVar('kri')
             );
             $simpan = $this->model->add("jenisbarang",$data);
             if($simpan == 1){
@@ -108,7 +141,8 @@ class Jenis extends BaseController {
     public function ajax_edit() {
         if(session()->get("logged_in")){
             $data = array(
-                'nama_jenis' => $this->request->getVar('nama')
+                'nama_jenis' => $this->request->getVar('nama'),
+                'idkapal' => $this->request->getVar('kri')
             );
             $kond['idjenisbarang'] = $this->request->getVar('kode');
             $update = $this->model->update("jenisbarang",$data, $kond);

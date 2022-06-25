@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: May 27, 2022 at 07:55 AM
+-- Generation Time: Jun 25, 2022 at 06:34 AM
 -- Server version: 5.7.31
 -- PHP Version: 7.3.21
 
@@ -65,6 +65,14 @@ CREATE TABLE IF NOT EXISTS `brg_keluar` (
   KEY `FK_brg_keluar_usr` (`idusers`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `brg_keluar`
+--
+
+INSERT INTO `brg_keluar` (`idbrg_keluar`, `idkapal`, `tgl`, `idusers`) VALUES
+('K00001', 'K00001', '2022-05-27', 'U00006'),
+('K00002', 'K00003', '2022-06-22', 'U00007');
+
 -- --------------------------------------------------------
 
 --
@@ -99,13 +107,6 @@ CREATE TABLE IF NOT EXISTS `brg_masuk` (
   KEY `FK_brg_masuk_kapal` (`idkapal`),
   KEY `FK_brg_masuk_users` (`idusers`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `brg_masuk`
---
-
-INSERT INTO `brg_masuk` (`idbrg_masuk`, `idkapal`, `tgl`, `idusers`) VALUES
-('M00001', 'K00001', '2022-05-27', 'U00001');
 
 -- --------------------------------------------------------
 
@@ -155,7 +156,7 @@ CREATE TABLE IF NOT EXISTS `identitas` (
 --
 
 INSERT INTO `identitas` (`kode`, `instansi`, `slogan`, `tahun`, `pimpinan`, `alamat`, `kdpos`, `tlp`, `fax`, `website`, `email`, `logo`, `lat`, `lon`) VALUES
-('K00001', 'KOARMADA 2', 'Ghora Wira Madya Jala', 1985, 'Laksamana Muda TNI Iwan Isnurwanto, M.A.P., M.Tr.(Han).', 'Dermaga Ujung Surabaya, Jawa Timur', '60178', '08', '-', 'https://koarmada2.tnial.mil.id/', 'rampa@gmail.com', 'Koarmada2.png', '-7.4063726', '112.5841074');
+('K00001', 'KOARMADA 2', 'Ghora Wira Madya Jala', 1985, 'Laksamana Muda TNI Iwan Isnurwanto, M.A.P., M.Tr.(Han).', 'Dermaga Ujung Surabaya, Jawa Timur', '60178', '08', '-', 'https://koarmada2.tnial.mil.id/', 'rampa@gmail.com', '1656081780_d4bf97842275cf4c6103.png', '-7.4063726', '112.5841074');
 
 -- --------------------------------------------------------
 
@@ -167,18 +168,10 @@ DROP TABLE IF EXISTS `jenisbarang`;
 CREATE TABLE IF NOT EXISTS `jenisbarang` (
   `idjenisbarang` varchar(6) NOT NULL,
   `nama_jenis` varchar(45) NOT NULL,
-  PRIMARY KEY (`idjenisbarang`)
+  `idkapal` varchar(6) CHARACTER SET utf8mb4 NOT NULL,
+  PRIMARY KEY (`idjenisbarang`),
+  KEY `FK_jenisbarang_kapal` (`idkapal`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `jenisbarang`
---
-
-INSERT INTO `jenisbarang` (`idjenisbarang`, `nama_jenis`) VALUES
-('J00001', 'Platform'),
-('J00002', 'Sewaco'),
-('J00003', 'Komaliwan'),
-('J00004', 'Barang Umum');
 
 -- --------------------------------------------------------
 
@@ -200,8 +193,11 @@ CREATE TABLE IF NOT EXISTS `kapal` (
 --
 
 INSERT INTO `kapal` (`idkapal`, `nama_kapal`, `gambar`, `keterangan`) VALUES
-('K00001', 'Dewaruci', 'Dewaruci1.jpg', 'Gambar kapal dewaruci'),
-('K00002', 'KRI B', '', '');
+('K00001', 'Dewaruci', '1656082231_2544998d662c894c180b.jpg', 'Gambar kapal dewaruci'),
+('K00002', 'KRI B', '1656082238_ace2e7f0a1543f840dc1.jpg', ''),
+('K00003', 'kri sultan hasanudin', '', ''),
+('K00004', 'KRI FKO', '', ''),
+('K00005', 'KRI DPN-365', '', '');
 
 -- --------------------------------------------------------
 
@@ -350,7 +346,12 @@ INSERT INTO `users` (`idusers`, `nrp`, `pass`, `nama`, `tgl_lahir`, `agama`, `ko
 ('U00001', 'ADMIN', 'aGtq', 'ADMIN', '1991-01-30', 'Islam', 'Surabaya', './assets/images/e7118256aaf4d1de09199e2b6cbe667c.png', 'TNI ANGKATAN LAUT', 'R00001', NULL),
 ('U00002', '111', 'aGtq', 'Rampa', '1989-08-02', 'Islam', 'Surabaya', NULL, 'TNI', 'R00003', 'K00001'),
 ('U00003', '222', 'aGtq', 'Atika', NULL, NULL, NULL, NULL, NULL, 'R00002', 'K00001'),
-('U00004', '333', 'aGtq', 'Putri Hapsari', NULL, NULL, NULL, NULL, NULL, 'R00003', 'K00002');
+('U00004', '333', 'aGtq', 'Putri Hapsari', NULL, NULL, NULL, NULL, NULL, 'R00003', 'K00002'),
+('U00005', '444', 'aGtq', 'vhjv', NULL, NULL, NULL, NULL, NULL, 'R00003', 'K00002'),
+('U00006', '555', 'aGtq', 'scscsx', NULL, NULL, NULL, NULL, NULL, 'R00003', 'K00001'),
+('U00007', 'admin shn', 'aGtq', 'adiatma', NULL, NULL, NULL, NULL, NULL, 'R00003', 'K00003'),
+('U00008', 'KRI DPN-365', 'aGtq', 'Naratama Yoga', NULL, NULL, NULL, NULL, NULL, 'R00003', '-'),
+('U00009', 'KRI FKO-368', 'aGtq', 'Koko Fajar Suharyogi', '0000-00-00', 'Islam', 'Blitar', NULL, 'Satkor Koarmada II', 'R00003', 'K00004');
 
 --
 -- Constraints for dumped tables
@@ -390,6 +391,12 @@ ALTER TABLE `brg_masuk`
 ALTER TABLE `brg_masuk_detil`
   ADD CONSTRAINT `FK_brg_masuk_detil_brg` FOREIGN KEY (`idbarang`) REFERENCES `barang` (`idbarang`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `FK_brg_masuk_detil_key` FOREIGN KEY (`idbrg_masuk`) REFERENCES `brg_masuk` (`idbrg_masuk`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `jenisbarang`
+--
+ALTER TABLE `jenisbarang`
+  ADD CONSTRAINT `FK_jenisbarang_kapal` FOREIGN KEY (`idkapal`) REFERENCES `kapal` (`idkapal`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `users`

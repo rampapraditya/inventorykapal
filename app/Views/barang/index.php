@@ -8,17 +8,17 @@
             ajax: "<?php echo base_url(); ?>/barang/ajaxlistplatform",
             ordering: false
         });
-        
+
         tb_sewaco = $('#tb_sewaco').DataTable({
             ajax: "<?php echo base_url(); ?>/barang/ajaxlist_sewaco",
             ordering: false
         });
-        
+
         tb_komaliwan = $('#tb_komaliwan').DataTable({
             ajax: "<?php echo base_url(); ?>/barang/ajaxlist_komaliwan",
             ordering: false
         });
-        
+
         tb_br_umum = $('#tb_br_umum').DataTable({
             ajax: "<?php echo base_url(); ?>/barang/ajaxlist_br_umum",
             ordering: false
@@ -54,10 +54,10 @@
         var quant = document.getElementById('quant').value;
         var uoi = document.getElementById('uoi').value;
         var verwendung = document.getElementById('verwendung').value;
-        
-        if(kapal === "-"){
+
+        if (kapal === "-") {
             alert("KRI tidak boleh kosong");
-        }else if (gudang === "-") {
+        } else if (gudang === "-") {
             alert("Gudang tidak boleh kosong");
         } else if (deskripsi === "") {
             alert("Deskripsi tidak boleh kosong");
@@ -180,9 +180,9 @@
         var gudang = document.getElementById('gudang_upload').value;
         var file = $('#file_upload').prop('files')[0];
 
-        if(kri === "-"){
+        if (kri === "-") {
             alert("KRI tidak boleh kosong");
-        }else if (gudang === "-") {
+        } else if (gudang === "-") {
             alert("Gudang tidak boleh kosong");
         } else {
             $('#btnSaveUpload').text('Saving...');
@@ -218,6 +218,28 @@
             });
         }
     }
+    
+    function showbykri(){
+        
+        var form_data = new FormData();
+        form_data.append('kapal', document.getElementById('kri_head').value);
+
+        // ajax adding data to database
+        $.ajax({
+            url: "<?php echo base_url(); ?>/barang/display_tab",
+            dataType: 'JSON',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'POST',
+            success: function (data) {
+                $('#wadah_tab').html(data.hasil)
+            }, error: function (jqXHR, textStatus, errorThrown) {
+                alert("Error json " + errorThrown);
+            }
+        });
+    }
 
 </script>
 <div class="content-wrapper">
@@ -227,113 +249,30 @@
                 <div class="card-body">
                     <h4 class="card-title">MASTER BARANG</h4>
                     <p class="card-description">Maintenance data barang</p>
-                    <button type="button" class="btn btn-primary" onclick="add();">Tambah</button>
-                    <button type="button" class="btn btn-secondary" onclick="uploadfile();">Upload File</button>
+
                 </div>
                 <div class="card-body">
-                    <nav>
-                        <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
-                            <a class="nav-item nav-link active" id="head_nav_platform" data-toggle="tab" href="#nav_platform" role="tab" aria-controls="nav_platform" aria-selected="true">Platform</a>
-                            <a class="nav-item nav-link" id="head_nav_sewaco" data-toggle="tab" href="#nav_sewaco" role="tab" aria-controls="nav_sewaco" aria-selected="false">Sewaco</a>
-                            <a class="nav-item nav-link" id="head_nav_komaliwan" data-toggle="tab" href="#nav_komaliwan" role="tab" aria-controls="nav_komaliwan" aria-selected="false">Komaliwan</a>
-                            <a class="nav-item nav-link" id="head_nav_nav_barangumum" data-toggle="tab" href="#nav_barangumum" role="tab" aria-controls="nav_barangumum" aria-selected="false">Barang Umum</a>
+                    <button type="button" class="btn btn-primary btn-sm" onclick="add();">Tambah</button>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="uploadfile();">Upload File</button>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <select class="form-control" id="kri_head" name="kri_head" onchange="showbykri();">
+                                <option value="-">- PILIH KRI -</option>
+                                <?php
+                                foreach ($kapal->getResult() as $row) {
+                                    ?>
+                                <option value="<?php echo $row->idkapal; ?>"><?php echo $row->nama_kapal; ?></option>
+                                    <?php
+                                }
+                                ?>
+                            </select>
                         </div>
-                    </nav>
-                    <div class="tab-content" id="nav-tabContent">
-                        <div class="tab-pane fade show active" id="nav_platform" role="tabpanel" aria-labelledby="nav_platform">
-                            <div class="table-responsive">
-                                <table id="tb_platform" class="table table-bordered" style="width: 100%; font-size: 11px;">
-                                    <thead>
-                                        <tr>
-                                            <th>GAMBAR</th>
-                                            <th>DESCRIPTION</th>
-                                            <th>PN/NSN</th>
-                                            <th>DS NUMBER</th>
-                                            <th>Holding</th>
-                                            <th style="text-align: center;">EQUIPMENT<br>DESCRIPTION</th>
-                                            <th style="text-align: center;">STORE<br>LOCATION</th>
-                                            <th style="text-align: center;">SUPPLEMENTARY<br>LOCATION</th>
-                                            <th style="text-align: center;">UOI</th>
-                                            <th style="text-align: center;">Verwendung</th>
-                                            <th style="text-align: center;">AKSI</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="nav_sewaco" role="tabpanel" aria-labelledby="nav_sewaco">
-                            <div class="table-responsive">
-                                <table id="tb_sewaco" class="table table-bordered" style="width: 100%; font-size: 11px;">
-                                    <thead>
-                                        <tr>
-                                            <th>GAMBAR</th>
-                                            <th>DESCRIPTION</th>
-                                            <th>PN/NSN</th>
-                                            <th>DS NUMBER</th>
-                                            <th>Holding</th>
-                                            <th style="text-align: center;">EQUIPMENT<br>DESCRIPTION</th>
-                                            <th style="text-align: center;">STORE<br>LOCATION</th>
-                                            <th style="text-align: center;">SUPPLEMENTARY<br>LOCATION</th>
-                                            <th style="text-align: center;">QUANT</th>
-                                            <th style="text-align: center;">UOI</th>
-                                            <th style="text-align: center;">Verwendung</th>
-                                            <th style="text-align: center;">AKSI</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="nav_komaliwan" role="tabpanel" aria-labelledby="nav_komaliwan">
-                            <div class="table-responsive">
-                                <table id="tb_komaliwan" class="table table-bordered" style="width: 100%; font-size: 11px;">
-                                    <thead>
-                                        <tr>
-                                            <th>GAMBAR</th>
-                                            <th>DESCRIPTION</th>
-                                            <th>PN/NSN</th>
-                                            <th>DS NUMBER</th>
-                                            <th>Holding</th>
-                                            <th style="text-align: center;">EQUIPMENT<br>DESCRIPTION</th>
-                                            <th style="text-align: center;">STORE<br>LOCATION</th>
-                                            <th style="text-align: center;">SUPPLEMENTARY<br>LOCATION</th>
-                                            <th style="text-align: center;">QUANT</th>
-                                            <th style="text-align: center;">UOI</th>
-                                            <th style="text-align: center;">Verwendung</th>
-                                            <th style="text-align: center;">AKSI</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="nav_barangumum" role="tabpanel" aria-labelledby="nav_barangumum">
-                            <div class="table-responsive">
-                                <table id="tb_br_umum" class="table table-bordered" style="width: 100%; font-size: 11px;">
-                                    <thead>
-                                        <tr>
-                                            <th>GAMBAR</th>
-                                            <th>DESCRIPTION</th>
-                                            <th>PN/NSN</th>
-                                            <th>DS NUMBER</th>
-                                            <th>Holding</th>
-                                            <th style="text-align: center;">EQUIPMENT<br>DESCRIPTION</th>
-                                            <th style="text-align: center;">STORE<br>LOCATION</th>
-                                            <th style="text-align: center;">SUPPLEMENTARY<br>LOCATION</th>
-                                            <th style="text-align: center;">QUANT</th>
-                                            <th style="text-align: center;">UOI</th>
-                                            <th style="text-align: center;">Verwendung</th>
-                                            <th style="text-align: center;">AKSI</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                            </div>
+                    </div>
+                    <div class="row" style="margin-top: 10px;">
+                        <div id="wadah_tab" class="col-md-12">
+                            
                         </div>
                     </div>
                 </div>

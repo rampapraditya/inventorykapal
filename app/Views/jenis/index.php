@@ -24,9 +24,12 @@
     function save() {
         var kode = document.getElementById('kode').value;
         var nama = document.getElementById('nama').value;
+        var kri = document.getElementById('kri').value;
         
         if (nama === '') {
             alert("Gudang tidak boleh kosong");
+        }else if(kri === '-'){
+            alert("KRI tidak boleh kosong");
         } else {
             $('#btnSave').text('Saving...'); //change button text
             $('#btnSave').attr('disabled', true); //set button disable 
@@ -41,6 +44,7 @@
             var form_data = new FormData();
             form_data.append('kode', kode);
             form_data.append('nama', nama);
+            form_data.append('kri', kri);
             
             // ajax adding data to database
             $.ajax({
@@ -105,6 +109,22 @@
     function closemodal(){
         $('#modal_form').modal('hide');
     }
+    
+    function showbykri(){
+        var kri_head = document.getElementById('kri_head').value;
+        
+        table = $('#tb').DataTable({
+            ajax: "<?php echo base_url(); ?>/jenis/ajaxlistby/" + kri_head,
+            ordering: false,
+            retrieve:true
+        });
+        table.destroy();
+        table = $('#tb').DataTable({
+            ajax: "<?php echo base_url(); ?>/jenis/ajaxlistby/" + kri_head,
+            ordering: false,
+            retrieve:true
+        });
+    }
 
 </script>
 <div class="content-wrapper">
@@ -114,21 +134,42 @@
                 <div class="card-body">
                     <h4 class="card-title">MASTER GUDANG</h4>
                     <p class="card-description">Maintenance data gudang</p>
-                    <button type="button" class="btn btn-primary" onclick="add();">Tambah</button>
-                    <button type="button" class="btn btn-secondary" onclick="reload();">Reload</button>
                 </div>
                 <div class="card-body">
-                    <div class="table-responsive">
-                        <table id="tb" class="table table-hover" style="width: 100%;">
-                            <thead>
-                                <tr>
-                                    <th>GUDANG</th>
-                                    <th style="text-align: center;">AKSI</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
+                    <button type="button" class="btn btn-primary btn-sm" onclick="add();">Tambah</button>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="reload();">Reload</button>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <select class="form-control" id="kri_head" name="kri_head" onchange="showbykri();">
+                                <option value="-">- PILIH KRI -</option>
+                                <?php
+                                foreach ($kri->getResult() as $row) {
+                                    ?>
+                                <option value="<?php echo $row->idkapal; ?>"><?php echo $row->nama_kapal; ?></option>
+                                    <?php
+                                }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 10px;">
+                        <div class="col-md-12">
+                            <div class="table-responsive">
+                                <table id="tb" class="table table-hover" style="width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>KRI</th>
+                                            <th>GUDANG</th>
+                                            <th style="text-align: center;">AKSI</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -148,6 +189,19 @@
             <div class="modal-body">
                 <form id="form" class="form-horizontal">
                     <input type="hidden" name="kode" id="kode">
+                    <div class="form-group">
+                        <label>KRI</label>
+                        <select class="form-control" id="kri" name="kri">
+                            <option value="-">- PILIH KRI -</option>
+                            <?php
+                            foreach ($kri->getResult() as $row) {
+                                ?>
+                            <option value="<?php echo $row->idkapal; ?>"><?php echo $row->nama_kapal; ?></option>
+                                <?php
+                            }
+                            ?>
+                        </select>
+                    </div>
                     <div class="form-group">
                         <label>Gudang</label>
                         <input id="nama" name="nama" class="form-control" type="text" autocomplete="off">
