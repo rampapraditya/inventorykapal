@@ -21,36 +21,37 @@ class Brgmasuk extends BaseController {
 
     public function index() {
         if (session()->get("logged_in")) {
-            $data['username'] = session()->get("username");
-            $data['nrp'] = session()->get('nrp');
-            $data['nama'] = session()->get("nama");
-            $data['role'] = session()->get("role");
-
-            // membaca foto profile
-            $def_foto = base_url() . '/images/noimg.jpg';
-            $foto = $this->model->getAllQR("select foto from users where idusers = '" . session()->get("username") . "';")->foto;
-            if (strlen($foto) > 0) {
-                if (file_exists(ROOTPATH . 'public/uploads/' . $foto)) {
-                    $def_foto = base_url() . '/uploads/' . $foto;
-                }
-            }
-            $data['foto_profile'] = $def_foto;
-
-            // membaca logo
-            $def_logo = base_url() . '/images/noimg.jpg';
-            $logo = $this->model->getAllQR("select logo from identitas;")->logo;
-            if (strlen($logo) > 0) {
-                if (file_exists(ROOTPATH . 'public/uploads/' . $logo)) {
-                    $def_logo = base_url() . '/uploads/' . $logo;
-                }
-            }
-            $data['logo'] = $def_logo;
-            $data['gudang'] = $this->model->getAll("jenisbarang");
-
-            echo view('head', $data);
-            echo view('menu');
-            echo view('barang_masuk/index');
-            echo view('foot');
+//            $data['username'] = session()->get("username");
+//            $data['nrp'] = session()->get('nrp');
+//            $data['nama'] = session()->get("nama");
+//            $data['role'] = session()->get("role");
+//
+//            // membaca foto profile
+//            $def_foto = base_url() . '/images/noimg.jpg';
+//            $foto = $this->model->getAllQR("select foto from users where idusers = '" . session()->get("username") . "';")->foto;
+//            if (strlen($foto) > 0) {
+//                if (file_exists(ROOTPATH . 'public/uploads/' . $foto)) {
+//                    $def_foto = base_url() . '/uploads/' . $foto;
+//                }
+//            }
+//            $data['foto_profile'] = $def_foto;
+//
+//            // membaca logo
+//            $def_logo = base_url() . '/images/noimg.jpg';
+//            $logo = $this->model->getAllQR("select logo from identitas;")->logo;
+//            if (strlen($logo) > 0) {
+//                if (file_exists(ROOTPATH . 'public/uploads/' . $logo)) {
+//                    $def_logo = base_url() . '/uploads/' . $logo;
+//                }
+//            }
+//            $data['logo'] = $def_logo;
+//            $data['gudang'] = $this->model->getAll("jenisbarang");
+//
+//            echo view('head', $data);
+//            echo view('menu');
+//            echo view('barang_masuk/index');
+//            echo view('foot');
+            echo "Akses di tutup";
         } else {
             $this->modul->halaman('login');
         }
@@ -102,65 +103,66 @@ class Brgmasuk extends BaseController {
     
     public function detil() {
         if (session()->get("logged_in")) {
-            $data['username'] = session()->get("username");
-            $data['nrp'] = session()->get('nrp');
-            $data['nama'] = session()->get("nama");
-            $data['role'] = session()->get("role");
-
-            // membaca foto profile
-            $def_foto = base_url() . '/images/noimg.jpg';
-            $foto = $this->model->getAllQR("select foto from users where idusers = '" . session()->get("username") . "';")->foto;
-            if (strlen($foto) > 0) {
-                if (file_exists(ROOTPATH . 'public/uploads/' . $foto)) {
-                    $def_foto = base_url() . '/uploads/' . $foto;
-                }
-            }
-            $data['foto_profile'] = $def_foto;
-
-            // membaca logo
-            $def_logo = base_url() . '/images/noimg.jpg';
-            $logo = $this->model->getAllQR("select logo from identitas;")->logo;
-            if (strlen($logo) > 0) {
-                if (file_exists(ROOTPATH . 'public/uploads/' . $logo)) {
-                    $def_logo = base_url() . '/uploads/' . $logo;
-                }
-            }
-            $data['logo'] = $def_logo;
-            
-            $temp = $this->request->uri->getSegment(3);
-            if(strlen($temp) > 0){
-                $kode = $this->modul->dekrip_url($temp);
-                $jml = $this->model->getAllQR("select count(*) as jml from brg_masuk where idbrg_masuk = '".$kode."';")->jml;
-                if($jml > 0){
-                    $kondisi['idbrg_masuk'] = $kode;
-                    $tersimpan = $this->model->get_by_id("brg_masuk", $kondisi);
-                            
-                    $data['kode'] = $kode;
-                    $data['kri'] = $this->model->getAll("kapal");
-                    $data['kri_tersimpan'] = $tersimpan->idkapal;
-                    $data['tgl_def'] = $tersimpan->tgl;
-                    $data['ket'] = "Ganti barang datang";
-
-                    echo view('head', $data);
-                    echo view('menu');
-                    echo view('barang_masuk/detil');
-                    echo view('foot');
-                
-                }else{
-                    $this->modul->halaman('brgmasuk');
-                }
-            }else{
-                $data['kode'] = $this->model->autokode('M','idbrg_masuk', 'brg_masuk', 2, 7);
-                $data['kri'] = $this->model->getAll("kapal");
-                $data['kri_tersimpan'] = "";
-                $data['tgl_def'] = $this->modul->TanggalSekarang();
-                $data['ket'] = "Tambah barang datang";
-
-                echo view('head', $data);
-                echo view('menu');
-                echo view('barang_masuk/detil');
-                echo view('foot');
-            }
+//            $data['username'] = session()->get("username");
+//            $data['nrp'] = session()->get('nrp');
+//            $data['nama'] = session()->get("nama");
+//            $data['role'] = session()->get("role");
+//
+//            // membaca foto profile
+//            $def_foto = base_url() . '/images/noimg.jpg';
+//            $foto = $this->model->getAllQR("select foto from users where idusers = '" . session()->get("username") . "';")->foto;
+//            if (strlen($foto) > 0) {
+//                if (file_exists(ROOTPATH . 'public/uploads/' . $foto)) {
+//                    $def_foto = base_url() . '/uploads/' . $foto;
+//                }
+//            }
+//            $data['foto_profile'] = $def_foto;
+//
+//            // membaca logo
+//            $def_logo = base_url() . '/images/noimg.jpg';
+//            $logo = $this->model->getAllQR("select logo from identitas;")->logo;
+//            if (strlen($logo) > 0) {
+//                if (file_exists(ROOTPATH . 'public/uploads/' . $logo)) {
+//                    $def_logo = base_url() . '/uploads/' . $logo;
+//                }
+//            }
+//            $data['logo'] = $def_logo;
+//            
+//            $temp = $this->request->uri->getSegment(3);
+//            if(strlen($temp) > 0){
+//                $kode = $this->modul->dekrip_url($temp);
+//                $jml = $this->model->getAllQR("select count(*) as jml from brg_masuk where idbrg_masuk = '".$kode."';")->jml;
+//                if($jml > 0){
+//                    $kondisi['idbrg_masuk'] = $kode;
+//                    $tersimpan = $this->model->get_by_id("brg_masuk", $kondisi);
+//                            
+//                    $data['kode'] = $kode;
+//                    $data['kri'] = $this->model->getAll("kapal");
+//                    $data['kri_tersimpan'] = $tersimpan->idkapal;
+//                    $data['tgl_def'] = $tersimpan->tgl;
+//                    $data['ket'] = "Ganti barang datang";
+//
+//                    echo view('head', $data);
+//                    echo view('menu');
+//                    echo view('barang_masuk/detil');
+//                    echo view('foot');
+//                
+//                }else{
+//                    $this->modul->halaman('brgmasuk');
+//                }
+//            }else{
+//                $data['kode'] = $this->model->autokode('M','idbrg_masuk', 'brg_masuk', 2, 7);
+//                $data['kri'] = $this->model->getAll("kapal");
+//                $data['kri_tersimpan'] = "";
+//                $data['tgl_def'] = $this->modul->TanggalSekarang();
+//                $data['ket'] = "Tambah barang datang";
+//
+//                echo view('head', $data);
+//                echo view('menu');
+//                echo view('barang_masuk/detil');
+//                echo view('foot');
+//            }
+            echo "Akses di tutup";
         } else {
             $this->modul->halaman('login');
         }

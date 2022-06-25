@@ -1,36 +1,9 @@
 <script type="text/javascript">
 
     var save_method; //for save method string
-    var tb_platform, tb_sewaco, tb_komaliwan, tb_br_umum;
-
     $(document).ready(function () {
-        tb_platform = $('#tb_platform').DataTable({
-            ajax: "<?php echo base_url(); ?>/barang/ajaxlistplatform",
-            ordering: false
-        });
-
-        tb_sewaco = $('#tb_sewaco').DataTable({
-            ajax: "<?php echo base_url(); ?>/barang/ajaxlist_sewaco",
-            ordering: false
-        });
-
-        tb_komaliwan = $('#tb_komaliwan').DataTable({
-            ajax: "<?php echo base_url(); ?>/barang/ajaxlist_komaliwan",
-            ordering: false
-        });
-
-        tb_br_umum = $('#tb_br_umum').DataTable({
-            ajax: "<?php echo base_url(); ?>/barang/ajaxlist_br_umum",
-            ordering: false
-        });
+        
     });
-
-    function reload() {
-        tb_platform.ajax.reload(null, false);
-        tb_sewaco.ajax.reload(null, false);
-        tb_komaliwan.ajax.reload(null, false);
-        tb_br_umum.ajax.reload(null, false);
-    }
 
     function add() {
         save_method = 'add';
@@ -102,7 +75,7 @@
                 success: function (data) {
                     alert(data.status);
                     $('#modal_form').modal('hide');
-                    reload();
+                    showbykri();
 
                     $('#btnSave').text('Save'); //change button text
                     $('#btnSave').attr('disabled', false); //set button enable 
@@ -124,7 +97,7 @@
                 dataType: "JSON",
                 success: function (data) {
                     alert(data.status);
-                    reload();
+                    showbykri();
                 }, error: function (jqXHR, textStatus, errorThrown) {
                     alert('Error hapus data');
                 }
@@ -205,7 +178,7 @@
                 success: function (data) {
                     alert(data.status);
                     $('#modal_upload').modal('hide');
-                    reload();
+                    showbykri();
 
                     $('#btnSaveUpload').text('Save');
                     $('#btnSaveUpload').attr('disabled', false);
@@ -220,11 +193,9 @@
     }
     
     function showbykri(){
-        
+        var kapal = document.getElementById('kri_head').value;
         var form_data = new FormData();
-        form_data.append('kapal', document.getElementById('kri_head').value);
-
-        // ajax adding data to database
+        form_data.append('kapal', kapal);
         $.ajax({
             url: "<?php echo base_url(); ?>/barang/display_tab",
             dataType: 'JSON',
@@ -234,7 +205,7 @@
             data: form_data,
             type: 'POST',
             success: function (data) {
-                $('#wadah_tab').html(data.hasil)
+                $('#wadah_tab').html(data.hasil);
             }, error: function (jqXHR, textStatus, errorThrown) {
                 alert("Error json " + errorThrown);
             }
