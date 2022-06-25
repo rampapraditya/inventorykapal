@@ -93,9 +93,9 @@ class Lapstoknadm extends BaseController {
                                         <th style="text-align: center;">EQUIPMENT<br>DESCRIPTION</th>
                                         <th style="text-align: center;">STORE<br>LOCATION</th>
                                         <th style="text-align: center;">SUPPLEMENTARY<br>LOCATION</th>
+                                        <th style="text-align: center;">QTY</th>
                                         <th style="text-align: center;">UOI</th>
                                         <th style="text-align: center;">Verwendung</th>
-                                        <th style="text-align: center;">AKSI</th>
                                     </tr>
                                 </thead>
                                 <tbody>';
@@ -117,12 +117,10 @@ class Lapstoknadm extends BaseController {
                             $str .= '<td>'.$row1->equipment_desc.'</td>';
                             $str .= '<td>'.$row1->store_location.'</td>';
                             $str .= '<td>'.$row1->supplementary_location.'</td>';
+                            $str .= '<td>'.$this->getStok($row1->idbarang, $idkapal).'</td>';
                             $str .= '<td>'.$row1->uoi.'</td>';
                             $str .= '<td>'.$row1->verwendung.'</td>';
-                            $str .= '<td><div style="text-align: center;">'
-                                    . '<button type="button" class="btn btn-xs btn-outline-primary btn-fw" onclick="ganti(' . "'" . $row1->idbarang . "'" . ')">Ganti</button>&nbsp;'
-                                    . '<button type="button" class="btn btn-xs btn-outline-danger btn-fw" onclick="hapus(' . "'" . $row1->idbarang . "'" . ',' . "'" . $row1->deskripsi . "'" . ')">Hapus</button>'
-                                    . '</div></td>';
+                            
                         $str .= '</tr>';
                     }
                     $str .= '</tbody></table>';
@@ -142,9 +140,9 @@ class Lapstoknadm extends BaseController {
                                         <th style="text-align: center;">EQUIPMENT<br>DESCRIPTION</th>
                                         <th style="text-align: center;">STORE<br>LOCATION</th>
                                         <th style="text-align: center;">SUPPLEMENTARY<br>LOCATION</th>
+                                        <th style="text-align: center;">QTY</th>
                                         <th style="text-align: center;">UOI</th>
                                         <th style="text-align: center;">Verwendung</th>
-                                        <th style="text-align: center;">AKSI</th>
                                     </tr>
                                 </thead>
                                 <tbody>';
@@ -166,12 +164,10 @@ class Lapstoknadm extends BaseController {
                             $str .= '<td>'.$row1->equipment_desc.'</td>';
                             $str .= '<td>'.$row1->store_location.'</td>';
                             $str .= '<td>'.$row1->supplementary_location.'</td>';
+                            $str .= '<td>'.$this->getStok($row1->idbarang, $idkapal).'</td>';
                             $str .= '<td>'.$row1->uoi.'</td>';
                             $str .= '<td>'.$row1->verwendung.'</td>';
-                            $str .= '<td><div style="text-align: center;">'
-                                    . '<button type="button" class="btn btn-xs btn-outline-primary btn-fw" onclick="ganti(' . "'" . $row1->idbarang . "'" . ')">Ganti</button>&nbsp;'
-                                    . '<button type="button" class="btn btn-xs btn-outline-danger btn-fw" onclick="hapus(' . "'" . $row1->idbarang . "'" . ',' . "'" . $row1->deskripsi . "'" . ')">Hapus</button>'
-                                    . '</div></td>';
+                            
                         $str .= '</tr>';
                     }
                     $str .= '</tbody></table>';
