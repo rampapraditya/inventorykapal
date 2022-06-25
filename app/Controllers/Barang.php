@@ -462,23 +462,30 @@ class Barang extends BaseController {
                     $data = $spreadsheet->getActiveSheet()->toArray();
                     foreach ($data as $x => $row) {
                         // masukkan ke database
-                        $data = array(
-                            'idbarang' => $this->model->autokode("B", "idbarang", "barang", 2, 7),
-                            'foto' => '',
-                            'deskripsi' => addslashes($row[0]),
-                            'pn_nsn' => addslashes($row[1]),
-                            'ds_number' => addslashes($row[2]),
-                            'holding' => addslashes($row[3]),
-                            'equipment_desc' => addslashes($row[4]),
-                            'store_location' => addslashes($row[5]),
-                            'supplementary_location' => addslashes($row[6]),
-                            'qty' => addslashes($row[7]),
-                            'uoi' => addslashes($row[8]),
-                            'verwendung' => addslashes($row[9]),
-                            'idjenisbarang' => $this->request->getVar('gudang'),
-                            'idkapal' => $this->request->getVar('idkapal')
-                        );
-                        $this->model->add("barang", $data);
+                        // melakukan pengecekan deskripsi dan qty tidak boleh kosong
+                        if ( (strlen(trim(addslashes($row[0]))) > 0) && (strlen(trim(addslashes($row[7]))) > 0) ){
+                            // cek juga apakah barang sudah pernah di import
+                            $cek_desc = $this->model->getAllQR("select count(*) as jml from barang where deskripsi = '".trim(addslashes($row[0]))."';")->jml;
+                            if($cek_desc < 1){
+                                $data = array(
+                                    'idbarang' => $this->model->autokode("B", "idbarang", "barang", 2, 7),
+                                    'foto' => '',
+                                    'deskripsi' => trim(addslashes($row[0])),
+                                    'pn_nsn' => trim(addslashes($row[1])),
+                                    'ds_number' => trim(addslashes($row[2])),
+                                    'holding' => trim(addslashes($row[3])),
+                                    'equipment_desc' => trim(addslashes($row[4])),
+                                    'store_location' => trim(addslashes($row[5])),
+                                    'supplementary_location' => trim(addslashes($row[6])),
+                                    'qty' => 0,
+                                    'uoi' => trim(addslashes($row[8])),
+                                    'verwendung' => trim(addslashes($row[9])),
+                                    'idjenisbarang' => $this->request->getVar('gudang'),
+                                    'idkapal' => $this->request->getVar('idkapal')
+                                );
+                                $this->model->add("barang", $data);
+                            }
+                        }
                     }
                     unlink($this->modul->getPathApp().$namaFile);
                     

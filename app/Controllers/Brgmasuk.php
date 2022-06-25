@@ -387,10 +387,19 @@ class Brgmasuk extends BaseController {
     
     public function hapusdetil() {
         if(session()->get("logged_in")){
-            $kond['idbrg_m_detil'] = $this->request->uri->getSegment(3);
+            $idbrg_m_detil = $this->request->uri->getSegment(3);
+            // membaca idbrg_masuk
+            $idbrg_masuk = $this->model->getAllQR("SELECT idbrg_masuk FROM brg_masuk_detil where idbrg_m_detil = '".$idbrg_m_detil."';")->idbrg_masuk;
+            // hapus
+            $kond['idbrg_m_detil'] = $idbrg_m_detil;
             $hapus = $this->model->delete("brg_masuk_detil",$kond);
             if($hapus == 1){
                 $status = "Data terhapus";
+                $cek_head = $this->model->getAllQR("SELECT count(*) as jml FROM brg_masuk_detil where idbrg_masuk = '".$idbrg_masuk."';")->jml;
+                if($cek_head < 1){
+                    $kond_head['idbrg_masuk'] = $idbrg_masuk;
+                    $this->model->delete("brg_masuk",$kond_head);
+                }
             }else{
                 $status = "Data gagal terhapus";
             }
