@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jun 25, 2022 at 06:34 AM
+-- Generation Time: Jun 26, 2022 at 04:26 AM
 -- Server version: 5.7.31
 -- PHP Version: 7.3.21
 
@@ -47,6 +47,16 @@ CREATE TABLE IF NOT EXISTS `barang` (
   KEY `FK_barang_jenis` (`idjenisbarang`),
   KEY `FK_barang_kapal` (`idkapal`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `barang`
+--
+
+INSERT INTO `barang` (`idbarang`, `foto`, `deskripsi`, `pn_nsn`, `ds_number`, `holding`, `equipment_desc`, `store_location`, `supplementary_location`, `qty`, `uoi`, `verwendung`, `idjenisbarang`, `idkapal`) VALUES
+('B00001', '', 'TROPONG LAPANGAN DENGAN KOMP', '', '', '', '', '', 'NAVAL STORE', 0, 'UNIT', 'BP/230/III/2020 Sprin/1310/IX/2019 tanggal 09 September 2019', 'J00001', 'K00001'),
+('B00002', '', 'TROPONG NIGHT VICION', '', '', '', '', '', 'NAVAL STORE', 0, 'UNIT', 'BP/230/III/2020 Sprin/1310/IX/2019 tanggal 09 September 2020', 'J00001', 'K00001'),
+('B00003', '', 'DRY CABINET', '', '', '', '', '', 'NAVAL STORE', 0, 'UNIT', 'BP/230/III/2020 Sprin/1310/IX/2019 tanggal 09 September 2021', 'J00001', 'K00001'),
+('B00004', '', 'BATTERY', '', '', '', '', '', 'NAVAL STORE', 0, 'UNIT', 'BP/230/III/2020 Sprin/1310/IX/2019 tanggal 09 September 2022', 'J00001', 'K00001');
 
 -- --------------------------------------------------------
 
@@ -108,6 +118,14 @@ CREATE TABLE IF NOT EXISTS `brg_masuk` (
   KEY `FK_brg_masuk_users` (`idusers`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `brg_masuk`
+--
+
+INSERT INTO `brg_masuk` (`idbrg_masuk`, `idkapal`, `tgl`, `idusers`) VALUES
+('M00001', 'K00001', '2022-06-26', 'U00002'),
+('M00002', 'K00001', '2022-06-26', 'U00002');
+
 -- --------------------------------------------------------
 
 --
@@ -125,6 +143,20 @@ CREATE TABLE IF NOT EXISTS `brg_masuk_detil` (
   KEY `FK_brg_masuk_detil_brg` (`idbarang`),
   KEY `FK_brg_masuk_detil_key` (`idbrg_masuk`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `brg_masuk_detil`
+--
+
+INSERT INTO `brg_masuk_detil` (`idbrg_m_detil`, `idbarang`, `jumlah`, `satuan`, `idbrg_masuk`) VALUES
+('MD000001', 'B00001', 2, '', 'M00001'),
+('MD000002', 'B00002', 2, '', 'M00001'),
+('MD000003', 'B00003', 2, '', 'M00001'),
+('MD000004', 'B00004', 2, '', 'M00001'),
+('MD000005', 'B00001', 2, 'UNIT', 'M00002'),
+('MD000006', 'B00002', 2, 'UNIT', 'M00002'),
+('MD000007', 'B00003', 2, 'UNIT', 'M00002'),
+('MD000008', 'B00004', 2, 'UNIT', 'M00002');
 
 -- --------------------------------------------------------
 
@@ -172,6 +204,18 @@ CREATE TABLE IF NOT EXISTS `jenisbarang` (
   PRIMARY KEY (`idjenisbarang`),
   KEY `FK_jenisbarang_kapal` (`idkapal`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `jenisbarang`
+--
+
+INSERT INTO `jenisbarang` (`idjenisbarang`, `nama_jenis`, `idkapal`) VALUES
+('J00001', 'Platform', 'K00001'),
+('J00002', 'Sewaco', 'K00001'),
+('J00003', 'Komaliwan', 'K00001'),
+('J00004', 'Barang Umum', 'K00001'),
+('J00005', 'Bahari', 'K00001'),
+('J00006', 'Bahari', 'K00002');
 
 -- --------------------------------------------------------
 

@@ -211,6 +211,26 @@
             }
         });
     }
+    
+    function pilih_gudang(){
+        var kri = document.getElementById('kri').value;
+        var form_data = new FormData();
+        form_data.append('kapal', kri);
+        $.ajax({
+            url: "<?php echo base_url(); ?>/barang/display_gudang",
+            dataType: 'JSON',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'POST',
+            success: function (data) {
+                $('#gudang_upload').html(data.hasil);
+            }, error: function (jqXHR, textStatus, errorThrown) {
+                alert("Error json " + errorThrown);
+            }
+        });
+    }
 
 </script>
 <div class="content-wrapper">
@@ -357,7 +377,7 @@
                 <form id="form_upload" class="form-horizontal">
                     <div class="form-group">
                         <label>KRI</label>
-                        <select id="kri" name="kri" class="form-control">
+                        <select id="kri" name="kri" class="form-control" onchange="pilih_gudang();">
                             <option value="-">- PILIH KRI -</option>
                             <?php
                             foreach ($kapal->getResult() as $row) {
@@ -372,13 +392,6 @@
                         <label>GUDANG</label>
                         <select id="gudang_upload" name="gudang_upload" class="form-control">
                             <option value="-">- PILIH GUDANG -</option>
-                            <?php
-                            foreach ($gudang->getResult() as $row) {
-                                ?>
-                                <option value="<?php echo $row->idjenisbarang; ?>"><?php echo $row->nama_jenis; ?></option>
-                                <?php
-                            }
-                            ?>
                         </select>
                     </div>
                     <div class="form-group">
@@ -388,8 +401,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button id="btnSaveUpload" type="button" class="btn btn-primary" onclick="save_upload();">Upload</button>
-                <button type="button" class="btn btn-secondary" onclick="closemodal_upload();">Close</button>
+                <button id="btnSaveUpload" type="button" class="btn btn-primary btn-sm" onclick="save_upload();">Upload</button>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="closemodal_upload();">Close</button>
             </div>
         </div>
     </div>

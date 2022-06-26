@@ -311,7 +311,7 @@ class Barang extends BaseController {
                         // melakukan pengecekan deskripsi dan qty tidak boleh kosong
                         if ( (strlen(trim(addslashes($row[0]))) > 0) && (strlen(trim(addslashes($row[7]))) > 0) ){
                             // cek juga apakah barang sudah pernah di import
-                            $cek_desc = $this->model->getAllQR("select count(*) as jml from barang where deskripsi = '".trim(addslashes($row[0]))."';")->jml;
+                            $cek_desc = $this->model->getAllQR("select count(*) as jml from barang where deskripsi = '".trim(addslashes($row[0]))."' and idkapal = '".$this->request->getVar('idkapal')."';")->jml;
                             if($cek_desc < 1){
                                 $data = array(
                                     'idbarang' => $this->model->autokode("B", "idbarang", "barang", 2, 7),
@@ -471,6 +471,24 @@ class Barang extends BaseController {
                 
             }
             $str .= '</div>';
+            
+            $hasil = $str;
+            echo json_encode(array("hasil" => $hasil));
+        } else {
+            $this->modul->halaman('login');
+        }
+    }
+    
+    public function display_gudang() {
+        if (session()->get("logged_in")) {
+            $idkapal = $this->request->getVar('kapal');
+            
+            // menampilkan gudang
+            $str = '<option value="-">- PILIH GUDANG -</option>';
+            $list = $this->model->getAllQ("select idjenisbarang, nama_jenis from jenisbarang where idkapal = '".$idkapal."';");
+            foreach ($list->getResult() as $row) {
+                $str .= '<option value="'.$row->idjenisbarang.'">'.$row->nama_jenis.'</option>';
+            }
             
             $hasil = $str;
             echo json_encode(array("hasil" => $hasil));
