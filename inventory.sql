@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jun 26, 2022 at 04:26 AM
+-- Generation Time: Jun 26, 2022 at 07:32 AM
 -- Server version: 5.7.31
 -- PHP Version: 7.3.21
 
@@ -48,16 +48,6 @@ CREATE TABLE IF NOT EXISTS `barang` (
   KEY `FK_barang_kapal` (`idkapal`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `barang`
---
-
-INSERT INTO `barang` (`idbarang`, `foto`, `deskripsi`, `pn_nsn`, `ds_number`, `holding`, `equipment_desc`, `store_location`, `supplementary_location`, `qty`, `uoi`, `verwendung`, `idjenisbarang`, `idkapal`) VALUES
-('B00001', '', 'TROPONG LAPANGAN DENGAN KOMP', '', '', '', '', '', 'NAVAL STORE', 0, 'UNIT', 'BP/230/III/2020 Sprin/1310/IX/2019 tanggal 09 September 2019', 'J00001', 'K00001'),
-('B00002', '', 'TROPONG NIGHT VICION', '', '', '', '', '', 'NAVAL STORE', 0, 'UNIT', 'BP/230/III/2020 Sprin/1310/IX/2019 tanggal 09 September 2020', 'J00001', 'K00001'),
-('B00003', '', 'DRY CABINET', '', '', '', '', '', 'NAVAL STORE', 0, 'UNIT', 'BP/230/III/2020 Sprin/1310/IX/2019 tanggal 09 September 2021', 'J00001', 'K00001'),
-('B00004', '', 'BATTERY', '', '', '', '', '', 'NAVAL STORE', 0, 'UNIT', 'BP/230/III/2020 Sprin/1310/IX/2019 tanggal 09 September 2022', 'J00001', 'K00001');
-
 -- --------------------------------------------------------
 
 --
@@ -74,14 +64,6 @@ CREATE TABLE IF NOT EXISTS `brg_keluar` (
   KEY `FK_brg_keluar_kapal` (`idkapal`),
   KEY `FK_brg_keluar_usr` (`idusers`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `brg_keluar`
---
-
-INSERT INTO `brg_keluar` (`idbrg_keluar`, `idkapal`, `tgl`, `idusers`) VALUES
-('K00001', 'K00001', '2022-05-27', 'U00006'),
-('K00002', 'K00003', '2022-06-22', 'U00007');
 
 -- --------------------------------------------------------
 
@@ -118,14 +100,6 @@ CREATE TABLE IF NOT EXISTS `brg_masuk` (
   KEY `FK_brg_masuk_users` (`idusers`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `brg_masuk`
---
-
-INSERT INTO `brg_masuk` (`idbrg_masuk`, `idkapal`, `tgl`, `idusers`) VALUES
-('M00001', 'K00001', '2022-06-26', 'U00002'),
-('M00002', 'K00001', '2022-06-26', 'U00002');
-
 -- --------------------------------------------------------
 
 --
@@ -143,20 +117,6 @@ CREATE TABLE IF NOT EXISTS `brg_masuk_detil` (
   KEY `FK_brg_masuk_detil_brg` (`idbarang`),
   KEY `FK_brg_masuk_detil_key` (`idbrg_masuk`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `brg_masuk_detil`
---
-
-INSERT INTO `brg_masuk_detil` (`idbrg_m_detil`, `idbarang`, `jumlah`, `satuan`, `idbrg_masuk`) VALUES
-('MD000001', 'B00001', 2, '', 'M00001'),
-('MD000002', 'B00002', 2, '', 'M00001'),
-('MD000003', 'B00003', 2, '', 'M00001'),
-('MD000004', 'B00004', 2, '', 'M00001'),
-('MD000005', 'B00001', 2, 'UNIT', 'M00002'),
-('MD000006', 'B00002', 2, 'UNIT', 'M00002'),
-('MD000007', 'B00003', 2, 'UNIT', 'M00002'),
-('MD000008', 'B00004', 2, 'UNIT', 'M00002');
 
 -- --------------------------------------------------------
 
@@ -390,11 +350,10 @@ INSERT INTO `users` (`idusers`, `nrp`, `pass`, `nama`, `tgl_lahir`, `agama`, `ko
 ('U00001', 'ADMIN', 'aGtq', 'ADMIN', '1991-01-30', 'Islam', 'Surabaya', './assets/images/e7118256aaf4d1de09199e2b6cbe667c.png', 'TNI ANGKATAN LAUT', 'R00001', NULL),
 ('U00002', '111', 'aGtq', 'Rampa', '1989-08-02', 'Islam', 'Surabaya', NULL, 'TNI', 'R00003', 'K00001'),
 ('U00003', '222', 'aGtq', 'Atika', NULL, NULL, NULL, NULL, NULL, 'R00002', 'K00001'),
-('U00004', '333', 'aGtq', 'Putri Hapsari', NULL, NULL, NULL, NULL, NULL, 'R00003', 'K00002'),
 ('U00005', '444', 'aGtq', 'vhjv', NULL, NULL, NULL, NULL, NULL, 'R00003', 'K00002'),
 ('U00006', '555', 'aGtq', 'scscsx', NULL, NULL, NULL, NULL, NULL, 'R00003', 'K00001'),
 ('U00007', 'admin shn', 'aGtq', 'adiatma', NULL, NULL, NULL, NULL, NULL, 'R00003', 'K00003'),
-('U00008', 'KRI DPN-365', 'aGtq', 'Naratama Yoga', NULL, NULL, NULL, NULL, NULL, 'R00003', '-'),
+('U00008', 'KRI DPN-365', 'aGtq', 'Naratama Yoga', NULL, NULL, NULL, NULL, NULL, 'R00003', 'K00004'),
 ('U00009', 'KRI FKO-368', 'aGtq', 'Koko Fajar Suharyogi', '0000-00-00', 'Islam', 'Blitar', NULL, 'Satkor Koarmada II', 'R00003', 'K00004');
 
 --

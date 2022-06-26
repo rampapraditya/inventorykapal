@@ -74,10 +74,15 @@ class Pengguna extends BaseController{
                 }else{
                     $val[] = "";
                 }
-                $val[] = '<div style="text-align: center;">'
+                if($row->nama_role == "ADMINISTRATOR"){
+                    $val[] = '<div style="text-align: center;"></div>';
+                }else{
+                    $val[] = '<div style="text-align: center;">'
                         . '<button type="button" class="btn btn-outline-primary btn-fw" onclick="ganti('."'".$row->idusers."'".')">Ganti</button>&nbsp;'
                         . '<button type="button" class="btn btn-outline-danger btn-fw" onclick="hapus('."'".$row->idusers."'".','."'".$row->nrp."'".','."'".$row->nama."'".')">Hapus</button>'
                         . '</div>';
+                }
+                
                 
                 $data[] = $val;
             }
@@ -100,7 +105,7 @@ class Pengguna extends BaseController{
                     'pass' => $this->modul->enkrip_pass($this->request->getVar('pass')),
                     'nama' => $this->request->getVar('nama'),
                     'idrole' => $this->request->getVar('role'),
-                    'idkapal' => $this->request->getVar('kapal'),
+                    'idkapal' => $this->request->getVar('kapal')
                 );
                 $simpan = $this->model->add("users",$data);
                 if($simpan == 1){
@@ -139,7 +144,7 @@ class Pengguna extends BaseController{
                 'pass' => $this->modul->enkrip_pass($this->request->getVar('pass')),
                 'nama' => $this->request->getVar('nama'),
                 'idrole' => $this->request->getVar('role'),
-                'idkapal' => $this->request->getVar('kapal'),
+                'idkapal' => $this->request->getVar('kapal')
             );
             $kond['idusers'] = $this->request->getVar('kode');
             $update = $this->model->update("users",$data, $kond);

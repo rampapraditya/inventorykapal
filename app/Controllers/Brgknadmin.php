@@ -351,13 +351,18 @@ class Brgknadmin extends BaseController {
     }
     
     private function simpan_head($username) {
-        $data = array(
-            'idbrg_keluar' => $this->request->getVar('kode'),
-            'idkapal' => $this->request->getVar('kri'),
-            'tgl' => $this->request->getVar('tgl'),
-            'idusers' => $username
-        );
-        $simpan = $this->model->add("brg_keluar",$data);
+        $cek = $this->model->getAllQR("SELECT count(*) as jml FROM brg_keluar where idbrg_keluar = '".$this->request->getVar('kode')."' and idusers = '".$username."';")->jml;
+        if($cek < 1){
+            $data = array(
+                'idbrg_keluar' => $this->request->getVar('kode'),
+                'idkapal' => $this->request->getVar('kri'),
+                'tgl' => $this->request->getVar('tgl'),
+                'idusers' => $username
+            );
+            $simpan = $this->model->add("brg_keluar",$data);
+        }else{
+            $simpan = 1;
+        }
         return  $simpan;
     }
     
@@ -460,5 +465,91 @@ class Brgknadmin extends BaseController {
         $keluar = $this->model->getAllQR("SELECT ifnull(sum(b.jumlah),0) as keluar FROM brg_keluar a, brg_keluar_detil b where a.idbrg_keluar = b.idbrg_keluar and a.idkapal = '".$kri."' and b.idbarang = '".$idbarang."';")->keluar;
         $stok = $masuk - $keluar;
         return $stok;
+    }
+    
+    public function uploadkeluar() {
+        if(session()->get("logged_no_admin")){
+            $username = session()->get("username");
+            
+            if (isset($_FILES['file']['name'])) {
+                if (0 < $_FILES['file']['error']) {
+                    $status = "Error during file upload " . $_FILES['file']['error'];
+                } else {
+                    $status = $this->simpan_dengan_file($username);
+                }
+            } else {
+                $status = "File tidak ditemukan";
+            }
+            echo json_encode(array("status" => $status));
+        }else{
+            $this->modul->halaman('login');
+        }
+    }
+    
+    private function simpan_dengan_file($username) {
+        $file = $this->request->getFile('file');
+        $fileName = $file->getRandomName();
+        $info_file = $this->modul->info_file($file);
+
+        if (file_exists($this->modul->getPathApp().$fileName)) {
+            $status = "Gunakan nama file lain";
+        } else {
+            $status = false;
+            // mengetahui ext
+            if ($info_file['ext'] == "xls") {
+                $render = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
+                $status = true;
+            } else if ($info_file['ext'] == "xlsx") {
+                $render = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+                $status = true;
+            }else{
+                $status = false;
+            }
+
+            if($status){
+                $status_upload = $file->move($this->modul->getPathApp(), $fileName);
+                if ($status_upload) {
+                    // upload header terlebih dahulu
+                    $this->simpan_head($username);
+                    $kri = $this->request->getVar('kri');
+                    
+                    // extrak kulit manggis
+                    $path = $this->modul->getPathApp().$fileName;
+                    $spreadsheet = $render->load($path);
+                    $data = $spreadsheet->getActiveSheet()->toArray();
+                    foreach ($data as $x => $row) {
+                        // masukkan ke database
+                        $nama_brg = trim(addslashes($row[0]));
+                        $jumlah = trim(addslashes($row[7]));
+                        
+                        if (strlen($nama_brg) > 0 && strlen($jumlah) > 0) {
+                            // cek barang ini sudah masuk master apa belum
+                            $jml = $this->model->getAllQR("select count(*) as jml from barang where idkapal = '".$kri."' and deskripsi = '".$nama_brg."';")->jml;
+                            if($jml > 0){
+                                $idbrg = $this->model->getAllQR("select idbarang from barang where idkapal = '".$kri."' and deskripsi = '".$nama_brg."';")->idbarang;
+                                // klo barangnya sudah ada baru di masukkan ke stok
+                                $data_detil = array(
+                                    'idbrg_k_detil' => $this->model->autokode("KD","idbrg_k_detil","brg_keluar_detil", 3, 9),
+                                    'idbarang' => $idbrg,
+                                    'jumlah' => $jumlah,
+                                    'satuan' => trim(addslashes($row[8])),
+                                    'idbrg_keluar' => $this->request->getVar('kode')
+                                );
+                                $this->model->add("brg_keluar_detil",$data_detil);
+                            }
+                        }                   
+                    }
+                    
+                    unlink($this->modul->getPathApp().$fileName);
+                    
+                    $hasil = "Terupload";
+                } else {
+                    $hasil = "File gagal terupload";
+                }
+            }else{
+                $hasil = "Harus berupa file excel";
+            }
+        }
+        return $hasil;
     }
 }

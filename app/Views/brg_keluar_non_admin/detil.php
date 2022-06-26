@@ -174,6 +174,56 @@
             });
         }
     }
+    
+    function add_file(){
+        $('#form_file')[0].reset();
+        $('#modal_file').modal('show');
+    }
+    
+    function save_file(){
+        $('#btnSaveFile').text('Saving...');
+        $('#btnSaveFile').attr('disabled',true);
+        
+        var kode = document.getElementById('kode').value;
+        var tgl = document.getElementById('tgl').value;
+        var kri = document.getElementById('kri').value;
+        var file = $('#file_excel').prop('files')[0];
+        
+        var form_data = new FormData();
+        form_data.append('kode', kode);
+        form_data.append('tgl', tgl);
+        form_data.append('kri', kri);
+        form_data.append('file', file);
+
+        $.ajax({
+            url: "<?php echo base_url(); ?>/brgknadmin/uploadkeluar",
+            dataType: 'JSON',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'POST',
+            success: function (response) {
+                alert(response.status);
+                $('#btnSaveFile').text('Save');
+                $('#btnSaveFile').attr('disabled',false);
+                
+                if(response.status === "Terupload"){
+                    window.location.href = "<?php echo base_url(); ?>/brgknadmin";
+                }
+
+            },error: function (response) {
+                alert(response.status);
+
+                $('#btnSaveFile').text('Save');
+                $('#btnSaveFile').attr('disabled',false);
+            }
+        });
+    }
+    
+    function closemodal_file(){
+        $('#modal_file').modal('hide');
+    }
 
 </script>
 <div class="content-wrapper">
@@ -205,6 +255,7 @@
             <div class="card">
                 <div class="card-header">
                     <button type="button" class="btn btn-primary btn-sm" onclick="add();">Tambah</button>
+                    <button type="button" class="btn btn-success btn-sm" onclick="add_file();">Tambah (File)</button>
                     <button type="button" class="btn btn-secondary btn-sm" onclick="reload();">Reload</button>
                 </div>
                 <div class="card-body">
@@ -286,6 +337,31 @@
                 <div id="wadah_tab" class="col-md-12">
                     
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal_file" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>File Barang Keluar</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closemodal();">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="form_file" class="form-horizontal">
+                    <div class="form-group">
+                        <label>File Excel</label>
+                        <input id="file_excel" name="file_excel" class="form-control" type="file" autocomplete="off">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="btnSaveFile" type="button" class="btn btn-primary btn-sm" onclick="save_file();">Save</button>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="closemodal_file();">Close</button>
             </div>
         </div>
     </div>

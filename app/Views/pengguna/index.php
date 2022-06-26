@@ -38,6 +38,8 @@
             alert("Nama tidak boleh kosong");
         }else if(role === "-"){
             alert("Pilih role terlebih dahulu");
+        }else if(kapal === "-"){
+            alert("Pilih KRI terlebih dahulu");
         } else {
             $('#btnSave').text('Saving...');
             $('#btnSave').attr('disabled', true);
@@ -110,7 +112,7 @@
             type: "POST",
             dataType: "JSON",
             success: function (data) {
-                $('[name="kode"]').val(data.idusers);
+                $('[name="kode"]').val(data.kode);
                 $('[name="nama"]').val(data.nama);
                 $('[name="nrp"]').val(data.nrp);
                 $('[name="pass"]').val(data.pass);
@@ -172,7 +174,7 @@
             </div>
             <div class="modal-body">
                 <form id="form" class="form-horizontal">
-                    <input type="hidden" name="kode" id="kode">
+                    <input type="text" name="kode" id="kode">
                     <div class="form-group">
                         <label>NRP</label>
                         <input id="nrp" name="nrp" class="form-control" type="text" autocomplete="off">
@@ -214,8 +216,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button id="btnSave" type="button" class="btn btn-primary" onclick="save();">Save</button>
-                <button type="button" class="btn btn-secondary" onclick="closemodal();">Close</button>
+                <button id="btnSave" type="button" class="btn btn-primary btn-sm" onclick="save();">Save</button>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="closemodal();">Close</button>
             </div>
         </div>
     </div>
