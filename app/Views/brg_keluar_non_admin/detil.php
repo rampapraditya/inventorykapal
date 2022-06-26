@@ -2,7 +2,6 @@
 
     var save_method = "";
     var table;
-    var tb_platform, tb_sewaco, tb_komaliwan, tb_br_umum;
 
     $(document).ready(function () {
         table = $('#tb').DataTable({
@@ -35,79 +34,25 @@
         $('#modal_barang').modal('hide');
     }
     
-    function load_tb_platform(){
-        var kri = document.getElementById('kri').value;
-        tb_platform = $('#tb_platform').DataTable({
-            ajax: "<?php echo base_url(); ?>/brgknadmin/ajax_platform/<?php echo $kode; ?>/" + kri,
-            ordering: false,
-            retrieve:true
-        });
-        tb_platform.destroy();
-        tb_platform = $('#tb_platform').DataTable({
-            ajax: "<?php echo base_url(); ?>/brgknadmin/ajax_platform/<?php echo $kode; ?>/" + kri,
-            ordering: false,
-            retrieve:true
-        });
-    }
-    
-    function load_tb_sewaco(){
-        var kri = document.getElementById('kri').value;
-        tb_sewaco = $('#tb_sewaco').DataTable({
-            ajax: "<?php echo base_url(); ?>/brgknadmin/ajax_sewaco/<?php echo $kode; ?>/" + kri,
-            ordering: false,
-            retrieve:true
-        });
-        tb_sewaco.destroy();
-        tb_sewaco = $('#tb_sewaco').DataTable({
-            ajax: "<?php echo base_url(); ?>/brgknadmin/ajax_sewaco/<?php echo $kode; ?>/" + kri,
-            ordering: false,
-            retrieve:true
-        });
-    }
-    
-    function load_tb_komaliwan(){
-        var kri = document.getElementById('kri').value;
-        tb_komaliwan = $('#tb_komaliwan').DataTable({
-            ajax: "<?php echo base_url(); ?>/brgknadmin/ajax_komaliwan/<?php echo $kode; ?>/" + kri,
-            ordering: false,
-            retrieve:true
-        });
-        tb_komaliwan.destroy();
-        tb_komaliwan = $('#tb_komaliwan').DataTable({
-            ajax: "<?php echo base_url(); ?>/brgknadmin/ajax_komaliwan/<?php echo $kode; ?>/" + kri,
-            ordering: false,
-            retrieve:true
-        });
-    }
-    
-    function load_tb_br_umum(){
-        var kri = document.getElementById('kri').value;
-        tb_br_umum = $('#tb_br_umum').DataTable({
-            ajax: "<?php echo base_url(); ?>/brgknadmin/ajax_br_umum/<?php echo $kode; ?>/" + kri,
-            ordering: false,
-            retrieve:true
-        });
-        tb_br_umum.destroy();
-        tb_br_umum = $('#tb_br_umum').DataTable({
-            ajax: "<?php echo base_url(); ?>/brgknadmin/ajax_br_umum/<?php echo $kode; ?>/" + kri,
-            ordering: false,
-            retrieve:true
-        });
-    }
-    
     function showBarang(){
         $('#modal_barang').modal('show');
-        
-        load_tb_platform();
-        load_tb_sewaco();
-        load_tb_komaliwan();
-        load_tb_br_umum();
+        $.ajax({
+            url: "<?php echo base_url(); ?>/brgknadmin/load_table",
+            type: "POST",
+            dataType: "JSON",
+            success: function (data) {
+                $('#wadah_tab').html(data.hasil);
+            }, error: function (jqXHR, textStatus, errorThrown) {
+                alert('Error load data');
+            }
+        });
     }
     
-    function pilih(kode, nama, stok){
+    function pilih(kode, nama, stok, satuan){
         $('[name="kode_barang"]').val(kode);
         $('[name="nama"]').val(nama);
         $('[name="stok"]').val(stok);
+        $('[name="satuan"]').val(satuan);
         $('#modal_barang').modal('hide');
     }
     
@@ -316,13 +261,13 @@
                     </div>
                     <div class="form-group">
                         <label>Satuan</label>
-                        <input id="satuan" name="satuan" class="form-control" type="text" autocomplete="off">
+                        <input id="satuan" name="satuan" class="form-control" type="text" autocomplete="off" readonly>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button id="btnSave" type="button" class="btn btn-primary" onclick="save();">Save</button>
-                <button type="button" class="btn btn-secondary" onclick="closemodal();">Close</button>
+                <button id="btnSave" type="button" class="btn btn-primary btn-sm" onclick="save();">Save</button>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="closemodal();">Close</button>
             </div>
         </div>
     </div>
@@ -338,91 +283,8 @@
                 </button>
             </div>
             <div class="modal-body">
-                <nav>
-                    <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
-                        <a class="nav-item nav-link active" id="head_nav_platform" data-toggle="tab" href="#nav_platform" role="tab" aria-controls="nav_platform" aria-selected="true">Platform</a>
-                        <a class="nav-item nav-link" id="head_nav_sewaco" data-toggle="tab" href="#nav_sewaco" role="tab" aria-controls="nav_sewaco" aria-selected="false">Sewaco</a>
-                        <a class="nav-item nav-link" id="head_nav_komaliwan" data-toggle="tab" href="#nav_komaliwan" role="tab" aria-controls="nav_komaliwan" aria-selected="false">Komaliwan</a>
-                        <a class="nav-item nav-link" id="head_nav_nav_barangumum" data-toggle="tab" href="#nav_barangumum" role="tab" aria-controls="nav_barangumum" aria-selected="false">Barang Umum</a>
-                    </div>
-                </nav>
-                <div class="tab-content" id="nav-tabContent">
-                    <div class="tab-pane fade show active" id="nav_platform" role="tabpanel" aria-labelledby="nav_platform">
-                        <div class="table-responsive">
-                            <table id="tb_platform" class="table table-bordered" style="width: 100%; font-size: 10px;">
-                                <thead>
-                                    <tr>
-                                        <th>GAMBAR</th>
-                                        <th>DESCRIPTION</th>
-                                        <th>PN/NSN</th>
-                                        <th>DS NUMBER</th>
-                                        <th>Holding</th>
-                                        <th>Stok</th>
-                                        <th style="text-align: center;">AKSI</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="nav_sewaco" role="tabpanel" aria-labelledby="nav_sewaco">
-                        <div class="table-responsive">
-                            <table id="tb_sewaco" class="table table-bordered" style="width: 100%; font-size: 10px;">
-                                <thead>
-                                    <tr>
-                                        <th>GAMBAR</th>
-                                        <th>DESCRIPTION</th>
-                                        <th>PN/NSN</th>
-                                        <th>DS NUMBER</th>
-                                        <th>Holding</th>
-                                        <th>Stok</th>
-                                        <th style="text-align: center;">AKSI</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="nav_komaliwan" role="tabpanel" aria-labelledby="nav_komaliwan">
-                        <div class="table-responsive">
-                            <table id="tb_komaliwan" class="table table-bordered" style="width: 100%; font-size: 10px;">
-                                <thead>
-                                    <tr>
-                                        <th>GAMBAR</th>
-                                        <th>DESCRIPTION</th>
-                                        <th>PN/NSN</th>
-                                        <th>DS NUMBER</th>
-                                        <th>Holding</th>
-                                        <th>Stok</th>
-                                        <th style="text-align: center;">AKSI</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="nav_barangumum" role="tabpanel" aria-labelledby="nav_barangumum">
-                        <div class="table-responsive">
-                            <table id="tb_br_umum" class="table table-bordered" style="width: 100%; font-size: 10px;">
-                                <thead>
-                                    <tr>
-                                        <th>GAMBAR</th>
-                                        <th>DESCRIPTION</th>
-                                        <th>PN/NSN</th>
-                                        <th>DS NUMBER</th>
-                                        <th>Holding</th>
-                                        <th>Stok</th>
-                                        <th style="text-align: center;">AKSI</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                <div id="wadah_tab" class="col-md-12">
+                    
                 </div>
             </div>
         </div>
