@@ -29,7 +29,7 @@ class Profile extends BaseController {
             $def_foto = base_url().'/images/noimg.jpg';
             $foto = $this->model->getAllQR("select foto from users where idusers = '".session()->get("username")."';")->foto;
             if(strlen($foto) > 0){
-                if(file_exists(ROOTPATH.'public/uploads/'.$foto)){
+                if(file_exists($this->modul->getPathApp().$foto)){
                     $def_foto = base_url().'/uploads/'.$foto;
                 }
             }
@@ -40,14 +40,11 @@ class Profile extends BaseController {
             $def_logo = base_url().'/images/noimg.jpg';
             $logo = $this->model->getAllQR("select logo from identitas;")->logo;
             if(strlen($logo) > 0){
-                if(file_exists(ROOTPATH.'public/uploads/'.$logo)){
+                if(file_exists($this->modul->getPathApp().$logo)){
                     $def_logo = base_url().'/uploads/'.$logo;
                 }
             }
             $data['logo'] = $def_logo;
-            
-            //$data['korps'] = $this->model->getAll("korps");
-            //$data['pangkat'] = $this->model->getAll("pangkat");
             
             $kondisi['idusers'] = $data['username'];
             $data['tersimpan'] = $this->model->get_by_id("users", $kondisi);
