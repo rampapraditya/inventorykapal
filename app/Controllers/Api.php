@@ -189,22 +189,6 @@ class Api extends BaseController {
         return $this->respond($response);
     }
 
-    public function coba11() {
-        $response = array();
-        $response["kode"] = 1;
-        $response["pesan"] = "Display Data";
-        $response["data"] = array();
-
-        $list = $this->model->getAllQ("select idjenisbarang, nama_jenis from jenisbarang;");
-        foreach ($list->getResult() as $row) {
-            $temp["id_jenis"] = $row->idjenisbarang;
-            $temp["nama_jenis"] = $row->nama_jenis;
-
-            array_push($response["data"], $temp);
-        }
-        return $this->respond($response);
-    }
-
     public function load_gudang() {
         $response = array();
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -215,6 +199,7 @@ class Api extends BaseController {
             if ($security == "Pr4medi4InvTorITNIAL") {
             
                 $response["kode"] = 1;
+                $response["pesan"] = "Display Data";
                 $response["data"] = array();
 
                 $idkapal = $this->model->getAllQR("select idkapal from users where idusers = '" . $idusers . "';")->idkapal;
@@ -225,8 +210,6 @@ class Api extends BaseController {
 
                     array_push($response["data"], $temp);
                 }
-                
-                $response["pesan"] = "Display Data Kapal : " . $idkapal.' Users : ' .$idusers;
                 
             } else {
                 $response["kode"] = 0;
