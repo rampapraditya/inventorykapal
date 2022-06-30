@@ -117,4 +117,133 @@ class Api extends BaseController {
         return $this->respond($response);
     }
 
+    public function proses_profile() {
+        $response = array();
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $security = $this->request->getPost('security');
+
+            if ($security == "Pr4medi4InvTorITNIAL") {
+                $data = array(
+                    'nrp' => $this->request->getPost('nrp'),
+                    'nama' => $this->request->getPost('nama'),
+                    'tgl_lahir' => $this->request->getPost('tgllahir'),
+                    'agama' => $this->request->getPost('agama'),
+                    'kota_asal' => $this->request->getPost('kota'),
+                    'satuan_kerja' => $this->request->getPost('satker')
+                );
+                $kond['idusers'] = $this->request->getPost('idusers');
+                $update = $this->model->update("users", $data, $kond);
+                if ($update == 1) {
+                    $response["kode"] = 1;
+                    $response["pesan"] = "Profile tersimpan";
+                } else {
+                    $response["kode"] = 1;
+                    $response["pesan"] = "Profile gagal tersimpan";
+                }
+            } else {
+                $response["kode"] = 0;
+                $response["pesan"] = "Token ditolak";
+            }
+        } else {
+            $response["kode"] = 0;
+            $response["pesan"] = "Tidak Ada Post Data";
+        }
+        return $this->respond($response);
+    }
+
+    public function proses_password() {
+        $response = array();
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $security = $this->request->getPost('security');
+
+            if ($security == "Pr4medi4InvTorITNIAL") {
+                $idusers = $this->request->getPost('idusers');
+                $lama = $this->modul->enkrip_pass($this->request->getPost('lama'));
+                $lama_db = $this->model->getAllQR("select pass from users where idusers = '" . $idusers . "';")->pass;
+
+                if ($lama == $lama_db) {
+                    $data = array(
+                        'pass' => $this->modul->enkrip_pass($this->request->getPost('baru'))
+                    );
+                    $kond['idusers'] = $idusers;
+                    $update = $this->model->update("users", $data, $kond);
+                    if ($update == 1) {
+                        $response["kode"] = 1;
+                        $response["pesan"] = "Password tersimpan";
+                    } else {
+                        $response["kode"] = 1;
+                        $response["pesan"] = "Password gagal tersimpan";
+                    }
+                } else {
+                    $response["kode"] = 1;
+                    $response["pesan"] = "Passsword lama tidak sesuai";
+                }
+            } else {
+                $response["kode"] = 0;
+                $response["pesan"] = "Token ditolak";
+            }
+        } else {
+            $response["kode"] = 0;
+            $response["pesan"] = "Tidak Ada Post Data";
+        }
+        return $this->respond($response);
+    }
+
+    public function coba11() {
+        $response = array();
+        $response["kode"] = 1;
+        $response["pesan"] = "Display Data";
+        $response["data"] = array();
+
+        $list = $this->model->getAllQ("select idjenisbarang, nama_jenis from jenisbarang;");
+        foreach ($list->getResult() as $row) {
+            $temp["id_jenis"] = $row->idjenisbarang;
+            $temp["nama_jenis"] = $row->nama_jenis;
+
+            array_push($response["data"], $temp);
+        }
+        return $this->respond($response);
+    }
+
+    public function load_gudang() {
+        $response = array();
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $security = $this->request->getPost('security');
+            $idusers = $this->request->getPost('idusers');
+            $nama_jenis = $this->request->getPost('nama_jenis');
+
+            if ($security == "Pr4medi4InvTorITNIAL") {
+            
+                $response["kode"] = 1;
+                $response["data"] = array();
+
+                $idkapal = $this->model->getAllQR("select idkapal from users where idusers = '" . $idusers . "';")->idkapal;
+                $list = $this->model->getAllQ("select idjenisbarang, nama_jenis from jenisbarang where idkapal = '" . $idkapal . "' and nama_jenis like '%".$nama_jenis."%';");
+                foreach ($list->getResult() as $row) {
+                    $temp["id_jenis"] = $row->idjenisbarang;
+                    $temp["nama_jenis"] = $row->nama_jenis;
+
+                    array_push($response["data"], $temp);
+                }
+                
+                $response["pesan"] = "Display Data Kapal : " . $idkapal.' Users : ' .$idusers;
+                
+            } else {
+                $response["kode"] = 0;
+                $response["pesan"] = "Token ditolak";
+            }
+        } else {
+            $response["kode"] = 0;
+            $response["pesan"] = "Tidak Ada Post Data";
+        }
+        return $this->respond($response);
+    }
+
+    private function getStok($idbarang, $kri) {
+        $masuk = $this->model->getAllQR("SELECT ifnull(sum(b.jumlah),0) as masuk FROM brg_masuk a, brg_masuk_detil b where a.idbrg_masuk = b.idbrg_masuk and a.idkapal = '" . $kri . "' and b.idbarang = '" . $idbarang . "';")->masuk;
+        $keluar = $this->model->getAllQR("SELECT ifnull(sum(b.jumlah),0) as keluar FROM brg_keluar a, brg_keluar_detil b where a.idbrg_keluar = b.idbrg_keluar and a.idkapal = '" . $kri . "' and b.idbarang = '" . $idbarang . "';")->keluar;
+        $stok = $masuk - $keluar;
+        return $stok;
+    }
+
 }

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jun 26, 2022 at 07:32 AM
+-- Generation Time: Jun 29, 2022 at 03:15 PM
 -- Server version: 5.7.31
 -- PHP Version: 7.3.21
 
@@ -199,7 +199,7 @@ CREATE TABLE IF NOT EXISTS `kapal` (
 INSERT INTO `kapal` (`idkapal`, `nama_kapal`, `gambar`, `keterangan`) VALUES
 ('K00001', 'Dewaruci', '1656082231_2544998d662c894c180b.jpg', 'Gambar kapal dewaruci'),
 ('K00002', 'KRI B', '1656082238_ace2e7f0a1543f840dc1.jpg', ''),
-('K00003', 'kri sultan hasanudin', '', ''),
+('K00003', 'kri sultan hasanudin', '1656493858_0e0384b437dd3b25cd10.jpg', ''),
 ('K00004', 'KRI FKO', '', ''),
 ('K00005', 'KRI DPN-365', '', '');
 
