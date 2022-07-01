@@ -221,12 +221,125 @@ class Api extends BaseController {
         }
         return $this->respond($response);
     }
+    
+    public function load_stok() {
+        $response = array();
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $security = $this->request->getPost('security');
+            $idusers = $this->request->getPost('idusers');
+            $idkapal = $this->model->getAllQR("select idkapal from users where idusers = '" . $idusers . "';")->idkapal;
+            $idjenisbarang = $this->request->getPost('idgudang');
+            $deskripsi = $this->request->getPost('deskripsi');
+
+            if ($security == "Pr4medi4InvTorITNIAL") {
+            
+                $response["kode"] = 1;
+                $response["pesan"] = "Display Data";
+                $response["data"] = array();
+
+                $list = $this->model->getAllQ("select * from barang where idjenisbarang = '".$idjenisbarang."' and idkapal = '".$idkapal."' and deskripsi like '%".$deskripsi."%';");
+                foreach ($list->getResult() as $row) {
+                    
+                    $foto = base_url() . '/images/noimg.jpg';
+                    if (strlen($row->foto) > 0) {
+                        if (file_exists($this->modul->getPathApp().$row->foto)) {
+                            $foto = base_url().'/uploads/'.$row->foto;
+                        }
+                    }
+                    
+                    $temp["idbarang"] = $row->idbarang;
+                    $temp["foto"] = $foto;
+                    $temp["deskripsi"] = $row->deskripsi;
+                    $temp["pn_nsn"] = $row->pn_nsn;
+                    $temp["ds_number"] = $row->ds_number;
+                    $temp["holding"] = $row->holding;
+                    $temp["equipment_desc"] = $row->equipment_desc;
+                    $temp["store_location"] = $row->store_location;
+                    $temp["supplementary_location"] = $row->supplementary_location;
+                    $temp["qty"] = $this->getStok($row->idbarang, $idkapal);
+                    $temp["uoi"] = $row->uoi;
+                    $temp["verwendung"] = $row->verwendung;
+
+                    array_push($response["data"], $temp);
+                }
+                
+            } else {
+                $response["kode"] = 0;
+                $response["pesan"] = "Token ditolak";
+            }
+        } else {
+            $response["kode"] = 0;
+            $response["pesan"] = "Tidak Ada Post Data";
+        }
+        return $this->respond($response);
+    }
 
     private function getStok($idbarang, $kri) {
         $masuk = $this->model->getAllQR("SELECT ifnull(sum(b.jumlah),0) as masuk FROM brg_masuk a, brg_masuk_detil b where a.idbrg_masuk = b.idbrg_masuk and a.idkapal = '" . $kri . "' and b.idbarang = '" . $idbarang . "';")->masuk;
         $keluar = $this->model->getAllQR("SELECT ifnull(sum(b.jumlah),0) as keluar FROM brg_keluar a, brg_keluar_detil b where a.idbrg_keluar = b.idbrg_keluar and a.idkapal = '" . $kri . "' and b.idbarang = '" . $idbarang . "';")->keluar;
         $stok = $masuk - $keluar;
         return $stok;
+    }
+    
+    public function load_barang_masuk() {
+        $response = array();
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $security = $this->request->getPost('security');
+            $idusers = $this->request->getPost('idusers');
+            $idkapal = $this->model->getAllQR("select idkapal from users where idusers = '" . $idusers . "';")->idkapal;
+
+            if ($security == "Pr4medi4InvTorITNIAL") {
+            
+                $response["kode"] = 1;
+                $response["pesan"] = "Display Data";
+                $response["data"] = array();
+                
+                $no = 1;
+                $list = $this->model->getAllQ("SELECT a.idbrg_masuk, date_format(tgl, '%d %M %Y') as tglf, b.nama_kapal FROM brg_masuk a, kapal b where a.idkapal = b.idkapal and b.idkapal = '".$idkapal."' order by tgl desc;");
+                foreach ($list->getResult() as $row) {
+                    $temp["no"] = $no;
+                    $temp["idbrg_masuk"] = $row->idbrg_masuk;
+                    $temp["tglf"] = $row->tglf;
+                    $temp["nama_kapal"] = $row->nama_kapal;
+
+                    array_push($response["data"], $temp);
+                    
+                    $no++;
+                }
+
+            } else {
+                $response["kode"] = 0;
+                $response["pesan"] = "Token ditolak";
+            }
+        } else {
+            $response["kode"] = 0;
+            $response["pesan"] = "Tidak Ada Post Data";
+        }
+        return $this->respond($response);
+    }
+    
+    public function load_barang_masuk_detil() {
+        $response = array();
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $idbrg_masuk = $this->request->getPost('idbrg_masuk');
+            
+            $response["kode"] = 1;
+            $response["pesan"] = "Display Data";
+            $response["data"] = array();
+
+            $list = $this->model->getAllQ("SELECT b.deskripsi, a.jumlah, a.satuan FROM brg_masuk_detil a, barang b where a.idbarang = b.idbarang and a.idbrg_masuk = '".$idbrg_masuk."';");
+            foreach ($list->getResult() as $row) {
+                $temp["deskripsi"] = $row->deskripsi;
+                $temp["jumlah"] = $row->jumlah;
+                $temp["satuan"] = $row->satuan;
+
+                array_push($response["data"], $temp);
+            }
+        } else {
+            $response["kode"] = 0;
+            $response["pesan"] = "Tidak Ada Post Data";
+        }
+        return $this->respond($response);
     }
 
 }
