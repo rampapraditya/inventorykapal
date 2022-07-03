@@ -49,13 +49,18 @@ class Api extends BaseController {
                     $jml1 = $this->model->getAllQR("select count(*) as jml from users where nrp = '" . $username . "' and pass = '" . $enkrip_pass . "';")->jml;
                     if ($jml1 > 0) {
                         $data = $this->model->getAllQR("select idusers, nrp, nama, idrole from users where nrp = '" . $username . "';");
-
-                        $response["kode"] = 1;
-                        $response["pesan"] = "Login sukses";
-                        $response["idusers"] = $data->idusers;
-                        $response["nrp"] = $data->nrp;
-                        $response["nama"] = $data->nama;
-                        $response["role"] = $data->idrole;
+						if($data->idrole == "R00001"){
+							$response["kode"] = 0;
+							$response["pesan"] = "Aplikasi bukan untuk administrator";
+						}else{
+							$response["kode"] = 1;
+							$response["pesan"] = "Login sukses";
+							$response["idusers"] = $data->idusers;
+							$response["nrp"] = $data->nrp;
+							$response["nama"] = $data->nama;
+							$response["role"] = $data->idrole;
+						}
+                        
                     } else {
                         $response["kode"] = 0;
                         $response["pesan"] = "Akses ditolak";
@@ -295,11 +300,51 @@ class Api extends BaseController {
                 $response["data"] = array();
 
                 $no = 1;
-                $list = $this->model->getAllQ("SELECT a.idbrg_masuk, date_format(tgl, '%d %M %Y') as tglf, b.nama_kapal FROM brg_masuk a, kapal b where a.idkapal = b.idkapal and b.idkapal = '" . $idkapal . "' and tgl like '%" . $tgl . "%' order by tgl desc;");
+                $list = $this->model->getAllQ("SELECT a.idbrg_masuk, tgl, date_format(tgl, '%d %M %Y') as tglf, b.nama_kapal FROM brg_masuk a, kapal b where a.idkapal = b.idkapal and b.idkapal = '" . $idkapal . "' and tgl like '%" . $tgl . "%' order by tgl desc;");
                 foreach ($list->getResult() as $row) {
                     $temp["no"] = $no;
                     $temp["idbrg_masuk"] = $row->idbrg_masuk;
-                    $temp["tglf"] = $row->tglf;
+                    $temp["tgl"] = $row->tgl;
+					$temp["tglf"] = $row->tglf;
+                    $temp["nama_kapal"] = $row->nama_kapal;
+
+                    array_push($response["data"], $temp);
+
+                    $no++;
+                }
+            } else {
+                $response["kode"] = 0;
+                $response["pesan"] = "Token ditolak";
+            }
+        } else {
+            $response["kode"] = 0;
+            $response["pesan"] = "Tidak Ada Post Data";
+        }
+        return $this->respond($response);
+    }
+	
+	public function load_barang_keluar() {
+        $response = array();
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $security = $this->request->getPost('security');
+            $idusers = $this->request->getPost('idusers');
+            $tgl = $this->request->getPost('tgl');
+
+            $idkapal = $this->model->getAllQR("select idkapal from users where idusers = '" . $idusers . "';")->idkapal;
+
+            if ($security == "Pr4medi4InvTorITNIAL") {
+
+                $response["kode"] = 1;
+                $response["pesan"] = "Display Data";
+                $response["data"] = array();
+
+                $no = 1;
+                $list = $this->model->getAllQ("SELECT a.idbrg_keluar, tgl, date_format(tgl, '%d %M %Y') as tglf, b.nama_kapal FROM brg_keluar a, kapal b where a.idkapal = b.idkapal and a.idkapal = '".$idkapal."' and a.tgl like '%".$tgl."%' order by tgl desc;");
+                foreach ($list->getResult() as $row) {
+                    $temp["no"] = $no;
+                    $temp["idbrg_keluar"] = $row->idbrg_keluar;
+                    $temp["tgl"] = $row->tgl;
+					$temp["tglf"] = $row->tglf;
                     $temp["nama_kapal"] = $row->nama_kapal;
 
                     array_push($response["data"], $temp);
@@ -337,6 +382,27 @@ class Api extends BaseController {
         }
         return $this->respond($response);
     }
+	
+	public function generate_kode_barang_keluar() {
+        $response = array();
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $security = $this->request->getPost('security');
+            if ($security == "Pr4medi4InvTorITNIAL") {
+                $idbrg_keluar = $this->model->autokode('K','idbrg_keluar', 'brg_keluar', 2, 7);
+
+                $response["kode"] = 1;
+                $response["pesan"] = "Display Data";
+                $response["idbrg_keluar"] = $idbrg_keluar;
+            } else {
+                $response["kode"] = 0;
+                $response["pesan"] = "Token ditolak";
+            }
+        } else {
+            $response["kode"] = 0;
+            $response["pesan"] = "Tidak Ada Post Data";
+        }
+        return $this->respond($response);
+    }
 
     public function load_barang_masuk_detil() {
         $response = array();
@@ -350,6 +416,31 @@ class Api extends BaseController {
             $list = $this->model->getAllQ("SELECT a.idbrg_m_detil, b.deskripsi, a.jumlah, a.satuan FROM brg_masuk_detil a, barang b where a.idbarang = b.idbarang and a.idbrg_masuk = '" . $idbrg_masuk . "';");
             foreach ($list->getResult() as $row) {
                 $temp["idbrg_m_detil"] = $row->idbrg_m_detil;
+                $temp["deskripsi"] = $row->deskripsi;
+                $temp["jumlah"] = $row->jumlah;
+                $temp["satuan"] = $row->satuan;
+
+                array_push($response["data"], $temp);
+            }
+        } else {
+            $response["kode"] = 0;
+            $response["pesan"] = "Tidak Ada Post Data";
+        }
+        return $this->respond($response);
+    }
+	
+	public function load_barang_keluar_detil() {
+        $response = array();
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $idbrg_keluar = $this->request->getPost('idbrg_keluar');
+
+            $response["kode"] = 1;
+            $response["pesan"] = "Display Data";
+            $response["data"] = array();
+
+            $list = $this->model->getAllQ("SELECT a.idbrg_k_detil, b.deskripsi, a.jumlah, a.satuan FROM brg_keluar_detil a, barang b where a.idbarang = b.idbarang and a.idbrg_keluar = '".$idbrg_keluar."';");
+            foreach ($list->getResult() as $row) {
+                $temp["idbrg_k_detil"] = $row->idbrg_k_detil;
                 $temp["deskripsi"] = $row->deskripsi;
                 $temp["jumlah"] = $row->jumlah;
                 $temp["satuan"] = $row->satuan;
@@ -390,6 +481,120 @@ class Api extends BaseController {
         }
         return $this->respond($response);
     }
+	
+	public function hapus_keluar() {
+        $response = array();
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $security = $this->request->getPost('security');
+            $idbrg_keluar = $this->request->getPost('idbrg_keluar');
+            if ($security == "Pr4medi4InvTorITNIAL") {
+
+                $kond['idbrg_keluar'] = $idbrg_keluar;
+                $hapus = $this->model->delete("brg_keluar", $kond);
+                if ($hapus == 1) {
+                    $status = "Data terhapus";
+                } else {
+                    $status = "Data gagal terhapus";
+                }
+
+                $response["kode"] = 1;
+                $response["pesan"] = $status;
+            } else {
+                $response["kode"] = 0;
+                $response["pesan"] = "Token ditolak";
+            }
+        } else {
+            $response["kode"] = 0;
+            $response["pesan"] = "Tidak Ada Post Data";
+        }
+        return $this->respond($response);
+    }
+	
+	public function hapus_masuk_detil() {
+        $response = array();
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $security = $this->request->getPost('security');
+            $idbrg_m_detil = $this->request->getPost('idbrg_m_detil');
+            if ($security == "Pr4medi4InvTorITNIAL") {
+
+                $kond['idbrg_m_detil'] = $idbrg_m_detil;
+                $hapus = $this->model->delete("brg_masuk_detil", $kond);
+                if ($hapus == 1) {
+                    $status = "Data terhapus";
+                } else {
+                    $status = "Data gagal terhapus";
+                }
+
+                $response["kode"] = 1;
+                $response["pesan"] = $status;
+            } else {
+                $response["kode"] = 0;
+                $response["pesan"] = "Token ditolak";
+            }
+        } else {
+            $response["kode"] = 0;
+            $response["pesan"] = "Tidak Ada Post Data";
+        }
+        return $this->respond($response);
+    }
+	
+	public function hapus_keluar_detil() {
+        $response = array();
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $security = $this->request->getPost('security');
+            $idbrg_k_detil = $this->request->getPost('idbrg_k_detil');
+            if ($security == "Pr4medi4InvTorITNIAL") {
+
+                $kond['idbrg_k_detil'] = $idbrg_k_detil;
+                $hapus = $this->model->delete("brg_keluar_detil", $kond);
+                if ($hapus == 1) {
+                    $status = "Data terhapus";
+                } else {
+                    $status = "Data gagal terhapus";
+                }
+
+                $response["kode"] = 1;
+                $response["pesan"] = $status;
+            } else {
+                $response["kode"] = 0;
+                $response["pesan"] = "Token ditolak";
+            }
+        } else {
+            $response["kode"] = 0;
+            $response["pesan"] = "Tidak Ada Post Data";
+        }
+        return $this->respond($response);
+    }
+	
+	public function update_masuk_detil(){
+		$response = array();
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $security = $this->request->getPost('security');
+            if ($security == "Pr4medi4InvTorITNIAL") {
+
+                $data = array(
+                    'jumlah' => $this->request->getPost('jumlah')
+                );
+                $kond['idbrg_m_detil'] = $this->request->getPost('idbrg_m_detil');
+                $update = $this->model->update("brg_masuk_detil",$data, $kond);
+                if($update == 1){
+                    $pesan = "Data terupdate";
+                }else{
+                    $pesan = "Data gagal terupdate";
+                }
+
+                $response["kode"] = 1;
+                $response["pesan"] = $pesan;
+            } else {
+                $response["kode"] = 0;
+                $response["pesan"] = "Token ditolak";
+            }
+        } else {
+            $response["kode"] = 0;
+            $response["pesan"] = "Tidak Ada Post Data";
+        }
+        return $this->respond($response);
+	}
 
     public function upload_barang_masuk() {
         $response = array();
@@ -397,6 +602,7 @@ class Api extends BaseController {
             $security = $this->request->getPost('security');
             if ($security == "Pr4medi4InvTorITNIAL") {
                 $file = $this->request->getFile('file');
+                $info_file = $this->modul->info_file($file);
                 $fileName = $file->getRandomName();
                 $username = $this->request->getPost('username');
                 

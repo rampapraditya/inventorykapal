@@ -408,7 +408,6 @@ class Brgmnadmin extends BaseController {
             $update = $this->model->update("brg_masuk",$data, $kond1);
             if($update == 1){
                 $data_detil = array(
-                    'idbrg_m_detil' => $this->model->autokode("MD","idbrg_m_detil","brg_masuk_detil", 3, 9),
                     'idbarang' => $this->request->getVar('kode_barang'),
                     'jumlah' => $this->request->getVar('jumlah'),
                     'satuan' => $this->request->getVar('satuan')
