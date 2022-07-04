@@ -300,8 +300,6 @@ class Barangnoadmin extends BaseController {
             } else {
                 $status = $this->update_tanpa_foto();
             }
-
-
             echo json_encode(array("status" => $status));
         } else {
             $this->modul->halaman('login');

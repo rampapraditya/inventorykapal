@@ -89,10 +89,10 @@ class Api extends BaseController {
                 $cek = $this->model->getAllQR("select count(*) as jml from users where idusers = '" . $idusers . "';")->jml;
                 if ($cek > 0) {
                     $data = $this->model->getAllQR("select *, b.nama_role from users a, role b where a.idrole = b.idrole and a.idusers = '" . $idusers . "';");
-                    $def_foto = base_url() . '/images/noimg.jpg';
+                    $def_foto = base_url().'/images/noimg.jpg';
                     if (strlen($data->foto) > 0) {
-                        if (file_exists($this->modul->getPathApp() . $data->foto)) {
-                            $def_foto = base_url() . '/uploads/' . $foto;
+                        if (file_exists($this->modul->getPathApp().$data->foto)) {
+                            $def_foto = base_url().'/uploads/'.$data->foto;
                         }
                     }
                     $response["kode"] = 1;
@@ -284,6 +284,91 @@ class Api extends BaseController {
         return $stok;
     }
 
+    public function load_barang() {
+        $response = array();
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $security = $this->request->getPost('security');
+            $idusers = $this->request->getPost('idusers');
+            $idgudang = $this->request->getPost('idgudang');
+            $idkapal = $this->model->getAllQR("select idkapal from users where idusers = '".$idusers."';")->idkapal;
+            $deskripsi = $this->request->getPost('deskripsi');
+
+            if ($security == "Pr4medi4InvTorITNIAL") {
+
+                $response["kode"] = 1;
+                $response["pesan"] = "Display Data";
+                $response["data"] = array();
+
+                $list = $this->model->getAllQ("select * from barang where idjenisbarang = '".$idgudang."' and idkapal = '".$idkapal."' and deskripsi like '%".$deskripsi."%';");
+                foreach ($list->getResult() as $row) {
+                    $foto = base_url().'/images/noimg.jpg';
+                    if (strlen($row->foto) > 0) {
+                        if (file_exists($this->modul->getPathApp().$row->foto)) {
+                            $foto = base_url().'/uploads/'.$row->foto;
+                        }
+                    }
+                    
+                    $temp["idbarang"] = $row->idbarang;
+                    $temp["foto"] = $foto;
+                    $temp["deskripsi"] = $row->deskripsi;
+                    $temp["pn_nsn"] = $row->pn_nsn;
+                    $temp["ds_number"] = $row->ds_number;
+                    $temp["holding"] = $row->holding;
+                    $temp["equipment_desc"] = $row->equipment_desc;
+                    $temp["store_location"] = $row->store_location;
+                    $temp["supplementary_location"] = $row->supplementary_location;
+                    $temp["qty"] = $this->getStok($row->idbarang, $idkapal);
+                    $temp["uoi"] = $row->uoi;
+                    $temp["verwendung"] = $row->verwendung;
+
+                    array_push($response["data"], $temp);
+                }
+            } else {
+                $response["kode"] = 0;
+                $response["pesan"] = "Token ditolak";
+            }
+        } else {
+            $response["kode"] = 0;
+            $response["pesan"] = "Tidak Ada Post Data";
+        }
+        return $this->respond($response);
+    }
+    
+    public function hapus_barang() {
+        $response = array();
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $security = $this->request->getPost('security');
+            $idbarang = $this->request->getPost('idbarang');
+            if ($security == "Pr4medi4InvTorITNIAL") {
+
+                $logo = $this->model->getAllQR("SELECT foto FROM barang where idbarang = '" . $idbarang . "';")->foto;
+                if (strlen($logo) > 0) {
+                    if (file_exists($this->modul->getPathApp(). $logo)) {
+                        unlink($this->modul->getPathApp(). $logo);
+                    }
+                }
+
+                $kondisi['idbarang'] = $idbarang;
+                $hapus = $this->model->delete("barang", $kondisi);
+                if ($hapus == 1) {
+                    $pesan = "Data terhapus";
+                } else {
+                    $pesan = "Data gagal terhapus";
+                }
+                
+                $response["kode"] = 1;
+                $response["pesan"] = $pesan;
+            } else {
+                $response["kode"] = 0;
+                $response["pesan"] = "Token ditolak";
+            }
+        } else {
+            $response["kode"] = 0;
+            $response["pesan"] = "Tidak Ada Post Data";
+        }
+        return $this->respond($response);
+    }
+    
     public function load_barang_masuk() {
         $response = array();
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -305,7 +390,7 @@ class Api extends BaseController {
                     $temp["no"] = $no;
                     $temp["idbrg_masuk"] = $row->idbrg_masuk;
                     $temp["tgl"] = $row->tgl;
-					$temp["tglf"] = $row->tglf;
+                    $temp["tglf"] = $row->tglf;
                     $temp["nama_kapal"] = $row->nama_kapal;
 
                     array_push($response["data"], $temp);
@@ -344,7 +429,7 @@ class Api extends BaseController {
                     $temp["no"] = $no;
                     $temp["idbrg_keluar"] = $row->idbrg_keluar;
                     $temp["tgl"] = $row->tgl;
-					$temp["tglf"] = $row->tglf;
+                    $temp["tglf"] = $row->tglf;
                     $temp["nama_kapal"] = $row->nama_kapal;
 
                     array_push($response["data"], $temp);
@@ -859,6 +944,117 @@ class Api extends BaseController {
             $simpan = 1;
         }
         return $simpan;
+    }
+    
+    public function update_barang() {
+        $response = array();
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $username = $this->request->getPost('idusers');
+            $idkapal = $this->model->getAllQR("select idkapal from users where idusers = '".$username."';")->idkapal;
+            $data = array(
+                'deskripsi' => $this->request->getPost('deskripsi'),
+                'pn_nsn' => $this->request->getPost('pn_nsn'),
+                'ds_number' => $this->request->getPost('ds_number'),
+                'holding' => $this->request->getPost('holding'),
+                'equipment_desc' => $this->request->getPost('equipment_desc'),
+                'store_location' => $this->request->getPost('store_location'),
+                'supplementary_location' => $this->request->getPost('supplementary_location'),
+                'uoi' => $this->request->getPost('uoi'),
+                'verwendung' => $this->request->getPost('verwendung'),
+                'idkapal' => $idkapal
+            );
+            $kond['idbarang'] = $this->request->getPost('idbarang');
+            $update = $this->model->update("barang", $data, $kond);
+            if ($update == 1) {
+                $pesan = "Data terupdate";
+            } else {
+                $pesan = "Data gagal terupdate";
+            }
+            $response["kode"] = 1;
+            $response["pesan"] = $pesan;
+        } else {
+            $response["kode"] = 0;
+            $response["pesan"] = "Tidak Ada Post Data";
+        }
+        return $this->respond($response);
+    }
+    
+    public function update_foto_barang() {
+        $response = array();
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $file = $this->request->getFile('file');
+            $namaFile = $file->getRandomName();
+            $info_file = $this->modul->info_file($file);
+            
+            // cek foto lama
+            $foto = $this->model->getAllQR("select foto from barang where idbarang = '".$this->request->getPost('idbarang')."';")->foto;
+            if(strlen($foto) > 0){
+                if (file_exists($this->modul->getPathApp().$foto)) {
+                    unlink($this->modul->getPathApp().$foto);
+                }
+            }
+            
+            $upload = $file->move($this->modul->getPathApp(), $namaFile);
+            if($upload){
+                $data = array(
+                    'foto' => $namaFile,
+                );
+                $kond['idbarang'] = $this->request->getPost('idbarang');
+                $update = $this->model->update("barang", $data, $kond);
+                if ($update == 1) {
+                    $pesan = "Data terupdate";
+                } else {
+                    $pesan = "Data gagal terupdate";
+                }
+            }
+                
+            $response["kode"] = 1;
+            $response["pesan"] = $pesan;
+            
+        } else {
+            $response["kode"] = 0;
+            $response["pesan"] = "Tidak Ada Post Data";
+        }
+        return $this->respond($response);
+    }
+    
+    public function update_foto_profile() {
+        $response = array();
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $file = $this->request->getFile('file');
+            $namaFile = $file->getRandomName();
+            $info_file = $this->modul->info_file($file);
+            
+            // cek foto lama
+            $foto = $this->model->getAllQR("select foto from users where idusers = '".$this->request->getPost('idusers')."';")->foto;
+            if(strlen($foto) > 0){
+                if (file_exists($this->modul->getPathApp().$foto)) {
+                    unlink($this->modul->getPathApp().$foto);
+                }
+            }
+            
+            $upload = $file->move($this->modul->getPathApp(), $namaFile);
+            if($upload){
+                $data = array(
+                    'foto' => $namaFile,
+                );
+                $kond['idusers'] = $this->request->getPost('idusers');
+                $update = $this->model->update("users", $data, $kond);
+                if ($update == 1) {
+                    $pesan = "Foto terupdate";
+                } else {
+                    $pesan = "Foto gagal terupdate";
+                }
+            }
+                
+            $response["kode"] = 1;
+            $response["pesan"] = $pesan;
+            
+        } else {
+            $response["kode"] = 0;
+            $response["pesan"] = "Tidak Ada Post Data";
+        }
+        return $this->respond($response);
     }
 
 }
