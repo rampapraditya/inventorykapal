@@ -15,7 +15,6 @@
                     </ul>
                 </div>
             </li>
-            <!--
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#master" aria-expanded="false" aria-controls="master">
                     <i class="icon-grid-2 menu-icon"></i>
@@ -24,11 +23,10 @@
                 </a>
                 <div class="collapse" id="master">
                     <ul class="nav flex-column sub-menu">
-                        <li class="nav-item"> <a class="nav-link" href="<?php //echo base_url(); ?>/barangnoadmin">Barang</a></li>
+                        <li class="nav-item"> <a class="nav-link" href="<?php echo base_url(); ?>/barangnoadmin">Barang</a></li>
                     </ul>
                 </div>
             </li>
-            -->
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#trans" aria-expanded="false" aria-controls="trans">
                     <i class="icon-file-add menu-icon"></i>

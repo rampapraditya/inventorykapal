@@ -49,17 +49,17 @@ class Api extends BaseController {
                     $jml1 = $this->model->getAllQR("select count(*) as jml from users where nrp = '" . $username . "' and pass = '" . $enkrip_pass . "';")->jml;
                     if ($jml1 > 0) {
                         $data = $this->model->getAllQR("select idusers, nrp, nama, idrole from users where nrp = '" . $username . "';");
-						if($data->idrole == "R00001"){
-							$response["kode"] = 0;
-							$response["pesan"] = "Aplikasi bukan untuk administrator";
-						}else{
-							$response["kode"] = 1;
-							$response["pesan"] = "Login sukses";
-							$response["idusers"] = $data->idusers;
-							$response["nrp"] = $data->nrp;
-							$response["nama"] = $data->nama;
-							$response["role"] = $data->idrole;
-						}
+                        if($data->idrole == "R00001"){
+                            $response["kode"] = 0;
+                            $response["pesan"] = "Aplikasi bukan untuk administrator";
+                        }else{
+                            $response["kode"] = 1;
+                            $response["pesan"] = "Login sukses";
+                            $response["idusers"] = $data->idusers;
+                            $response["nrp"] = $data->nrp;
+                            $response["nama"] = $data->nama;
+                            $response["role"] = $data->idrole;
+                        }
                         
                     } else {
                         $response["kode"] = 0;
@@ -323,7 +323,7 @@ class Api extends BaseController {
         return $this->respond($response);
     }
 	
-	public function load_barang_keluar() {
+    public function load_barang_keluar() {
         $response = array();
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $security = $this->request->getPost('security');
@@ -383,7 +383,7 @@ class Api extends BaseController {
         return $this->respond($response);
     }
 	
-	public function generate_kode_barang_keluar() {
+    public function generate_kode_barang_keluar() {
         $response = array();
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $security = $this->request->getPost('security');
@@ -429,7 +429,7 @@ class Api extends BaseController {
         return $this->respond($response);
     }
 	
-	public function load_barang_keluar_detil() {
+    public function load_barang_keluar_detil() {
         $response = array();
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $idbrg_keluar = $this->request->getPost('idbrg_keluar');
@@ -482,7 +482,7 @@ class Api extends BaseController {
         return $this->respond($response);
     }
 	
-	public function hapus_keluar() {
+    public function hapus_keluar() {
         $response = array();
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $security = $this->request->getPost('security');
@@ -510,7 +510,7 @@ class Api extends BaseController {
         return $this->respond($response);
     }
 	
-	public function hapus_masuk_detil() {
+    public function hapus_masuk_detil() {
         $response = array();
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $security = $this->request->getPost('security');
@@ -538,7 +538,7 @@ class Api extends BaseController {
         return $this->respond($response);
     }
 	
-	public function hapus_keluar_detil() {
+    public function hapus_keluar_detil() {
         $response = array();
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $security = $this->request->getPost('security');
@@ -566,8 +566,8 @@ class Api extends BaseController {
         return $this->respond($response);
     }
 	
-	public function update_masuk_detil(){
-		$response = array();
+    public function update_masuk_detil(){
+        $response = array();
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $security = $this->request->getPost('security');
             if ($security == "Pr4medi4InvTorITNIAL") {
@@ -594,7 +594,37 @@ class Api extends BaseController {
             $response["pesan"] = "Tidak Ada Post Data";
         }
         return $this->respond($response);
-	}
+    }
+	
+    public function update_keluar_detil(){
+        $response = array();
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $security = $this->request->getPost('security');
+            if ($security == "Pr4medi4InvTorITNIAL") {
+
+                $data = array(
+                    'jumlah' => $this->request->getPost('jumlah')
+                );
+                $kond['idbrg_k_detil'] = $this->request->getPost('idbrg_k_detil');
+                $update = $this->model->update("brg_keluar_detil",$data, $kond);
+                if($update == 1){
+                    $pesan = "Data terupdate";
+                }else{
+                    $pesan = "Data gagal terupdate";
+                }
+
+                $response["kode"] = 1;
+                $response["pesan"] = $pesan;
+            } else {
+                $response["kode"] = 0;
+                $response["pesan"] = "Token ditolak";
+            }
+        } else {
+            $response["kode"] = 0;
+            $response["pesan"] = "Tidak Ada Post Data";
+        }
+        return $this->respond($response);
+    }
 
     public function upload_barang_masuk() {
         $response = array();
@@ -688,6 +718,108 @@ class Api extends BaseController {
                             }
                             unlink($this->modul->getPathApp() . $fileName);
 
+                            $hasil = "Terupload";
+                        } else {
+                            $hasil = "File gagal terupload";
+                        }
+                    } else {
+                        $hasil = "Harus berupa file excel";
+                    }
+                }
+
+                $response["kode"] = 1;
+                $response["pesan"] = $hasil;
+            } else {
+                $response["kode"] = 0;
+                $response["pesan"] = "Token ditolak";
+            }
+        } else {
+            $response["kode"] = 0;
+            $response["pesan"] = "Tidak Ada Post Data";
+        }
+        return $this->respond($response);
+    }
+	
+    private function simpan_head_keluar($username) {
+        // mencari kri dari username
+        $kri = $this->model->getAllQR("select idkapal from users where idusers = '".$username."';")->idkapal;
+		
+        $cek = $this->model->getAllQR("SELECT count(*) as jml FROM brg_keluar where idbrg_keluar = '".$this->request->getPost('kode')."' and idusers = '".$username."';")->jml;
+        if($cek < 1){
+            $data = array(
+                'idbrg_keluar' => $this->request->getPost('kode'),
+                'idkapal' => $kri,
+                'tgl' => $this->request->getPost('tanggal'),
+                'idusers' => $username
+            );
+            $simpan = $this->model->add("brg_keluar",$data);
+        }else{
+            $simpan = 1;
+        }
+        return  $simpan;
+    }
+	
+    public function upload_barang_keluar() {
+        $response = array();
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $security = $this->request->getPost('security');
+            if ($security == "Pr4medi4InvTorITNIAL") {
+                $file = $this->request->getFile('file');
+                $info_file = $this->modul->info_file($file);
+                $fileName = $file->getRandomName();
+                $username = $this->request->getPost('username');
+                
+                if (file_exists($this->modul->getPathApp() . $fileName)) {
+                    $status = "Gunakan nama file lain";
+                } else {
+                    $status = false;
+                    // mengetahui ext
+                    if ($info_file['ext'] == "xls") {
+                        $render = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
+                        $status = true;
+                    } else if ($info_file['ext'] == "xlsx") {
+                        $render = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+                        $status = true;
+                    } else {
+                        $status = false;
+                    }
+
+                    if ($status) {
+                        $status_upload = $file->move($this->modul->getPathApp(), $fileName);
+                        if ($status_upload) {
+                            // upload header terlebih dahulu
+                            $this->simpan_head_keluar($username);
+                            $kri = $this->model->getAllQR("select idkapal from users where idusers = '".$username."';")->idkapal;
+
+                            // extrak kulit manggis
+                            $path = $this->modul->getPathApp().$fileName;
+                            $spreadsheet = $render->load($path);
+                            $data = $spreadsheet->getActiveSheet()->toArray();
+                            foreach ($data as $x => $row) {
+                                // masukkan ke database
+                                $nama_brg = trim(addslashes($row[0]));
+                                $jumlah = trim(addslashes($row[7]));
+
+                                if (strlen($nama_brg) > 0 && strlen($jumlah) > 0) {
+                                    // cek barang ini sudah masuk master apa belum
+                                    $jml = $this->model->getAllQR("select count(*) as jml from barang where idkapal = '".$kri."' and deskripsi = '".$nama_brg."';")->jml;
+                                    if($jml > 0){
+                                        $idbrg = $this->model->getAllQR("select idbarang from barang where idkapal = '".$kri."' and deskripsi = '".$nama_brg."';")->idbarang;
+                                        // klo barangnya sudah ada baru di masukkan ke stok
+                                        $data_detil = array(
+                                            'idbrg_k_detil' => $this->model->autokode("KD","idbrg_k_detil","brg_keluar_detil", 3, 9),
+                                            'idbarang' => $idbrg,
+                                            'jumlah' => $jumlah,
+                                            'satuan' => trim(addslashes($row[8])),
+                                            'idbrg_keluar' => $this->request->getPost('kode')
+                                        );
+                                        $this->model->add("brg_keluar_detil",$data_detil);
+                                    }
+                                }                   
+                            }
+
+                            unlink($this->modul->getPathApp().$fileName);
+					
                             $hasil = "Terupload";
                         } else {
                             $hasil = "File gagal terupload";
