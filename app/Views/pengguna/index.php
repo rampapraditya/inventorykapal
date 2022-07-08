@@ -174,7 +174,7 @@
             </div>
             <div class="modal-body">
                 <form id="form" class="form-horizontal">
-                    <input type="text" name="kode" id="kode">
+                    <input type="hidden" name="kode" id="kode">
                     <div class="form-group">
                         <label>NRP</label>
                         <input id="nrp" name="nrp" class="form-control" type="text" autocomplete="off">

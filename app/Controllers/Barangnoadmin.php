@@ -99,6 +99,7 @@ class Barangnoadmin extends BaseController {
                                         <th style="text-align: center;">EQUIPMENT<br>DESCRIPTION</th>
                                         <th style="text-align: center;">STORE<br>LOCATION</th>
                                         <th style="text-align: center;">SUPPLEMENTARY<br>LOCATION</th>
+                                        <th style="text-align: center;">STOK</th>
                                         <th style="text-align: center;">UOI</th>
                                         <th style="text-align: center;">Verwendung</th>
                                         <th style="text-align: center;">AKSI</th>
@@ -123,6 +124,7 @@ class Barangnoadmin extends BaseController {
                             $str .= '<td>'.$row1->equipment_desc.'</td>';
                             $str .= '<td>'.$row1->store_location.'</td>';
                             $str .= '<td>'.$row1->supplementary_location.'</td>';
+                            $str .= '<td>'.$this->getStok($row1->idbarang, $idkapal).'</td>';
                             $str .= '<td>'.$row1->uoi.'</td>';
                             $str .= '<td>'.$row1->verwendung.'</td>';
                             $str .= '<td><div style="text-align: center;">'
@@ -148,6 +150,7 @@ class Barangnoadmin extends BaseController {
                                         <th style="text-align: center;">EQUIPMENT<br>DESCRIPTION</th>
                                         <th style="text-align: center;">STORE<br>LOCATION</th>
                                         <th style="text-align: center;">SUPPLEMENTARY<br>LOCATION</th>
+                                        <th style="text-align: center;">STOK</th>
                                         <th style="text-align: center;">UOI</th>
                                         <th style="text-align: center;">Verwendung</th>
                                         <th style="text-align: center;">AKSI</th>
@@ -172,6 +175,7 @@ class Barangnoadmin extends BaseController {
                             $str .= '<td>'.$row1->equipment_desc.'</td>';
                             $str .= '<td>'.$row1->store_location.'</td>';
                             $str .= '<td>'.$row1->supplementary_location.'</td>';
+                            $str .= '<td>'.$this->getStok($row1->idbarang, $idkapal).'</td>';
                             $str .= '<td>'.$row1->uoi.'</td>';
                             $str .= '<td>'.$row1->verwendung.'</td>';
                             $str .= '<td><div style="text-align: center;">'
@@ -196,6 +200,13 @@ class Barangnoadmin extends BaseController {
         }
     }
     
+    private function getStok($idbarang, $kri) {
+        $masuk = $this->model->getAllQR("SELECT ifnull(sum(b.jumlah),0) as masuk FROM brg_masuk a, brg_masuk_detil b where a.idbrg_masuk = b.idbrg_masuk and a.idkapal = '".$kri."' and b.idbarang = '".$idbarang."';")->masuk;
+        $keluar = $this->model->getAllQR("SELECT ifnull(sum(b.jumlah),0) as keluar FROM brg_keluar a, brg_keluar_detil b where a.idbrg_keluar = b.idbrg_keluar and a.idkapal = '".$kri."' and b.idbarang = '".$idbarang."';")->keluar;
+        $stok = $masuk - $keluar;
+        return $stok;
+    }
+
     public function ajax_add() {
         if (session()->get("logged_no_admin")) {
             if (isset($_FILES['file']['name'])) {

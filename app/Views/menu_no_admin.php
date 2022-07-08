@@ -40,6 +40,7 @@
                     </ul>
                 </div>
             </li>
+            <!--
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#report" aria-expanded="false" aria-controls="report">
                     <i class="icon-paper menu-icon"></i>
@@ -48,10 +49,11 @@
                 </a>
                 <div class="collapse" id="report">
                     <ul class="nav flex-column sub-menu">
-                        <li class="nav-item"><a class="nav-link" href="<?php echo base_url(); ?>/lapstoknadm">Stok</a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?php //echo base_url(); ?>/lapstoknadm">Stok</a></li>
                     </ul>
                 </div>
             </li>
+            -->
         </ul>
     </nav>
     <!-- partial -->
