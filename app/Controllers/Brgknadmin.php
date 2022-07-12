@@ -48,6 +48,7 @@ class Brgknadmin extends BaseController {
             // mengetahui ini kapal apa
             $idkapal = $this->model->getAllQR("select idkapal from users where idusers = '".$data['username']."';")->idkapal;
             $data['gudang'] = $this->model->getAllQ("select idjenisbarang, nama_jenis from jenisbarang where idkapal = '".$idkapal."';");
+            $data['deftgl'] = $this->modul->TanggalSekarang();
 
             echo view('head', $data);
             echo view('menu_no_admin');
@@ -66,38 +67,82 @@ class Brgknadmin extends BaseController {
             // load data
             $no = 1;
             $data = array();
-            $list = $this->model->getAllQ("SELECT a.idbrg_keluar, date_format(tgl, '%d %M %Y') as tglf, b.nama_kapal FROM brg_keluar a, kapal b where a.idkapal = b.idkapal and a.idkapal = '".$kri."' order by tgl desc;");
+            $list = $this->model->getAllQ("SELECT a.idbrg_keluar, date_format(tgl, '%d %M %Y') as tglf, b.nama_kapal, a.alasan FROM brg_keluar a, kapal b where a.idkapal = b.idkapal and a.idkapal = '".$kri."' order by tgl desc;");
             foreach ($list->getResult() as $row) {
                 $val = array();
                 $val[] = $no;
                 $val[] = $row->tglf;
                 $val[] = $row->nama_kapal;
-                $detil = '<table class="table table-hover" style="width: 100%; font-size: 9px;">
-                            <thead>
-                                <tr>
-                                    <th>Barang</th>
-                                    <th>Jumlah</th>
-                                    <th>Satuan</th>
-                                </tr>
-                            </thead>
-                            <tbody>';
-                $list_detil = $this->model->getAllQ("SELECT b.deskripsi, a.jumlah, a.satuan FROM brg_keluar_detil a, barang b where a.idbarang = b.idbarang and a.idbrg_keluar = '".$row->idbrg_keluar."';");
-                foreach ($list_detil->getResult() as $row1) {
-                    $detil .= '<tr>';
-                    $detil .= '<td>'.$row1->deskripsi.'</td>';
-                    $detil .= '<td>'.$row1->jumlah.'</td>';
-                    $detil .= '<td>'.$row1->satuan.'</td>';
-                    $detil .= '</tr>';
-                }
-                $detil .= '</tbody></table>';
-                $val[] = $detil;
+                $val[] = $row->alasan;
+                $val[] = $this->model->getAllQR("SELECT count(*) as jml FROM brg_keluar_detil where idbrg_keluar = '".$row->idbrg_keluar."';")->jml.' ITEM';
                 $val[] = '<div style="text-align: center;">'
+                        . '<button type="button" class="btn btn-outline-secondary btn-fw" onclick="showitem('."'".$row->idbrg_keluar."'".')">Detail Item</button>&nbsp;'
                         . '<button type="button" class="btn btn-outline-primary btn-fw" onclick="ganti('."'".$this->modul->enkrip_url($row->idbrg_keluar)."'".')">Ganti</button>&nbsp;'
                         . '<button type="button" class="btn btn-outline-danger btn-fw" onclick="hapus(' . "'" . $row->idbrg_keluar . "'" . ',' . "'" . $no . "'" . ')">Hapus</button>'
                         . '</div>';
                 $data[] = $val;
                 
                 $no++;
+            }
+            $output = array("data" => $data);
+            echo json_encode($output);
+        } else {
+            $this->modul->halaman('login');
+        }
+    }
+    
+    public function ajaxlistcari() {
+        if (session()->get("logged_no_admin")) {
+            // load yang hanya miliknya dia
+            $username = session()->get("username");
+            $kri = $this->model->getAllQR("select idkapal from users where idusers = '".$username."';")->idkapal;
+            
+            $tgl1 = $this->request->uri->getSegment(3);
+            $tgl2 = $this->request->uri->getSegment(4);
+            $deskripsi = str_replace("%20", " ", $this->request->uri->getSegment(5));
+            
+            // load data
+            $no = 1;
+            $data = array();
+            $list = $this->model->getAllQ("SELECT distinct a.idbrg_keluar, date_format(tgl, '%d %M %Y') as tglf, b.nama_kapal, a.alasan FROM brg_keluar a, kapal b, brg_keluar_detil c, barang d 
+                where a.idkapal = b.idkapal and a.idbrg_keluar = c.idbrg_keluar and c.idbarang = d.idbarang 
+                and a.idkapal = '".$kri."' and (a.tgl between '".$tgl1."' and '".$tgl2."') and d.deskripsi like '%".$deskripsi."%' order by tgl desc;");
+            foreach ($list->getResult() as $row) {
+                $val = array();
+                $val[] = $no;
+                $val[] = $row->tglf;
+                $val[] = $row->nama_kapal;
+                $val[] = $row->alasan;
+                $val[] = $this->model->getAllQR("SELECT count(*) as jml FROM brg_keluar_detil where idbrg_keluar = '".$row->idbrg_keluar."';")->jml.' ITEM';
+                $val[] = '<div style="text-align: center;">'
+                        . '<button type="button" class="btn btn-outline-secondary btn-fw" onclick="showitem('."'".$row->idbrg_keluar."'".')">Detail Item</button>&nbsp;'
+                        . '<button type="button" class="btn btn-outline-primary btn-fw" onclick="ganti('."'".$this->modul->enkrip_url($row->idbrg_keluar)."'".')">Ganti</button>&nbsp;'
+                        . '<button type="button" class="btn btn-outline-danger btn-fw" onclick="hapus(' . "'" . $row->idbrg_keluar . "'" . ',' . "'" . $no . "'" . ')">Hapus</button>'
+                        . '</div>';
+                $data[] = $val;
+                
+                $no++;
+            }
+            $output = array("data" => $data);
+            echo json_encode($output);
+        } else {
+            $this->modul->halaman('login');
+        }
+    }
+    
+    public function ajax_item_detil() {
+        if (session()->get("logged_no_admin")) {
+            $idbrg_keluar = $this->request->uri->getSegment(3);
+            // load data
+            $data = array();
+            $list = $this->model->getAllQ("SELECT b.deskripsi, a.jumlah, a.satuan, a.alasan FROM brg_keluar_detil a, barang b where a.idbarang = b.idbarang and a.idbrg_keluar = '".$idbrg_keluar."';");
+            foreach ($list->getResult() as $row) {
+                $val = array();
+                $val[] = $row->deskripsi;
+                $val[] = $row->jumlah;
+                $val[] = $row->satuan;
+                $val[] = $row->alasan;
+                $data[] = $val;
             }
             $output = array("data" => $data);
             echo json_encode($output);
@@ -147,6 +192,7 @@ class Brgknadmin extends BaseController {
                     $data['kode'] = $kode;
                     $data['tgl_def'] = $tersimpan->tgl;
                     $data['ket'] = "GANTI";
+                    $data['alasan_head'] = $tersimpan->alasan;
 
                     echo view('head', $data);
                     echo view('menu_no_admin');
@@ -160,6 +206,7 @@ class Brgknadmin extends BaseController {
                 $data['kode'] = $this->model->autokode('K','idbrg_keluar', 'brg_keluar', 2, 7);
                 $data['tgl_def'] = $this->modul->TanggalSekarang();
                 $data['ket'] = "TAMBAH";
+                $data['alasan_head'] = "";
 
                 echo view('head', $data);
                 echo view('menu_no_admin');
@@ -177,13 +224,14 @@ class Brgknadmin extends BaseController {
             // load data
             $no = 1;
             $data = array();
-            $list = $this->model->getAllQ("select a.idbrg_k_detil, b.deskripsi, a.jumlah, a.satuan from brg_keluar_detil a, barang b, brg_keluar c where a.idbarang = b.idbarang and a.idbrg_keluar = c.idbrg_keluar and a.idbrg_keluar = '".$kode."';");
+            $list = $this->model->getAllQ("select a.idbrg_k_detil, b.deskripsi, a.jumlah, a.satuan, a.alasan from brg_keluar_detil a, barang b, brg_keluar c where a.idbarang = b.idbarang and a.idbrg_keluar = c.idbrg_keluar and a.idbrg_keluar = '".$kode."';");
             foreach ($list->getResult() as $row) {
                 $val = array();
                 $val[] = $no;
                 $val[] = $row->deskripsi;
                 $val[] = $row->jumlah;
                 $val[] = $row->satuan;
+                $val[] = $row->alasan;
                 $val[] = '<div style="text-align: center;">'
                         . '<button type="button" class="btn btn-outline-primary btn-fw" onclick="ganti(' . "'" . $row->idbrg_k_detil . "'" . ')">Ganti</button>&nbsp;'
                         . '<button type="button" class="btn btn-outline-danger btn-fw" onclick="hapus(' . "'" . $row->idbrg_k_detil . "'" . ',' . "'" . $no . "'" . ')">Hapus</button>'
@@ -357,7 +405,8 @@ class Brgknadmin extends BaseController {
                 'idbrg_keluar' => $this->request->getVar('kode'),
                 'idkapal' => $this->request->getVar('kri'),
                 'tgl' => $this->request->getVar('tgl'),
-                'idusers' => $username
+                'idusers' => $username,
+                'alasan' => $this->request->getVar('alasan_head')
             );
             $simpan = $this->model->add("brg_keluar",$data);
         }else{
@@ -372,7 +421,8 @@ class Brgknadmin extends BaseController {
             'idbarang' => $this->request->getVar('kode_barang'),
             'jumlah' => $this->request->getVar('jumlah'),
             'satuan' => $this->request->getVar('satuan'),
-            'idbrg_keluar' => $this->request->getVar('kode')
+            'idbrg_keluar' => $this->request->getVar('kode'),
+            'alasan' => $this->request->getVar('alasan')
         );
         $simpan = $this->model->add("brg_keluar_detil",$data);
         return  $simpan;

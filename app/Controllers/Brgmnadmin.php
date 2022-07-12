@@ -46,6 +46,7 @@ class Brgmnadmin extends BaseController {
             }
             $data['logo'] = $def_logo;
             $data['gudang'] = $this->model->getAll("jenisbarang");
+            $data['deftgl'] = $this->modul->TanggalSekarang();
 
             echo view('head', $data);
             echo view('menu_no_admin');
@@ -69,32 +70,72 @@ class Brgmnadmin extends BaseController {
                 $val[] = $no;
                 $val[] = $row->tglf;
                 $val[] = $row->nama_kapal;
-                $detil = '<table class="table table-hover" style="width: 100%; font-size: 9px;">
-                            <thead>
-                                <tr>
-                                    <th>Barang</th>
-                                    <th>Jumlah</th>
-                                    <th>Satuan</th>
-                                </tr>
-                            </thead>
-                            <tbody>';
-                $list_detil = $this->model->getAllQ("SELECT b.deskripsi, a.jumlah, a.satuan FROM brg_masuk_detil a, barang b where a.idbarang = b.idbarang and a.idbrg_masuk = '".$row->idbrg_masuk."';");
-                foreach ($list_detil->getResult() as $row1) {
-                    $detil .= '<tr>';
-                    $detil .= '<td>'.$row1->deskripsi.'</td>';
-                    $detil .= '<td>'.$row1->jumlah.'</td>';
-                    $detil .= '<td>'.$row1->satuan.'</td>';
-                    $detil .= '</tr>';
-                }
-                $detil .= '</tbody></table>';
-                $val[] = $detil;
+                // menampilkan jumlah itemnya saja
+                $val[] = $this->model->getAllQR("select count(*) as jml from brg_masuk_detil where idbrg_masuk = '".$row->idbrg_masuk."';")->jml;
                 $val[] = '<div style="text-align: center;">'
+                        . '<button type="button" class="btn btn-outline-secondary btn-fw" onclick="showitem('."'".$row->idbrg_masuk."'".')">Detail Item</button>&nbsp;'
                         . '<button type="button" class="btn btn-outline-primary btn-fw" onclick="ganti('."'".$this->modul->enkrip_url($row->idbrg_masuk)."'".')">Ganti</button>&nbsp;'
                         . '<button type="button" class="btn btn-outline-danger btn-fw" onclick="hapus(' . "'" . $row->idbrg_masuk . "'" . ',' . "'" . $no . "'" . ')">Hapus</button>'
                         . '</div>';
                 $data[] = $val;
                 
                 $no++;
+            }
+            $output = array("data" => $data);
+            echo json_encode($output);
+        } else {
+            $this->modul->halaman('login');
+        }
+    }
+    
+    public function ajaxlistcari() {
+        if (session()->get("logged_no_admin")) {
+            $username = session()->get("username");
+            $kri = $this->model->getAllQR("select idkapal from users where idusers = '".$username."';")->idkapal;
+            // load data
+            $tgl1 = $this->request->uri->getSegment(3);
+            $tgl2 = $this->request->uri->getSegment(4);
+            $deskripsi = str_replace("%20", " ", $this->request->uri->getSegment(5));
+            
+            $no = 1;
+            $data = array();
+            $list = $this->model->getAllQ("SELECT distinct a.idbrg_masuk, date_format(tgl, '%d %M %Y') as tglf, b.nama_kapal FROM brg_masuk a, kapal b, brg_masuk_detil c, barang d "
+                    . "where a.idkapal = b.idkapal and a.idbrg_masuk = c.idbrg_masuk and c.idbarang = d.idbarang and b.idkapal = '".$kri."' and (a.tgl between '".$tgl1."' and '".$tgl2."') and d.deskripsi like '%".$deskripsi."%' order by tgl desc;");
+            foreach ($list->getResult() as $row) {
+                $val = array();
+                $val[] = $no;
+                $val[] = $row->tglf;
+                $val[] = $row->nama_kapal;
+                // menampilkan jumlah itemnya saja
+                $val[] = $this->model->getAllQR("select count(*) as jml from brg_masuk_detil where idbrg_masuk = '".$row->idbrg_masuk."';")->jml;
+                $val[] = '<div style="text-align: center;">'
+                        . '<button type="button" class="btn btn-outline-secondary btn-fw" onclick="showitem('."'".$row->idbrg_masuk."'".')">Detail Item</button>&nbsp;'
+                        . '<button type="button" class="btn btn-outline-primary btn-fw" onclick="ganti('."'".$this->modul->enkrip_url($row->idbrg_masuk)."'".')">Ganti</button>&nbsp;'
+                        . '<button type="button" class="btn btn-outline-danger btn-fw" onclick="hapus(' . "'" . $row->idbrg_masuk . "'" . ',' . "'" . $no . "'" . ')">Hapus</button>'
+                        . '</div>';
+                $data[] = $val;
+                
+                $no++;
+            }
+            $output = array("data" => $data);
+            echo json_encode($output);
+        } else {
+            $this->modul->halaman('login');
+        }
+    }
+    
+    public function ajax_item_detil() {
+        if (session()->get("logged_no_admin")) {
+            $idbrg_masuk = $this->request->uri->getSegment(3);
+            // load data
+            $data = array();
+            $list = $this->model->getAllQ("SELECT b.deskripsi, a.jumlah, a.satuan FROM brg_masuk_detil a, barang b where a.idbarang = b.idbarang and a.idbrg_masuk = '".$idbrg_masuk."';");
+            foreach ($list->getResult() as $row) {
+                $val = array();
+                $val[] = $row->deskripsi;
+                $val[] = $row->jumlah;
+                $val[] = $row->satuan;
+                $data[] = $val;
             }
             $output = array("data" => $data);
             echo json_encode($output);

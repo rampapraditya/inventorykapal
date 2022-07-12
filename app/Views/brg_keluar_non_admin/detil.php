@@ -65,6 +65,8 @@
         var stok = document.getElementById('stok').value;
         var jumlah = document.getElementById('jumlah').value;
         var satuan = document.getElementById('satuan').value;
+        var alasan_head = document.getElementById('alasan_head').value;
+        var alasan = document.getElementById('alasan').value;
         
         if (kode === "") {
             alert("Kode tidak boleh kosong");
@@ -102,6 +104,8 @@
                 form_data.append('kode_barang', kode_barang);
                 form_data.append('jumlah', jumlah);
                 form_data.append('satuan', satuan);
+                form_data.append('alasan_head', alasan_head);
+                form_data.append('alasan', alasan);
 
                 // ajax adding data to database
                 $.ajax({
@@ -238,10 +242,16 @@
                     <input type="hidden" id="kri" name="kri" value="<?php echo $kri; ?>">
                     <div class="forms-sample">
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label>TANGGAL</label>
                                     <input type="date" class="form-control" id="tgl" name="tgl" autofocus="" autocomplete="off" value="<?php echo $tgl_def; ?>">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>ALASAN</label>
+                                    <input type="text" class="form-control" id="alasan_head" name="alasan_head" autocomplete="off" value="<?php echo $alasan_head; ?>">
                                 </div>
                             </div>
                         </div>
@@ -267,6 +277,7 @@
                                     <th>DESKRIPSI</th>
                                     <th>JUMLAH</th>
                                     <th>SATUAN</th>
+                                    <th>ALASAN</th>
                                     <th style="text-align: center;">AKSI</th>
                                 </tr>
                             </thead>
@@ -313,6 +324,10 @@
                     <div class="form-group">
                         <label>Satuan</label>
                         <input id="satuan" name="satuan" class="form-control" type="text" autocomplete="off" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Alasan</label>
+                        <input id="alasan" name="alasan" class="form-control" type="text" autocomplete="off">
                     </div>
                 </form>
             </div>

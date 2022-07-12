@@ -28,15 +28,28 @@
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-toggle="collapse" href="#trans" aria-expanded="false" aria-controls="trans">
+                <a class="nav-link" data-toggle="collapse" href="#trans_masuk" aria-expanded="false" aria-controls="trans_masuk">
                     <i class="icon-file-add menu-icon"></i>
-                    <span class="menu-title">TRANSAKSI</span>
+                    <span class="menu-title">MASUK</span>
                     <i class="menu-arrow"></i>
                 </a>
-                <div class="collapse" id="trans">
+                <div class="collapse" id="trans_masuk">
                     <ul class="nav flex-column sub-menu">
-                        <li class="nav-item"><a class="nav-link" href="<?php echo base_url(); ?>/brgmnadmin">Barang Masuk</a></li>
-                        <li class="nav-item"><a class="nav-link" href="<?php echo base_url(); ?>/brgknadmin">Barang Keluar</a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?php echo base_url(); ?>/brgmnadmin">Material Barang</a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?php echo base_url(); ?>/logmasukcair">Logistik Cair</a></li>
+                    </ul>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="collapse" href="#trans_keluar" aria-expanded="false" aria-controls="trans_keluar">
+                    <i class="icon-file-add menu-icon"></i>
+                    <span class="menu-title">KELUAR</span>
+                    <i class="menu-arrow"></i>
+                </a>
+                <div class="collapse" id="trans_keluar">
+                    <ul class="nav flex-column sub-menu">
+                        <li class="nav-item"><a class="nav-link" href="<?php echo base_url(); ?>/brgknadmin">Material Barang</a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?php echo base_url(); ?>/logkeluarcair">Logistik Cair</a></li>
                     </ul>
                 </div>
             </li>

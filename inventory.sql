@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jun 29, 2022 at 03:15 PM
+-- Generation Time: Jul 12, 2022 at 08:11 AM
 -- Server version: 5.7.31
 -- PHP Version: 7.3.21
 
@@ -48,6 +48,40 @@ CREATE TABLE IF NOT EXISTS `barang` (
   KEY `FK_barang_kapal` (`idkapal`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `barang`
+--
+
+INSERT INTO `barang` (`idbarang`, `foto`, `deskripsi`, `pn_nsn`, `ds_number`, `holding`, `equipment_desc`, `store_location`, `supplementary_location`, `qty`, `uoi`, `verwendung`, `idjenisbarang`, `idkapal`) VALUES
+('B00006', '', 'O RING', '98609000012', '', '', 'MPK', 'BOX 1', 'GUDANG SPARE', 0, 'EA', '', 'J00001', 'K00001'),
+('B00007', '', 'MAIN BEARING TIEROD', '26001000800', '', '', 'MPK', 'BOX 1', 'GUDANG SPARE', 0, 'EA', '', 'J00001', 'K00001'),
+('B00008', '', 'INNER SPRING', '26018010585', '', '', 'MPK', 'BOX 1', 'GUDANG SPARE', 0, 'EA', '', 'J00001', 'K00001'),
+('B00009', '', 'OUTER SPRING', '26018010586', '', '', 'MPK', 'BOX 1', 'GUDANG SPARE', 0, 'EA', '', 'J00001', 'K00001'),
+('B00010', '', 'HALF SHELL', '99526013009', '', '', 'MPK', 'BOX 2', 'GUDANG SPARE', 0, 'EA', '', 'J00001', 'K00001'),
+('B00011', '', 'GASKET', '9860900005', '', '', 'MPK', 'BOX 2', 'GUDANG SPARE', 0, 'EA', '', 'J00001', 'K00001'),
+('B00012', '', 'CIRCLIP', '00201010110', '', '', 'MPK', 'BOX 2', 'GUDANG SPARE', 0, 'EA', '', 'J00001', 'K00001'),
+('B00013', '', 'RECHANGER/SPARES', '333', '', '', 'MPK', 'BOX 2', 'GUDANG SPARE', 0, 'EA', '', 'J00001', 'K00001'),
+('B00014', '', 'EXTRATOR FOR INJECTION PUMP VALVE SEAT', 'T-266', '', '', 'MPK', 'BOX 2', 'GUDANG SPARE', 0, 'EA', '', 'J00001', 'K00001'),
+('B00015', '', 'LOWER UPPER BEARING SHELL', '00133675/91', '', '', 'MPK', 'BOX 2', 'GUDANG SPARE', 0, 'EA', '', 'J00001', 'K00001'),
+('B00016', '', 'POWER SUPPLAY 15V DC AE 24/15', 'ZZAUT000914', '', '', 'MPK', 'BOX 2', 'GUDANG SPARE', 0, 'EA', '', 'J00001', 'K00001'),
+('B00017', '', 'KIT NR 07196A', '98640401124', '', '', 'MPK', 'BOX 2', 'GUDANG SPARE', 0, 'EA', '', 'J00001', 'K00001'),
+('B00018', '', 'KEYBOARD', 'DV 3000', '', '', 'MPK', 'BOX 2', 'GUDANG SPARE', 0, 'EA', '', 'J00001', 'K00001'),
+('B00019', '', 'EXHAUST MANIFOLD GASKET', '26018000006', '', '', 'MPK', 'BOX 2', 'GUDANG SPARE', 0, 'EA', '', 'J00001', 'K00001'),
+('B00020', '', 'COMPRESSION RING', '26014000620', '', '', 'MPK', 'BOX 2', 'GUDANG SPARE', 0, 'EA', '', 'J00001', 'K00001'),
+('B00021', '', 'SCRAPER RING', '26014900020', '', '', 'MPK', 'BOX 2', 'GUDANG SPARE', 0, 'EA', '', 'J00001', 'K00001'),
+('B00022', '', 'ELECTRO VALVE', 'ZZAUT002JD3', '', '', 'MPK', 'BOX 2', 'GUDANG SPARE', 0, 'EA', '', 'J00001', 'K00001'),
+('B00023', '', 'JOINT 321365/001', '36040000064', '', '', 'MPK', 'BOX 2', 'GUDANG SPARE', 0, 'EA', '', 'J00001', 'K00001'),
+('B00024', '', 'ELECTRO DISTRIBUTOR', '514191027', '514191023', '', 'MPK', 'BOX 2', 'GUDANG SPARE', 0, 'EA', 'BEKAS', 'J00001', 'K00001'),
+('B00025', '', 'GASKET KIT', '98705912240', '', '', 'MPK', 'BOX 2', 'GUDANG SPARE', 0, 'EA', '', 'J00001', 'K00001'),
+('B00026', '', 'LEVEL SWITCH FLOAT FLANGEMOUNT', '5930AR0000495', '', '', 'MPK', 'BOX 3', 'GUDANG SPARE', 0, 'EA', '', 'J00001', 'K00001'),
+('B00027', '', 'SAVETY VALVE', '4820AR0000877', '', '', 'MPK', 'BOX 3', 'GUDANG SPARE', 0, 'EA', '', 'J00001', 'K00001'),
+('B00028', '', 'INJECTOR PIN', '26020000006', '', '', 'MPK', 'BOX 3', 'GUDANG SPARE', 0, 'EA', '', 'J00001', 'K00001'),
+('B00029', '', 'LOCTITE 594', 'FR-99351200000', '', '', 'MPK', 'BOX 3', 'GUDANG SPARE', 0, 'EA', '', 'J00001', 'K00001'),
+('B00030', '', 'LOCTITE 573', 'FR-99351320000', '', '', 'MPK', 'BOX 3', 'GUDANG SPARE', 0, 'EA', '', 'J00001', 'K00001'),
+('B00031', '', 'LOCTITE 270', '', '', '', 'MPK', 'BOX 3', 'GUDANG SPARE', 0, 'EA', '', 'J00001', 'K00001'),
+('B00032', '', 'MAIN BEARING SHELL', '26004805318', '', '', 'MPK', 'BOX 1', 'GUDANG SPARE', 0, 'EA', '', 'J00001', 'K00001'),
+('B00033', '', 'SPRING COOLAR', '26018011365', '', '', 'MPK', 'BOX 1', 'GUDANG SPARE', 0, 'EA', '', 'J00001', 'K00001');
+
 -- --------------------------------------------------------
 
 --
@@ -60,10 +94,18 @@ CREATE TABLE IF NOT EXISTS `brg_keluar` (
   `idkapal` varchar(6) NOT NULL,
   `tgl` date NOT NULL,
   `idusers` varchar(20) NOT NULL,
+  `alasan` varchar(150) DEFAULT NULL,
   PRIMARY KEY (`idbrg_keluar`),
   KEY `FK_brg_keluar_kapal` (`idkapal`),
   KEY `FK_brg_keluar_usr` (`idusers`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `brg_keluar`
+--
+
+INSERT INTO `brg_keluar` (`idbrg_keluar`, `idkapal`, `tgl`, `idusers`, `alasan`) VALUES
+('K00001', 'K00001', '2022-07-12', 'U00002', 'perobaan');
 
 -- --------------------------------------------------------
 
@@ -78,10 +120,18 @@ CREATE TABLE IF NOT EXISTS `brg_keluar_detil` (
   `jumlah` float NOT NULL DEFAULT '0',
   `satuan` varchar(15) NOT NULL,
   `idbrg_keluar` varchar(6) NOT NULL,
+  `alasan` varchar(150) DEFAULT NULL,
   PRIMARY KEY (`idbrg_k_detil`),
   KEY `FK_brg_keluar_detil_brg` (`idbarang`),
   KEY `FK_brg_keluar_detil_key` (`idbrg_keluar`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `brg_keluar_detil`
+--
+
+INSERT INTO `brg_keluar_detil` (`idbrg_k_detil`, `idbarang`, `jumlah`, `satuan`, `idbrg_keluar`, `alasan`) VALUES
+('KD000001', 'B00006', 1, 'EA', 'K00001', 'Rusak');
 
 -- --------------------------------------------------------
 
@@ -100,6 +150,30 @@ CREATE TABLE IF NOT EXISTS `brg_masuk` (
   KEY `FK_brg_masuk_users` (`idusers`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `brg_masuk`
+--
+
+INSERT INTO `brg_masuk` (`idbrg_masuk`, `idkapal`, `tgl`, `idusers`) VALUES
+('M00001', 'K00001', '2022-07-08', 'U00002');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `brg_masuk_cair`
+--
+
+DROP TABLE IF EXISTS `brg_masuk_cair`;
+CREATE TABLE IF NOT EXISTS `brg_masuk_cair` (
+  `idbrg_masuk` varchar(6) CHARACTER SET utf8mb4 NOT NULL,
+  `idkapal` varchar(6) CHARACTER SET utf8mb4 NOT NULL,
+  `tgl` date NOT NULL,
+  `idusers` varchar(20) CHARACTER SET utf8mb4 NOT NULL,
+  PRIMARY KEY (`idbrg_masuk`),
+  KEY `FK_brg_masuk_cair_kapal` (`idkapal`),
+  KEY `FK_brg_masuk_cair_users` (`idusers`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 -- --------------------------------------------------------
 
 --
@@ -117,6 +191,68 @@ CREATE TABLE IF NOT EXISTS `brg_masuk_detil` (
   KEY `FK_brg_masuk_detil_brg` (`idbarang`),
   KEY `FK_brg_masuk_detil_key` (`idbrg_masuk`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `brg_masuk_detil`
+--
+
+INSERT INTO `brg_masuk_detil` (`idbrg_m_detil`, `idbarang`, `jumlah`, `satuan`, `idbrg_masuk`) VALUES
+('MD000001', 'B00032', 1, 'EA', 'M00001'),
+('MD000002', 'B00033', 12, 'EA', 'M00001'),
+('MD000003', 'B00006', 4, 'EA', 'M00001'),
+('MD000004', 'B00007', 2, 'EA', 'M00001'),
+('MD000005', 'B00008', 6, 'EA', 'M00001'),
+('MD000006', 'B00009', 6, 'EA', 'M00001'),
+('MD000007', 'B00006', 2, 'EA', 'M00001'),
+('MD000008', 'B00010', 12, 'EA', 'M00001'),
+('MD000009', 'B00011', 2, 'EA', 'M00001'),
+('MD000010', 'B00012', 2, 'EA', 'M00001'),
+('MD000011', 'B00013', 1, 'EA', 'M00001'),
+('MD000012', 'B00014', 1, 'EA', 'M00001'),
+('MD000013', 'B00015', 2, 'EA', 'M00001'),
+('MD000014', 'B00016', 1, 'EA', 'M00001'),
+('MD000015', 'B00017', 10, 'EA', 'M00001'),
+('MD000016', 'B00018', 1, 'EA', 'M00001'),
+('MD000017', 'B00019', 1, 'EA', 'M00001'),
+('MD000018', 'B00020', 2, 'EA', 'M00001'),
+('MD000019', 'B00011', 2, 'EA', 'M00001'),
+('MD000020', 'B00011', 2, 'EA', 'M00001'),
+('MD000021', 'B00021', 2, 'EA', 'M00001'),
+('MD000022', 'B00011', 2, 'EA', 'M00001'),
+('MD000023', 'B00006', 1, 'EA', 'M00001'),
+('MD000024', 'B00022', 3, 'EA', 'M00001'),
+('MD000025', 'B00023', 1, 'EA', 'M00001'),
+('MD000026', 'B00011', 39, 'EA', 'M00001'),
+('MD000027', 'B00006', 6, 'EA', 'M00001'),
+('MD000028', 'B00006', 12, 'EA', 'M00001'),
+('MD000029', 'B00024', 11, 'EA', 'M00001'),
+('MD000030', 'B00025', 2, 'EA', 'M00001'),
+('MD000031', 'B00026', 1, 'EA', 'M00001'),
+('MD000032', 'B00027', 3, 'EA', 'M00001'),
+('MD000033', 'B00028', 66, 'EA', 'M00001'),
+('MD000034', 'B00029', 6, 'EA', 'M00001'),
+('MD000035', 'B00030', 12, 'EA', 'M00001'),
+('MD000036', 'B00031', 3, 'EA', 'M00001');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `brg_masuk_detil_cair`
+--
+
+DROP TABLE IF EXISTS `brg_masuk_detil_cair`;
+CREATE TABLE IF NOT EXISTS `brg_masuk_detil_cair` (
+  `idbrg_m_detil` varchar(8) CHARACTER SET utf8mb4 NOT NULL,
+  `idbarang` varchar(6) CHARACTER SET utf8mb4 NOT NULL,
+  `jumlah_minta` float NOT NULL DEFAULT '0',
+  `jumlah_datang` float NOT NULL DEFAULT '0',
+  `satuan` varchar(15) CHARACTER SET utf8mb4 NOT NULL,
+  `file_bukti` varchar(150) DEFAULT NULL,
+  `idbrg_masuk` varchar(6) CHARACTER SET utf8mb4 NOT NULL,
+  PRIMARY KEY (`idbrg_m_detil`),
+  KEY `FK_brg_masuk_detil_cair_barang` (`idbarang`),
+  KEY `FK_brg_masuk_detil_cair_key` (`idbrg_masuk`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -348,7 +484,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 INSERT INTO `users` (`idusers`, `nrp`, `pass`, `nama`, `tgl_lahir`, `agama`, `kota_asal`, `foto`, `satuan_kerja`, `idrole`, `idkapal`) VALUES
 ('U00001', 'ADMIN', 'aGtq', 'ADMIN', '1991-01-30', 'Islam', 'Surabaya', './assets/images/e7118256aaf4d1de09199e2b6cbe667c.png', 'TNI ANGKATAN LAUT', 'R00001', NULL),
-('U00002', '111', 'aGtq', 'Rampa', '1989-08-02', 'Islam', 'Surabaya', NULL, 'TNI', 'R00003', 'K00001'),
+('U00002', '111', 'aGtq', 'Rampa', '1989-08-02', 'Islam', 'Surabaya', '1656947456_64c14e624650113cae33.jpg', 'TNI', 'R00003', 'K00001'),
 ('U00003', '222', 'aGtq', 'Atika', NULL, NULL, NULL, NULL, NULL, 'R00002', 'K00001'),
 ('U00005', '444', 'aGtq', 'vhjv', NULL, NULL, NULL, NULL, NULL, 'R00003', 'K00002'),
 ('U00006', '555', 'aGtq', 'scscsx', NULL, NULL, NULL, NULL, NULL, 'R00003', 'K00001'),
@@ -389,11 +525,25 @@ ALTER TABLE `brg_masuk`
   ADD CONSTRAINT `FK_brg_masuk_users` FOREIGN KEY (`idusers`) REFERENCES `users` (`idusers`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
+-- Constraints for table `brg_masuk_cair`
+--
+ALTER TABLE `brg_masuk_cair`
+  ADD CONSTRAINT `FK_brg_masuk_cair_kapal` FOREIGN KEY (`idkapal`) REFERENCES `kapal` (`idkapal`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `FK_brg_masuk_cair_users` FOREIGN KEY (`idusers`) REFERENCES `users` (`idusers`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
 -- Constraints for table `brg_masuk_detil`
 --
 ALTER TABLE `brg_masuk_detil`
   ADD CONSTRAINT `FK_brg_masuk_detil_brg` FOREIGN KEY (`idbarang`) REFERENCES `barang` (`idbarang`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `FK_brg_masuk_detil_key` FOREIGN KEY (`idbrg_masuk`) REFERENCES `brg_masuk` (`idbrg_masuk`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `brg_masuk_detil_cair`
+--
+ALTER TABLE `brg_masuk_detil_cair`
+  ADD CONSTRAINT `FK_brg_masuk_detil_cair_barang` FOREIGN KEY (`idbarang`) REFERENCES `barang` (`idbarang`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `FK_brg_masuk_detil_cair_key` FOREIGN KEY (`idbrg_masuk`) REFERENCES `brg_masuk_cair` (`idbrg_masuk`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `jenisbarang`
