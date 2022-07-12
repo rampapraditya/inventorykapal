@@ -42,14 +42,13 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#trans_keluar" aria-expanded="false" aria-controls="trans_keluar">
-                    <i class="icon-file-add menu-icon"></i>
+                    <i class="icon-delete menu-icon"></i>
                     <span class="menu-title">KELUAR</span>
                     <i class="menu-arrow"></i>
                 </a>
                 <div class="collapse" id="trans_keluar">
                     <ul class="nav flex-column sub-menu">
                         <li class="nav-item"><a class="nav-link" href="<?php echo base_url(); ?>/brgknadmin">Material Barang</a></li>
-                        <li class="nav-item"><a class="nav-link" href="<?php echo base_url(); ?>/logkeluarcair">Logistik Cair</a></li>
                     </ul>
                 </div>
             </li>

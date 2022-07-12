@@ -4,27 +4,27 @@
 
     $(document).ready(function () {
         table = $('#tb').DataTable({
-            ajax: "<?php echo base_url(); ?>/brgmnadmin/ajaxlist",
+            ajax: "<?php echo base_url(); ?>/logmasukcair/ajaxlist",
             ordering: false
         });
     });
 
     function reload() {
-        table.ajax.reload(null, false);
+        table.ajax.reload(null, false); //reload datatable ajax
     }
 
     function add() {
-        window.location.href = "<?php echo base_url(); ?>/brgmnadmin/detil";
+        window.location.href = "<?php echo base_url(); ?>/logmasukcair/detil";
     }
     
     function ganti(id) {
-        window.location.href = "<?php echo base_url(); ?>/brgmnadmin/detil/"+id;
+        window.location.href = "<?php echo base_url(); ?>/logmasukcair/detil/"+id;
     }
     
     function hapus(id, nama) {
         if (confirm("Apakah anda yakin menghapus barang nomor " + nama + " ?")) {
             $.ajax({
-                url: "<?php echo base_url(); ?>/brgmnadmin/hapus/" + id,
+                url: "<?php echo base_url(); ?>/logmasukcair/hapus/" + id,
                 type: "POST",
                 dataType: "JSON",
                 success: function (data) {
@@ -40,15 +40,17 @@
     function showitem(id) {
         $('#modal_item').modal('show');
         tb_detil = $('#tb_detil').DataTable({
-            ajax: "<?php echo base_url(); ?>/brgmnadmin/ajax_item_detil/" + id,
+            ajax: "<?php echo base_url(); ?>/logmasukcair/ajax_item_detil/" + id,
             ordering: false,
-            retrieve:true
+            retrieve:true,
+            scrollX: true
         });
         tb_detil.destroy();
         tb_detil = $('#tb_detil').DataTable({
-            ajax: "<?php echo base_url(); ?>/brgmnadmin/ajax_item_detil/" + id,
+            ajax: "<?php echo base_url(); ?>/logmasukcair/ajax_item_detil/" + id,
             ordering: false,
-            retrieve:true
+            retrieve:true,
+            scrollX: true
         });
     }
     
@@ -79,13 +81,13 @@
             $('#btnCari').attr('disabled', true);
             
             table = $('#tb').DataTable({
-                ajax: "<?php echo base_url(); ?>/brgmnadmin/ajaxlistcari/" + tgl1 + "/" + tgl2 + "/" + deskripsi,
+                ajax: "<?php echo base_url(); ?>/logmasukcair/ajaxlistcari/" + tgl1 + "/" + tgl2 + "/" + deskripsi,
                 ordering: false,
                 retrieve:true
             });
             table.destroy();
             table = $('#tb').DataTable({
-                ajax: "<?php echo base_url(); ?>/brgmnadmin/ajaxlistcari/" + tgl1 + "/" + tgl2 + "/" + deskripsi,
+                ajax: "<?php echo base_url(); ?>/logmasukcair/ajaxlistcari/" + tgl1 + "/" + tgl2 + "/" + deskripsi,
                 ordering: false,
                 retrieve:true
             });
@@ -97,16 +99,15 @@
             $('#modal_cari').modal('hide');
         }
     }
-    
+
 </script>
 <div class="content-wrapper">
     <div class="row">
         <div class="col-md-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">TRANSAKSI MATERIAL BARANG MASUK</h4>
+                    <h4 class="card-title">TRANSAKSI LOGISTIK CAIR MASUK</h4>
                     <button type="button" class="btn btn-primary btn-sm" onclick="add();">Tambah</button>
-                    <button type="button" class="btn btn-success btn-sm" onclick="cari();">Pencarian</button>
                     <button type="button" class="btn btn-secondary btn-sm" onclick="reload();">Reload</button>
                 </div>
                 <div class="card-body">
@@ -145,7 +146,8 @@
                     <thead>
                         <tr>
                             <th>BARANG</th>
-                            <th>JUMLAH</th>
+                            <th>JML PERMINTAAN</th>
+                            <th>JML PEMENUHAN</th>
                             <th>SATUAN</th>
                         </tr>
                     </thead>

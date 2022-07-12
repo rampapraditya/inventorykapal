@@ -43,7 +43,7 @@
         <div class="col-md-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">TRANSAKSI BARANG MASUK</h4>
+                    <h4 class="card-title">TRANSAKSI MATERIAL BARANG MASUK</h4>
                     <button type="button" class="btn btn-primary btn-sm" onclick="add();">Tambah</button>
                     <button type="button" class="btn btn-secondary btn-sm" onclick="reload();">Reload</button>
                 </div>
