@@ -180,6 +180,7 @@ class Brgknadmin extends BaseController {
             
             // mengetahui kri default
             $data['kri'] = $this->model->getAllQR("select idkapal from users where idusers = '".$data['username']."';")->idkapal;
+            $data['gudang'] = $this->model->getAllQ("select idjenisbarang, nama_jenis from jenisbarang where idkapal = '".$data['kri']."';");
             
             $temp = $this->request->uri->getSegment(3);
             if(strlen($temp) > 0){
@@ -406,7 +407,8 @@ class Brgknadmin extends BaseController {
                 'idkapal' => $this->request->getVar('kri'),
                 'tgl' => $this->request->getVar('tgl'),
                 'idusers' => $username,
-                'alasan' => $this->request->getVar('alasan_head')
+                'alasan' => $this->request->getVar('alasan_head'),
+                'idjenisbarang' => $this->request->getVar('gudang')
             );
             $simpan = $this->model->add("brg_keluar",$data);
         }else{

@@ -42,13 +42,15 @@
         tb_detil = $('#tb_detil').DataTable({
             ajax: "<?php echo base_url(); ?>/brgknadmin/ajax_item_detil/" + id,
             ordering: false,
-            retrieve:true
+            retrieve:true,
+            scrollX:true
         });
         tb_detil.destroy();
         tb_detil = $('#tb_detil').DataTable({
             ajax: "<?php echo base_url(); ?>/brgknadmin/ajax_item_detil/" + id,
             ordering: false,
-            retrieve:true
+            retrieve:true,
+            scrollX:true
         });
     }
     

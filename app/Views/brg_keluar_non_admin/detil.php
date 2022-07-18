@@ -185,44 +185,53 @@
     }
     
     function save_file(){
-        $('#btnSaveFile').text('Saving...');
-        $('#btnSaveFile').attr('disabled',true);
+        
         
         var kode = document.getElementById('kode').value;
         var tgl = document.getElementById('tgl').value;
         var kri = document.getElementById('kri').value;
         var file = $('#file_excel').prop('files')[0];
+        var gudang = document.getElementById('gudang').value;
         
-        var form_data = new FormData();
-        form_data.append('kode', kode);
-        form_data.append('tgl', tgl);
-        form_data.append('kri', kri);
-        form_data.append('file', file);
+        if(gudang === '-'){
+            alert("Pilih gudang terlebih dahulu");
+        }else{
+            $('#btnSaveFile').text('Saving...');
+            $('#btnSaveFile').attr('disabled',true);
+        
+            var form_data = new FormData();
+            form_data.append('kode', kode);
+            form_data.append('tgl', tgl);
+            form_data.append('kri', kri);
+            form_data.append('file', file);
+            form_data.append('gudang', gudang);
 
-        $.ajax({
-            url: "<?php echo base_url(); ?>/brgknadmin/uploadkeluar",
-            dataType: 'JSON',
-            cache: false,
-            contentType: false,
-            processData: false,
-            data: form_data,
-            type: 'POST',
-            success: function (response) {
-                alert(response.status);
-                $('#btnSaveFile').text('Save');
-                $('#btnSaveFile').attr('disabled',false);
-                
-                if(response.status === "Terupload"){
-                    window.location.href = "<?php echo base_url(); ?>/brgknadmin";
+            
+            $.ajax({
+                url: "<?php echo base_url(); ?>/brgknadmin/uploadkeluar",
+                dataType: 'JSON',
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: form_data,
+                type: 'POST',
+                success: function (response) {
+                    alert(response.status);
+                    $('#btnSaveFile').text('Save');
+                    $('#btnSaveFile').attr('disabled',false);
+
+                    if(response.status === "Terupload"){
+                        window.location.href = "<?php echo base_url(); ?>/brgknadmin";
+                    }
+
+                },error: function (response) {
+                    alert(response.status);
+
+                    $('#btnSaveFile').text('Save');
+                    $('#btnSaveFile').attr('disabled',false);
                 }
-
-            },error: function (response) {
-                alert(response.status);
-
-                $('#btnSaveFile').text('Save');
-                $('#btnSaveFile').attr('disabled',false);
-            }
-        });
+            });
+        }
     }
     
     function closemodal_file(){
@@ -264,7 +273,9 @@
         <div class="col-md-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-header">
+                    <!--
                     <button type="button" class="btn btn-primary btn-sm" onclick="add();">Tambah</button>
+                    -->
                     <button type="button" class="btn btn-success btn-sm" onclick="add_file();">Tambah (File)</button>
                     <button type="button" class="btn btn-secondary btn-sm" onclick="reload();">Reload</button>
                 </div>
@@ -368,6 +379,19 @@
             </div>
             <div class="modal-body">
                 <form id="form_file" class="form-horizontal">
+                    <div class="form-group">
+                        <label>Gudang</label>
+                        <select id="gudang" name="gudang" class="form-control">
+                            <option value="-">- PILIH GUDANG -</option>
+                            <?php
+                            foreach ($gudang->getResult() as $row) {
+                                ?>
+                            <option value="<?php echo $row->idjenisbarang; ?>"><?php echo $row->nama_jenis; ?></option>
+                                <?php
+                            }
+                            ?>
+                        </select>
+                    </div>
                     <div class="form-group">
                         <label>File Excel</label>
                         <input id="file_excel" name="file_excel" class="form-control" type="file" autocomplete="off">

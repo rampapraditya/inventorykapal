@@ -154,7 +154,7 @@
         save_method = 'update';
         $('#form')[0].reset();
         $('#modal_form').modal('show');
-        $('.modal-title').text('Ganti barang datang');
+        $('.modal-title').text('Ganti barang cair datang');
         $.ajax({
             url: "<?php echo base_url(); ?>/logmasukcair/gantidetil/" + id,
             type: "POST",
@@ -164,9 +164,9 @@
                 $('[name="kode_barang"]').val(data.idbarang);
                 $('[name="nama"]').val(data.deskripsi);
                 $('[name="jumlah_minta"]').val(data.jumlah_minta);
-                $('[name="jumlah_datang"]').val(data.jumlah_datang);
+                $('[name="jumlah_datang"]').val(data.jumlah);
                 $('[name="satuan"]').val(data.satuan);
-                $('[name="gudang"]').val(data.idjenisbarang);
+                
             }, error: function (jqXHR, textStatus, errorThrown) {
                 alert('Error get data');
             }

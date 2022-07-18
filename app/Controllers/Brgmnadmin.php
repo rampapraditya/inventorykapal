@@ -242,7 +242,7 @@ class Brgmnadmin extends BaseController {
                                 <thead>
                                     <tr>
                                         <th>GAMBAR</th>
-                                        <th>DESCRIPTION</th>
+                                        <th>NAMA BARANG</th>
                                         <th>PN/NSN</th>
                                         <th>DS NUMBER</th>
                                         <th>Holding</th>
@@ -251,22 +251,25 @@ class Brgmnadmin extends BaseController {
                                 </thead>
                                 <tbody>';
                     // menampilkan isi table
-                    $list_brg = $this->model->getAllQ("select * from barang where idjenisbarang = '".$row->idjenisbarang."' and idkapal = '".$idkapal."' and idbarang not in(select idbarang from brg_masuk_detil where idbrg_masuk = '".$kode_trans."');");
+                    $list_brg = $this->model->getAllQ("select distinct b.idbarang from brg_masuk a, brg_masuk_detil b where a.idbrg_masuk = b.idbrg_masuk and a.idkapal = '".$idkapal."' and a.idjenisbarang = '".$row->idjenisbarang."' and idbarang not in(select idbarang from brg_masuk_detil where idbrg_masuk = '".$kode_trans."');");
                     foreach ($list_brg->getResult() as $row1) {
                         $str .= '<tr>';
+                            // mencari data barang
+                            $brg = $this->model->getAllQR("select * from barang where idbarang = '".$row1->idbarang."'");
+                            
                             $def_foto = base_url() . '/images/noimg.jpg';
-                            if (strlen($row1->foto) > 0) {
-                                if (file_exists($this->modul->getPathApp().$row1->foto)) {
-                                    $def_foto = base_url().'/uploads/'.$row1->foto;
+                            if (strlen($brg->foto) > 0) {
+                                if (file_exists($this->modul->getPathApp().$brg->foto)) {
+                                    $def_foto = base_url().'/uploads/'.$brg->foto;
                                 }
                             }
                             $str .= '<td><img src="'.$def_foto.'" style="width: 50px; height: auto;"></td>';
-                            $str .= '<td>'.$row1->deskripsi.'</td>';
-                            $str .= '<td>'.$row1->pn_nsn.'</td>';
-                            $str .= '<td>'.$row1->ds_number.'</td>';
-                            $str .= '<td>'.$row1->holding.'</td>';
+                            $str .= '<td>'.$brg->deskripsi.'</td>';
+                            $str .= '<td>'.$brg->pn_nsn.'</td>';
+                            $str .= '<td>'.$brg->ds_number.'</td>';
+                            $str .= '<td>'.$brg->holding.'</td>';
                             $str .= '<td><div style="text-align: center;">'
-                                        . '<button type="button" class="btn btn-xs btn-outline-primary btn-fw" onclick="pilih_barang('."'".$row1->idbarang."'".','."'".$row1->deskripsi."'".','."'".$row->nama_jenis."'".')">Pilih</button>'
+                                        . '<button type="button" class="btn btn-xs btn-outline-primary btn-fw" onclick="pilih_barang('."'".$brg->idbarang."'".','."'".$brg->deskripsi."'".','."'".$row->nama_jenis."'".')">Pilih</button>'
                                         . '</div></td>';
                         $str .= '</tr>';
                     }
@@ -280,7 +283,7 @@ class Brgmnadmin extends BaseController {
                                 <thead>
                                     <tr>
                                         <th>GAMBAR</th>
-                                        <th>DESCRIPTION</th>
+                                        <th>NAMA BARANG</th>
                                         <th>PN/NSN</th>
                                         <th>DS NUMBER</th>
                                         <th>Holding</th>
@@ -289,22 +292,25 @@ class Brgmnadmin extends BaseController {
                                 </thead>
                                 <tbody>';
                     // menampilkan isi table
-                    $list_brg = $this->model->getAllQ("select * from barang where idjenisbarang = '".$row->idjenisbarang."' and idkapal = '".$idkapal."' and idbarang not in(select idbarang from brg_masuk_detil where idbrg_masuk = '".$kode_trans."');");
+                    $list_brg = $this->model->getAllQ("select distinct b.idbarang from brg_masuk a, brg_masuk_detil b where a.idbrg_masuk = b.idbrg_masuk and a.idkapal = '".$idkapal."' and a.idjenisbarang = '".$row->idjenisbarang."' and idbarang not in(select idbarang from brg_masuk_detil where idbrg_masuk = '".$kode_trans."');");
                     foreach ($list_brg->getResult() as $row1) {
                         $str .= '<tr>';
+                            // mencari data barang
+                            $brg = $this->model->getAllQR("select * from barang where idbarang = '".$row1->idbarang."'");
+                            
                             $def_foto = base_url() . '/images/noimg.jpg';
-                            if (strlen($row1->foto) > 0) {
-                                if (file_exists($this->modul->getPathApp().$row1->foto)) {
-                                    $def_foto = base_url().'/uploads/'.$row1->foto;
+                            if (strlen($brg->foto) > 0) {
+                                if (file_exists($this->modul->getPathApp().$brg->foto)) {
+                                    $def_foto = base_url().'/uploads/'.$brg->foto;
                                 }
                             }
                             $str .= '<td><img src="'.$def_foto.'" style="width: 50px; height: auto;"></td>';
-                            $str .= '<td>'.$row1->deskripsi.'</td>';
-                            $str .= '<td>'.$row1->pn_nsn.'</td>';
-                            $str .= '<td>'.$row1->ds_number.'</td>';
-                            $str .= '<td>'.$row1->holding.'</td>';
+                            $str .= '<td>'.$brg->deskripsi.'</td>';
+                            $str .= '<td>'.$brg->pn_nsn.'</td>';
+                            $str .= '<td>'.$brg->ds_number.'</td>';
+                            $str .= '<td>'.$brg->holding.'</td>';
                             $str .= '<td><div style="text-align: center;">'
-                                        . '<button type="button" class="btn btn-xs btn-outline-primary btn-fw" onclick="pilih_barang('."'".$row1->idbarang."'".','."'".$row1->deskripsi."'".','."'".$row->nama_jenis."'".')">Pilih</button>'
+                                        . '<button type="button" class="btn btn-xs btn-outline-primary btn-fw" onclick="pilih_barang('."'".$brg->idbarang."'".','."'".$brg->deskripsi."'".','."'".$row->nama_jenis."'".')">Pilih</button>'
                                         . '</div></td>';
                         $str .= '</tr>';
                     }
@@ -393,7 +399,8 @@ class Brgmnadmin extends BaseController {
                 'idbrg_masuk' => $this->request->getVar('kode'),
                 'idkapal' => $this->request->getVar('kri'),
                 'tgl' => $this->request->getVar('tgl'),
-                'idusers' => $username
+                'idusers' => $username,
+                'idjenisbarang' => $this->request->getVar('gudang')
             );
             $simpan = $this->model->add("brg_masuk",$data);
         }else{
@@ -568,7 +575,6 @@ class Brgmnadmin extends BaseController {
                                     'qty' => 0,
                                     'uoi' => trim(addslashes($row[8])),
                                     'verwendung' => trim(addslashes($row[9])),
-                                    'idjenisbarang' => $this->request->getVar('gudang'),
                                     'idkapal' => $kri
                                 );
                                 $this->model->add("barang", $data);

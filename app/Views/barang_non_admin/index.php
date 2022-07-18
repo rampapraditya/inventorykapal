@@ -208,8 +208,10 @@
                 <div class="card-body">
                     <h4 class="card-title">MASTER BARANG</h4>
                     <p class="card-description">Maintenance data barang</p>
+                    <!--
                     <button type="button" class="btn btn-primary btn-sm" onclick="add();">Tambah</button>
                     <button type="button" class="btn btn-secondary btn-sm" onclick="uploadfile();">Upload File</button>
+                    -->
                 </div>
                 <div class="card-body">
                     <div id="wadah_tab" class="col-md-12">
@@ -251,7 +253,7 @@
                         <input id="gambar" name="gambar" class="form-control" type="file" autocomplete="off">
                     </div>
                     <div class="form-group">
-                        <label>DESKRIPSI</label>
+                        <label>NAMA BARANG</label>
                         <input id="deskripsi" name="deskripsi" class="form-control" type="text" autocomplete="off">
                     </div>
                     <div class="form-group">
@@ -279,15 +281,15 @@
                         <input id="supplementary" name="supplementary" class="form-control" type="text" autocomplete="off">
                     </div>
                     <div class="form-group">
-                        <label>QUANT</label>
+                        <label>JUMLAH</label>
                         <input id="quant" name="quant" class="form-control" type="text" autocomplete="off">
                     </div>
                     <div class="form-group">
-                        <label>UOI</label>
+                        <label>SATUAN</label>
                         <input id="uoi" name="uoi" class="form-control" type="text" autocomplete="off">
                     </div>
                     <div class="form-group">
-                        <label>Verwendung</label>
+                        <label>KETERANGAN</label>
                         <input id="verwendung" name="verwendung" class="form-control" type="text" autocomplete="off">
                     </div>
                 </form>

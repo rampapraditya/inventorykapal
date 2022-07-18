@@ -64,14 +64,14 @@ class Logmasukcair extends BaseController {
             // load data
             $no = 1;
             $data = array();
-            $list = $this->model->getAllQ("SELECT a.idbrg_masuk, date_format(tgl, '%d %M %Y') as tglf, b.nama_kapal FROM brg_masuk_cair a, kapal b where a.idkapal = b.idkapal and b.idkapal = '".$kri."' order by tgl desc;");
+            $list = $this->model->getAllQ("SELECT a.idbrg_masuk, date_format(tgl, '%d %M %Y') as tglf, b.nama_kapal FROM brg_masuk a, kapal b where a.idkapal = b.idkapal and b.idkapal = '".$kri."' and mode = 'cair' order by tgl desc;");
             foreach ($list->getResult() as $row) {
                 $val = array();
                 $val[] = $no;
                 $val[] = $row->tglf;
                 $val[] = $row->nama_kapal;
                 // menampilkan jumlah itemnya saja
-                $val[] = $this->model->getAllQR("select count(*) as jml from brg_masuk_detil_cair where idbrg_masuk = '".$row->idbrg_masuk."';")->jml;
+                $val[] = $this->model->getAllQR("select count(*) as jml from brg_masuk_detil where idbrg_masuk = '".$row->idbrg_masuk."';")->jml;
                 $val[] = '<div style="text-align: center;">'
                         . '<button type="button" class="btn btn-outline-secondary btn-fw" onclick="showitem('."'".$row->idbrg_masuk."'".')">Detail Item</button>&nbsp;'
                         . '<button type="button" class="btn btn-outline-primary btn-fw" onclick="ganti('."'".$this->modul->enkrip_url($row->idbrg_masuk)."'".')">Ganti</button>&nbsp;'
@@ -99,8 +99,8 @@ class Logmasukcair extends BaseController {
             
             $no = 1;
             $data = array();
-            $list = $this->model->getAllQ("SELECT distinct a.idbrg_masuk, date_format(tgl, '%d %M %Y') as tglf, b.nama_kapal FROM brg_masuk_cair a, kapal b, brg_masuk_detil_cair c, barang d "
-                    . "where a.idkapal = b.idkapal and a.idbrg_masuk = c.idbrg_masuk and c.idbarang = d.idbarang and b.idkapal = '".$kri."' and (a.tgl between '".$tgl1."' and '".$tgl2."') and d.deskripsi like '%".$deskripsi."%' order by tgl desc;");
+            $list = $this->model->getAllQ("SELECT distinct a.idbrg_masuk, date_format(tgl, '%d %M %Y') as tglf, b.nama_kapal FROM brg_masuk a, kapal b, brg_masuk_detil c, barang d "
+                    . "where a.idkapal = b.idkapal and a.idbrg_masuk = c.idbrg_masuk and c.idbarang = d.idbarang and b.idkapal = '".$kri."' and a.mode = 'cair' and (a.tgl between '".$tgl1."' and '".$tgl2."') and d.deskripsi like '%".$deskripsi."%' order by tgl desc;");
             foreach ($list->getResult() as $row) {
                 $val = array();
                 $val[] = $no;
@@ -129,12 +129,13 @@ class Logmasukcair extends BaseController {
             $idbrg_masuk = $this->request->uri->getSegment(3);
             // load data
             $data = array();
-            $list = $this->model->getAllQ("SELECT b.deskripsi, a.jumlah_minta, a.jumlah_datang, a.satuan FROM brg_masuk_detil_cair a, barang b where a.idbarang = b.idbarang and a.idbrg_masuk = '".$idbrg_masuk."';");
+            $list = $this->model->getAllQ("SELECT b.deskripsi, a.jumlah_minta, a.jumlah, a.satuan FROM brg_masuk_detil a, barang b "
+                    . "where a.idbarang = b.idbarang and a.idbrg_masuk = '".$idbrg_masuk."';");
             foreach ($list->getResult() as $row) {
                 $val = array();
                 $val[] = $row->deskripsi;
                 $val[] = $row->jumlah_minta;
-                $val[] = $row->jumlah_datang;
+                $val[] = $row->jumlah;
                 $val[] = $row->satuan;
                 $data[] = $val;
             }
@@ -178,10 +179,10 @@ class Logmasukcair extends BaseController {
             $temp = $this->request->uri->getSegment(3);
             if(strlen($temp) > 0){
                 $kode = $this->modul->dekrip_url($temp);
-                $jml = $this->model->getAllQR("select count(*) as jml from brg_masuk_cair where idbrg_masuk = '".$kode."';")->jml;
+                $jml = $this->model->getAllQR("select count(*) as jml from brg_masuk where idbrg_masuk = '".$kode."';")->jml;
                 if($jml > 0){
                     $kondisi['idbrg_masuk'] = $kode;
-                    $tersimpan = $this->model->get_by_id("brg_masuk_cair", $kondisi);
+                    $tersimpan = $this->model->get_by_id("brg_masuk", $kondisi);
                             
                     $data['kode'] = $kode;
                     $data['tgl_def'] = $tersimpan->tgl;
@@ -196,7 +197,7 @@ class Logmasukcair extends BaseController {
                     $this->modul->halaman('brgmasuk');
                 }
             }else{
-                $data['kode'] = $this->model->autokode('M','idbrg_masuk', 'brg_masuk_cair', 2, 7);
+                $data['kode'] = $this->model->autokode('M','idbrg_masuk', 'brg_masuk', 2, 7);
                 $data['tgl_def'] = $this->modul->TanggalSekarang();
                 $data['ket'] = "TAMBAH";
 
@@ -243,7 +244,7 @@ class Logmasukcair extends BaseController {
                                 <thead>
                                     <tr>
                                         <th>GAMBAR</th>
-                                        <th>DESCRIPTION</th>
+                                        <th>NAMA BARANG</th>
                                         <th>PN/NSN</th>
                                         <th>DS NUMBER</th>
                                         <th>Holding</th>
@@ -252,22 +253,24 @@ class Logmasukcair extends BaseController {
                                 </thead>
                                 <tbody>';
                     // menampilkan isi table
-                    $list_brg = $this->model->getAllQ("select * from barang where idjenisbarang = '".$row->idjenisbarang."' and idkapal = '".$idkapal."' and idbarang not in(select idbarang from brg_masuk_detil_cair where idbrg_masuk = '".$kode_trans."');");
+                    $list_brg = $this->model->getAllQ("select distinct b.idbarang from brg_masuk a, brg_masuk_detil b where a.mode = 'cair' and a.idbrg_masuk = b.idbrg_masuk and a.idkapal = '".$idkapal."' and a.idjenisbarang = '".$row->idjenisbarang."' and idbarang not in(select idbarang from brg_masuk_detil where idbrg_masuk = '".$kode_trans."');");
                     foreach ($list_brg->getResult() as $row1) {
                         $str .= '<tr>';
+                            $brg = $this->model->getAllQR("select * from barang where idbarang = '".$row1->idbarang."'");
+                            
                             $def_foto = base_url() . '/images/noimg.jpg';
-                            if (strlen($row1->foto) > 0) {
-                                if (file_exists($this->modul->getPathApp().$row1->foto)) {
-                                    $def_foto = base_url().'/uploads/'.$row1->foto;
+                            if (strlen($brg->foto) > 0) {
+                                if (file_exists($this->modul->getPathApp().$brg->foto)) {
+                                    $def_foto = base_url().'/uploads/'.$brg->foto;
                                 }
                             }
                             $str .= '<td><img src="'.$def_foto.'" style="width: 50px; height: auto;"></td>';
-                            $str .= '<td>'.$row1->deskripsi.'</td>';
-                            $str .= '<td>'.$row1->pn_nsn.'</td>';
-                            $str .= '<td>'.$row1->ds_number.'</td>';
-                            $str .= '<td>'.$row1->holding.'</td>';
+                            $str .= '<td>'.$brg->deskripsi.'</td>';
+                            $str .= '<td>'.$brg->pn_nsn.'</td>';
+                            $str .= '<td>'.$brg->ds_number.'</td>';
+                            $str .= '<td>'.$brg->holding.'</td>';
                             $str .= '<td><div style="text-align: center;">'
-                                        . '<button type="button" class="btn btn-xs btn-outline-primary btn-fw" onclick="pilih_barang('."'".$row1->idbarang."'".','."'".$row1->deskripsi."'".','."'".$row->nama_jenis."'".')">Pilih</button>'
+                                        . '<button type="button" class="btn btn-xs btn-outline-primary btn-fw" onclick="pilih_barang('."'".$brg->idbarang."'".','."'".$brg->deskripsi."'".','."'".$row->nama_jenis."'".')">Pilih</button>'
                                         . '</div></td>';
                         $str .= '</tr>';
                     }
@@ -281,7 +284,7 @@ class Logmasukcair extends BaseController {
                                 <thead>
                                     <tr>
                                         <th>GAMBAR</th>
-                                        <th>DESCRIPTION</th>
+                                        <th>NAMA BARANG</th>
                                         <th>PN/NSN</th>
                                         <th>DS NUMBER</th>
                                         <th>Holding</th>
@@ -290,22 +293,24 @@ class Logmasukcair extends BaseController {
                                 </thead>
                                 <tbody>';
                     // menampilkan isi table
-                    $list_brg = $this->model->getAllQ("select * from barang where idjenisbarang = '".$row->idjenisbarang."' and idkapal = '".$idkapal."' and idbarang not in(select idbarang from brg_masuk_detil_cair where idbrg_masuk = '".$kode_trans."');");
+                    $list_brg = $this->model->getAllQ("select distinct b.idbarang from brg_masuk a, brg_masuk_detil b where a.mode = 'cair' and a.idbrg_masuk = b.idbrg_masuk and a.idkapal = '".$idkapal."' and a.idjenisbarang = '".$row->idjenisbarang."' and idbarang not in(select idbarang from brg_masuk_detil where idbrg_masuk = '".$kode_trans."');");
                     foreach ($list_brg->getResult() as $row1) {
                         $str .= '<tr>';
+                            $brg = $this->model->getAllQR("select * from barang where idbarang = '".$row1->idbarang."'");
+                            
                             $def_foto = base_url() . '/images/noimg.jpg';
-                            if (strlen($row1->foto) > 0) {
-                                if (file_exists($this->modul->getPathApp().$row1->foto)) {
-                                    $def_foto = base_url().'/uploads/'.$row1->foto;
+                            if (strlen($brg->foto) > 0) {
+                                if (file_exists($this->modul->getPathApp().$brg->foto)) {
+                                    $def_foto = base_url().'/uploads/'.$brg->foto;
                                 }
                             }
                             $str .= '<td><img src="'.$def_foto.'" style="width: 50px; height: auto;"></td>';
-                            $str .= '<td>'.$row1->deskripsi.'</td>';
-                            $str .= '<td>'.$row1->pn_nsn.'</td>';
-                            $str .= '<td>'.$row1->ds_number.'</td>';
-                            $str .= '<td>'.$row1->holding.'</td>';
+                            $str .= '<td>'.$brg->deskripsi.'</td>';
+                            $str .= '<td>'.$brg->pn_nsn.'</td>';
+                            $str .= '<td>'.$brg->ds_number.'</td>';
+                            $str .= '<td>'.$brg->holding.'</td>';
                             $str .= '<td><div style="text-align: center;">'
-                                        . '<button type="button" class="btn btn-xs btn-outline-primary btn-fw" onclick="pilih_barang('."'".$row1->idbarang."'".','."'".$row1->deskripsi."'".','."'".$row->nama_jenis."'".')">Pilih</button>'
+                                        . '<button type="button" class="btn btn-xs btn-outline-primary btn-fw" onclick="pilih_barang('."'".$brg->idbarang."'".','."'".$brg->deskripsi."'".','."'".$row->nama_jenis."'".')">Pilih</button>'
                                         . '</div></td>';
                         $str .= '</tr>';
                     }
@@ -331,13 +336,13 @@ class Logmasukcair extends BaseController {
             // load data
             $no = 1;
             $data = array();
-            $list = $this->model->getAllQ("select a.idbrg_m_detil, b.deskripsi, a.jumlah_minta, a.jumlah_datang, a.satuan from brg_masuk_detil_cair a, barang b, brg_masuk_cair c where a.idbarang = b.idbarang and a.idbrg_masuk = c.idbrg_masuk and a.idbrg_masuk = '".$kode."';");
+            $list = $this->model->getAllQ("select a.idbrg_m_detil, b.deskripsi, a.jumlah_minta, a.jumlah, a.satuan from brg_masuk_detil a, barang b, brg_masuk c where a.idbarang = b.idbarang and a.idbrg_masuk = c.idbrg_masuk and a.idbrg_masuk = '".$kode."';");
             foreach ($list->getResult() as $row) {
                 $val = array();
                 $val[] = $no;
                 $val[] = $row->deskripsi;
                 $val[] = $row->jumlah_minta;
-                $val[] = $row->jumlah_datang;
+                $val[] = $row->jumlah;
                 $val[] = $row->satuan;
                 $val[] = '<div style="text-align: center;">'
                         . '<button type="button" class="btn btn-outline-primary btn-fw" onclick="ganti(' . "'" . $row->idbrg_m_detil . "'" . ')">Ganti</button>&nbsp;'
@@ -359,7 +364,7 @@ class Logmasukcair extends BaseController {
             $username = session()->get("username");
             
             // cek head ada apa endak
-            $jml = $this->model->getAllQR("SELECT count(*) as jml FROM brg_masuk_cair where idbrg_masuk = '".$this->request->getVar('kode')."';")->jml;
+            $jml = $this->model->getAllQR("SELECT count(*) as jml FROM brg_masuk where idbrg_masuk = '".$this->request->getVar('kode')."';")->jml;
             if($jml > 0){
                 $hasil3 = $this->simpan_detil();
                 if($hasil3 == 1){
@@ -389,15 +394,17 @@ class Logmasukcair extends BaseController {
     
     private function simpan_head($username) {
         // cek apa sudah masuk apa belum
-        $cek = $this->model->getAllQR("select count(*) as jml from brg_masuk_cair where idbrg_masuk = '".$this->request->getVar('kode')."' and idusers = '".$username."';")->jml;
+        $cek = $this->model->getAllQR("select count(*) as jml from brg_masuk where idbrg_masuk = '".$this->request->getVar('kode')."' and idusers = '".$username."';")->jml;
         if($cek < 1){
             $data = array(
                 'idbrg_masuk' => $this->request->getVar('kode'),
                 'idkapal' => $this->request->getVar('kri'),
                 'tgl' => $this->request->getVar('tgl'),
-                'idusers' => $username
+                'idusers' => $username,
+                'idjenisbarang' => $this->request->getVar('gudang'),
+                'mode' => 'cair'
             );
-            $simpan = $this->model->add("brg_masuk_cair",$data);
+            $simpan = $this->model->add("brg_masuk",$data);
         }else{
             $simpan = 1;
         }
@@ -428,27 +435,26 @@ class Logmasukcair extends BaseController {
                 'qty' => 0,
                 'uoi' => $this->request->getVar('satuan'),
                 'verwendung' => '',
-                'idjenisbarang' => $this->request->getVar('gudang'),
                 'idkapal' => $idkapal
             );
             $simpan = $this->model->add("barang", $data);
         }
         $data = array(
-            'idbrg_m_detil' => $this->model->autokode("MD","idbrg_m_detil","brg_masuk_detil_cair", 3, 9),
+            'idbrg_m_detil' => $this->model->autokode("MD","idbrg_m_detil","brg_masuk_detil", 3, 9),
             'idbarang' => $kodebarang,
             'jumlah_minta' => $this->request->getVar('jumlah_minta'),
-            'jumlah_datang' => $this->request->getVar('jumlah_datang'),
+            'jumlah' => $this->request->getVar('jumlah_datang'),
             'satuan' => $this->request->getVar('satuan'),
             'idbrg_masuk' => $this->request->getVar('kode')
         );
-        $simpan = $this->model->add("brg_masuk_detil_cair",$data);
+        $simpan = $this->model->add("brg_masuk_detil",$data);
         return  $simpan;
     }
     
     public function hapusdetil() {
         if(session()->get("logged_no_admin")){
             $kond['idbrg_m_detil'] = $this->request->uri->getSegment(3);
-            $hapus = $this->model->delete("brg_masuk_detil_cair",$kond);
+            $hapus = $this->model->delete("brg_masuk_detil",$kond);
             if($hapus == 1){
                 $status = "Data terhapus";
             }else{
@@ -463,7 +469,8 @@ class Logmasukcair extends BaseController {
     public function gantidetil(){
         if(session()->get("logged_no_admin")){
             $kode_detil = $this->request->uri->getSegment(3);
-            $data = $this->model->getAllQR("SELECT a.idbrg_m_detil, a.idbarang, b.deskripsi, a.jumlah_minta, a.jumlah_datang, a.satuan, b.idjenisbarang FROM brg_masuk_detil_cair a, barang b where a.idbarang = b.idbarang and a.idbrg_m_detil = '".$kode_detil."';");
+            $data = $this->model->getAllQR("SELECT a.idbrg_m_detil, a.idbarang, b.deskripsi, a.jumlah_minta, a.jumlah, a.satuan "
+                    . "FROM brg_masuk_detil a, barang b where a.idbarang = b.idbarang and a.idbrg_m_detil = '".$kode_detil."';");
             echo json_encode($data);
         }else{
             $this->modul->halaman('login');
@@ -474,27 +481,21 @@ class Logmasukcair extends BaseController {
         if(session()->get("logged_no_admin")){
             $data = array(
                 'idkapal' => $this->request->getVar('kri'),
-                'tgl' => $this->request->getVar('tgl')
+                'tgl' => $this->request->getVar('tgl'),
+                'idjenisbarang' => $this->request->getVar('gudang')
             );
             $kond1['idbrg_masuk'] = $this->request->getVar('kode');
-            $update = $this->model->update("brg_masuk_cair",$data, $kond1);
+            $update = $this->model->update("brg_masuk",$data, $kond1);
             if($update == 1){
                 $data_detil = array(
                     'idbarang' => $this->request->getVar('kode_barang'),
                     'jumlah_minta' => $this->request->getVar('jumlah_minta'),
-                    'jumlah_datang' => $this->request->getVar('jumlah_datang'),
+                    'jumlah' => $this->request->getVar('jumlah_datang'),
                     'satuan' => $this->request->getVar('satuan')
                 );
                 $kond2['idbrg_m_detil'] = $this->request->getVar('kode_detil');
-                $update2 = $this->model->update("brg_masuk_detil_cair",$data_detil, $kond2);
+                $update2 = $this->model->update("brg_masuk_detil",$data_detil, $kond2);
                 if($update2 == 1){
-                    // ubah juga posisi gudangnya
-                    $data_gudang = array(
-                        'idjenisbarang' => $this->request->getVar('gudang')
-                    );
-                    $kond3['idbarang'] = $this->request->getVar('kode_barang');
-                    $this->model->update("barang",$data_gudang, $kond3);
-
                     $status = "Data terupdate";
                 }else{
                     $status = "Data gagal terupdate";
@@ -511,7 +512,7 @@ class Logmasukcair extends BaseController {
     public function hapus() {
         if(session()->get("logged_no_admin")){
             $kond['idbrg_masuk'] = $this->request->uri->getSegment(3);
-            $hapus = $this->model->delete("brg_masuk_cair",$kond);
+            $hapus = $this->model->delete("brg_masuk",$kond);
             if($hapus == 1){
                 $status = "Data terhapus";
             }else{

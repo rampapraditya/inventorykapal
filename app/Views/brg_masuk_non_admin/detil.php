@@ -65,6 +65,7 @@
         var kode_barang = document.getElementById('kode_barang').value;
         var jumlah = document.getElementById('jumlah').value;
         var satuan = document.getElementById('satuan').value;
+        var gudang = document.getElementById('gudang_manual').value;
         
         if (kode === "") {
             alert("Kode tidak boleh kosong");
@@ -78,6 +79,8 @@
             alert("Jumlah tidak boleh kosong");
         }else if(satuan === ""){
             alert("Satuan tidak boleh kosong");
+        }else if(gudang === "-"){
+            alert("Pilih gudang terlebih dahulu");
         } else {
             $('#btnSave').text('Saving...');
             $('#btnSave').attr('disabled', true);
@@ -97,6 +100,7 @@
             form_data.append('kode_barang', kode_barang);
             form_data.append('jumlah', jumlah);
             form_data.append('satuan', satuan);
+            form_data.append('gudang', gudang);
             
             // ajax adding data to database
             $.ajax({
@@ -298,6 +302,19 @@
                     <div class="form-group">
                         <label>Satuan</label>
                         <input id="satuan" name="satuan" class="form-control" type="text" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label>Gudang</label>
+                        <select id="gudang_manual" name="gudang_manual" class="form-control">
+                            <option value="-">- PILIH GUDANG -</option>
+                            <?php
+                            foreach ($gudang->getResult() as $row) {
+                                ?>
+                            <option value="<?php echo $row->idjenisbarang; ?>"><?php echo $row->nama_jenis; ?></option>
+                                <?php
+                            }
+                            ?>
+                        </select>
                     </div>
                 </form>
             </div>
