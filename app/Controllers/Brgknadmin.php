@@ -459,11 +459,11 @@ class Brgknadmin extends BaseController {
     public function gantidetil(){
         if(session()->get("logged_no_admin")){
             $kode_detil = $this->request->uri->getSegment(3);
-            $data = $this->model->getAllQR("SELECT a.idbrg_k_detil, a.idbarang, b.deskripsi, a.jumlah, a.satuan, a.idbrg_keluar FROM brg_keluar_detil a, barang b where a.idbarang = b.idbarang and a.idbrg_k_detil = '".$kode_detil."';");
+            $data = $this->model->getAllQR("SELECT a.idbrg_k_detil, a.idbarang, b.deskripsi, a.jumlah, a.satuan, a.idbrg_keluar, a.alasan FROM brg_keluar_detil a, barang b where a.idbarang = b.idbarang and a.idbrg_k_detil = '".$kode_detil."';");
             // mencari kri
-            $kri = $this->model->getAllQR("select idkapal from brg_keluar where idbrg_keluar = '".$data->idbrg_keluar."';")->idkapal;
+            $head = $this->model->getAllQR("select idkapal, idjenisbarang from brg_keluar where idbrg_keluar = '".$data->idbrg_keluar."';");
             // mencari stok
-            $stok = $this->getStok($data->idbarang, $kri) + $data->jumlah;
+            $stok = $this->getStok($data->idbarang, $head->idkapal, $head->idjenisbarang) + $data->jumlah;
             
             echo json_encode(array(
                 "idbrg_k_detil" => $data->idbrg_k_detil,
@@ -471,7 +471,9 @@ class Brgknadmin extends BaseController {
                 "deskripsi" => $data->deskripsi,
                 "jumlah" => $data->jumlah,
                 "satuan" => $data->satuan,
-                "stok" => $stok
+                "stok" => $stok,
+                "alasan" => $data->alasan,
+                "idjenisbarang" => $head->idjenisbarang
             ));
         }else{
             $this->modul->halaman('login');
@@ -482,7 +484,8 @@ class Brgknadmin extends BaseController {
         if(session()->get("logged_no_admin")){
             $data = array(
                 'idkapal' => $this->request->getVar('kri'),
-                'tgl' => $this->request->getVar('tgl')
+                'tgl' => $this->request->getVar('tgl'),
+                'alasan' => $this->request->getVar('alasan_head')
             );
             $kond1['idbrg_keluar'] = $this->request->getVar('kode');
             $update = $this->model->update("brg_keluar",$data, $kond1);
@@ -490,7 +493,8 @@ class Brgknadmin extends BaseController {
                 $data_detil = array(
                     'idbarang' => $this->request->getVar('kode_barang'),
                     'jumlah' => $this->request->getVar('jumlah'),
-                    'satuan' => $this->request->getVar('satuan')
+                    'satuan' => $this->request->getVar('satuan'),
+                    'alasan' => $this->request->getVar('alasan')
                 );
                 $kond2['idbrg_k_detil'] = $this->request->getVar('kode_detil');
                 $update2 = $this->model->update("brg_keluar_detil",$data_detil, $kond2);

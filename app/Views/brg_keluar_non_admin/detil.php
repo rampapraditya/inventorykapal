@@ -177,6 +177,8 @@
                     $('[name="jumlah"]').val(data.jumlah);
                     $('[name="satuan"]').val(data.satuan);
                     $('[name="stok"]').val(data.stok);
+                    $('[name="alasan"]').val(data.alasan);
+                    $('[name="idjenisbarang"]').val(data.idjenisbarang);
                 }, error: function (jqXHR, textStatus, errorThrown) {
                     alert('Error get data');
                 }
