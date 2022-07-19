@@ -31,25 +31,21 @@
 
     function save() {
         var kode = document.getElementById('kode').value;
-        var gudang = document.getElementById('gudang').value;
+        //var gudang = document.getElementById('gudang').value;
         var gambar = $('#gambar').prop('files')[0];
         var deskripsi = document.getElementById('deskripsi').value;
         var pn_nsn = document.getElementById('pn_nsn').value;
-        var ds_number = document.getElementById('ds_number').value;
-        var holding = document.getElementById('holding').value;
+        //var ds_number = document.getElementById('ds_number').value;
+        //var holding = document.getElementById('holding').value;
         var equipment = document.getElementById('equipment').value;
-        var store = document.getElementById('store').value;
-        var supplementary = document.getElementById('supplementary').value;
-        var quant = document.getElementById('quant').value;
+        //var store = document.getElementById('store').value;
+        //var supplementary = document.getElementById('supplementary').value;
+        //var quant = document.getElementById('quant').value;
         var uoi = document.getElementById('uoi').value;
         var verwendung = document.getElementById('verwendung').value;
         
-        if (gudang === "-") {
-            alert("Gudang tidak boleh kosong");
-        } else if (deskripsi === "") {
-            alert("Deskripsi tidak boleh kosong");
-        } else if (pn_nsn === "") {
-            alert("PN/NSN tidak boleh kosong");
+        if (deskripsi === "") {
+            alert("Nama barang tidak boleh kosong");
         } else {
             $('#btnSave').text('Saving...'); //change button text
             $('#btnSave').attr('disabled', true); //set button disable 
@@ -63,16 +59,16 @@
 
             var form_data = new FormData();
             form_data.append('kode', kode);
-            form_data.append('gudang', gudang);
+            //form_data.append('gudang', gudang);
             form_data.append('file', gambar);
             form_data.append('deskripsi', deskripsi);
             form_data.append('pn_nsn', pn_nsn);
-            form_data.append('ds_number', ds_number);
-            form_data.append('holding', holding);
+            //form_data.append('ds_number', ds_number);
+            //form_data.append('holding', holding);
             form_data.append('equipment', equipment);
-            form_data.append('store', store);
-            form_data.append('supplementary', supplementary);
-            form_data.append('quant', quant);
+            //form_data.append('store', store);
+            //form_data.append('supplementary', supplementary);
+            //form_data.append('quant', quant);
             form_data.append('uoi', uoi);
             form_data.append('verwendung', verwendung);
 
@@ -131,15 +127,15 @@
                 $('[name="kode"]').val(data.idbarang);
                 $('[name="deskripsi"]').val(data.deskripsi);
                 $('[name="pn_nsn"]').val(data.pn_nsn);
-                $('[name="ds_number"]').val(data.ds_number);
-                $('[name="holding"]').val(data.holding);
+                //$('[name="ds_number"]').val(data.ds_number);
+                //$('[name="holding"]').val(data.holding);
                 $('[name="equipment"]').val(data.equipment_desc);
-                $('[name="store"]').val(data.store_location);
-                $('[name="supplementary"]').val(data.supplementary_location);
+                //$('[name="store"]').val(data.store_location);
+                //$('[name="supplementary"]').val(data.supplementary_location);
                 $('[name="quant"]').val(data.qty);
                 $('[name="uoi"]').val(data.uoi);
                 $('[name="verwendung"]').val(data.verwendung);
-                $('[name="gudang"]').val(data.idjenisbarang);
+                //$('[name="gudang"]').val(data.idjenisbarang);
 
             }, error: function (jqXHR, textStatus, errorThrown) {
                 alert('Error get data');
@@ -235,19 +231,21 @@
             <div class="modal-body">
                 <form id="form" class="form-horizontal">
                     <input type="hidden" name="kode" id="kode">
+                    <!--
                     <div class="form-group">
                         <label>GUDANG</label>
                         <select id="gudang" name="gudang" class="form-control">
                             <option value="-">- PILIH GUDANG -</option>
                             <?php
-                            foreach ($gudang->getResult() as $row) {
+                            //foreach ($gudang->getResult() as $row) {
                                 ?>
-                                <option value="<?php echo $row->idjenisbarang; ?>"><?php echo $row->nama_jenis; ?></option>
+                                <option value="<?php //echo $row->idjenisbarang; ?>"><?php //echo $row->nama_jenis; ?></option>
                                 <?php
-                            }
+                            //}
                             ?>
                         </select>
                     </div>
+                    -->
                     <div class="form-group">
                         <label>GAMBAR</label>
                         <input id="gambar" name="gambar" class="form-control" type="file" autocomplete="off">
@@ -260,6 +258,7 @@
                         <label>PN/NSN</label>
                         <input id="pn_nsn" name="pn_nsn" class="form-control" type="text" autocomplete="off">
                     </div>
+                    <!--
                     <div class="form-group">
                         <label>DS NUMBER</label>
                         <input id="ds_number" name="ds_number" class="form-control" type="text" autocomplete="off">
@@ -268,10 +267,12 @@
                         <label>Holding</label>
                         <input id="holding" name="holding" class="form-control" type="text" autocomplete="off">
                     </div>
+                    -->
                     <div class="form-group">
                         <label>EQUIPMENT DESCRIPTION</label>
                         <input id="equipment" name="equipment" class="form-control" type="text" autocomplete="off">
                     </div>
+                    <!--
                     <div class="form-group">
                         <label>STORE  LOCATION</label>
                         <input id="store" name="store" class="form-control" type="text" autocomplete="off">
@@ -284,6 +285,7 @@
                         <label>JUMLAH</label>
                         <input id="quant" name="quant" class="form-control" type="text" autocomplete="off">
                     </div>
+                    -->
                     <div class="form-group">
                         <label>SATUAN</label>
                         <input id="uoi" name="uoi" class="form-control" type="text" autocomplete="off">

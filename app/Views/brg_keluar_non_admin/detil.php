@@ -48,11 +48,12 @@
         });
     }
     
-    function pilih(kode, nama, stok, satuan){
+    function pilih(kode, nama, stok, satuan, gudang){
         $('[name="kode_barang"]').val(kode);
         $('[name="nama"]').val(nama);
         $('[name="stok"]').val(stok);
         $('[name="satuan"]').val(satuan);
+        $('[name="idjenisbarang"]').val(gudang);
         $('#modal_barang').modal('hide');
     }
     
@@ -67,6 +68,7 @@
         var satuan = document.getElementById('satuan').value;
         var alasan_head = document.getElementById('alasan_head').value;
         var alasan = document.getElementById('alasan').value;
+        var gudang = document.getElementById('idjenisbarang').value;
         
         if (kode === "") {
             alert("Kode tidak boleh kosong");
@@ -80,6 +82,8 @@
             alert("Jumlah tidak boleh kosong");
         }else if(satuan === ""){
             alert("Satuan tidak boleh kosong");
+        }else if(gudang === ""){
+            alert("Gudang tidak boleh kosong");
         } else {
             // cek stok
             var a = parseInt(stok);
@@ -106,6 +110,7 @@
                 form_data.append('satuan', satuan);
                 form_data.append('alasan_head', alasan_head);
                 form_data.append('alasan', alasan);
+                form_data.append('gudang', gudang);
 
                 // ajax adding data to database
                 $.ajax({
@@ -273,10 +278,10 @@
         <div class="col-md-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-header">
-                    <!--
                     <button type="button" class="btn btn-primary btn-sm" onclick="add();">Tambah</button>
-                    -->
+                    <!--
                     <button type="button" class="btn btn-success btn-sm" onclick="add_file();">Tambah (File)</button>
+                    -->
                     <button type="button" class="btn btn-secondary btn-sm" onclick="reload();">Reload</button>
                 </div>
                 <div class="card-body">
@@ -314,6 +319,7 @@
             <div class="modal-body">
                 <form id="form" class="form-horizontal">
                     <input type="hidden" name="kode_detil" id="kode_detil">
+                    <input type="hidden" name="idjenisbarang" id="idjenisbarang">
                     <div class="form-group">
                         <label>Barang</label>
                         <div class="input-group mb-3">
