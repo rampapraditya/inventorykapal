@@ -97,7 +97,6 @@ class Barang extends BaseController {
                     'qty' => $this->request->getVar('quant'),
                     'uoi' => $this->request->getVar('uoi'),
                     'verwendung' => $this->request->getVar('verwendung'),
-                    'idjenisbarang' => $this->request->getVar('gudang'),
                     'idkapal' => $this->request->getVar('idkapal')
                 );
                 $simpan = $this->model->add("barang", $data);
@@ -127,7 +126,6 @@ class Barang extends BaseController {
             'qty' => $this->request->getVar('quant'),
             'uoi' => $this->request->getVar('uoi'),
             'verwendung' => $this->request->getVar('verwendung'),
-            'idjenisbarang' => $this->request->getVar('gudang'),
             'idkapal' => $this->request->getVar('idkapal')
         );
         $simpan = $this->model->add("barang", $data);
@@ -197,7 +195,6 @@ class Barang extends BaseController {
                     'qty' => $this->request->getVar('quant'),
                     'uoi' => $this->request->getVar('uoi'),
                     'verwendung' => $this->request->getVar('verwendung'),
-                    'idjenisbarang' => $this->request->getVar('gudang'),
                     'idkapal' => $this->request->getVar('idkapal')
                 );
                 $kond['idbarang'] = $this->request->getVar('kode');
@@ -226,7 +223,6 @@ class Barang extends BaseController {
             'qty' => $this->request->getVar('quant'),
             'uoi' => $this->request->getVar('uoi'),
             'verwendung' => $this->request->getVar('verwendung'),
-            'idjenisbarang' => $this->request->getVar('gudang'),
             'idkapal' => $this->request->getVar('idkapal')
         );
         $kond['idbarang'] = $this->request->getVar('kode');
@@ -349,6 +345,8 @@ class Barang extends BaseController {
     public function display_tab() {
         if (session()->get("logged_in")) {
             $idkapal = $this->request->getVar('kapal');
+            //$idkapal = $this->request->uri->getSegment(3);
+            
             // set tab atas
             $counter = 1;
             $str = '<nav><div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">';
@@ -375,43 +373,36 @@ class Barang extends BaseController {
                                 <thead>
                                     <tr>
                                         <th>GAMBAR</th>
-                                        <th>DESCRIPTION</th>
+                                        <th>NAMA BARANG</th>
                                         <th>PN/NSN</th>
-                                        <th>DS NUMBER</th>
-                                        <th>Holding</th>
-                                        <th style="text-align: center;">EQUIPMENT<br>DESCRIPTION</th>
-                                        <th style="text-align: center;">STORE<br>LOCATION</th>
-                                        <th style="text-align: center;">SUPPLEMENTARY<br>LOCATION</th>
-                                        <th style="text-align: center;">UOI</th>
-                                        <th style="text-align: center;">Verwendung</th>
-                                        <th style="text-align: center;">AKSI</th>
+                                        <th>EQUIPMENT<br>DESC</th>
+                                        <th>JUMLAH</th>
+                                        <th>SATUAN</th>
+                                        <th>KETERANGAN</th>
                                     </tr>
                                 </thead>
                                 <tbody>';
                     // menampilkan isi table
-                    $list_brg = $this->model->getAllQ("select * from barang where idjenisbarang = '".$row->idjenisbarang."' and idkapal = '".$idkapal."';");
+                    $list_brg = $this->model->getAllQ("select distinct b.idbarang from brg_masuk a, brg_masuk_detil b where a.idbrg_masuk = b.idbrg_masuk and a.idkapal = '".$idkapal."' and a.idjenisbarang = '".$row->idjenisbarang."';");
                     foreach ($list_brg->getResult() as $row1) {
                         $str .= '<tr>';
+                            // mencari data barang
+                            $brg = $this->model->getAllQR("select * from barang where idbarang = '".$row1->idbarang."'");
+                            
                             $def_foto = base_url() . '/images/noimg.jpg';
-                            if (strlen($row1->foto) > 0) {
-                                if (file_exists($this->modul->getPathApp().$row1->foto)) {
-                                    $def_foto = base_url().'/uploads/'.$row1->foto;
+                            if (strlen($brg->foto) > 0) {
+                                if (file_exists($this->modul->getPathApp().$brg->foto)) {
+                                    $def_foto = base_url().'/uploads/'.$brg->foto;
                                 }
                             }
                             $str .= '<td><img src="'.$def_foto.'" style="width: 50px; height: auto;"></td>';
-                            $str .= '<td>'.$row1->deskripsi.'</td>';
-                            $str .= '<td>'.$row1->pn_nsn.'</td>';
-                            $str .= '<td>'.$row1->ds_number.'</td>';
-                            $str .= '<td>'.$row1->holding.'</td>';
-                            $str .= '<td>'.$row1->equipment_desc.'</td>';
-                            $str .= '<td>'.$row1->store_location.'</td>';
-                            $str .= '<td>'.$row1->supplementary_location.'</td>';
-                            $str .= '<td>'.$row1->uoi.'</td>';
-                            $str .= '<td>'.$row1->verwendung.'</td>';
-                            $str .= '<td><div style="text-align: center;">'
-                                    . '<button type="button" class="btn btn-xs btn-outline-primary btn-fw" onclick="ganti(' . "'" . $row1->idbarang . "'" . ')">Ganti</button>&nbsp;'
-                                    . '<button type="button" class="btn btn-xs btn-outline-danger btn-fw" onclick="hapus(' . "'" . $row1->idbarang . "'" . ',' . "'" . $row1->deskripsi . "'" . ')">Hapus</button>'
-                                    . '</div></td>';
+                            $str .= '<td>'.$brg->deskripsi.'</td>';
+                            $str .= '<td>'.$brg->pn_nsn.'</td>';
+                            $str .= '<td>'.$brg->equipment_desc.'</td>';
+                            $str .= '<td>'.$this->getStok($brg->idbarang, $idkapal, $row->idjenisbarang).'</td>';
+                            $str .= '<td>'.$brg->uoi.'</td>';
+                            $str .= '<td>'.$brg->verwendung.'</td>';
+                            
                         $str .= '</tr>';
                     }
                     $str .= '</tbody></table>';
@@ -424,43 +415,36 @@ class Barang extends BaseController {
                                 <thead>
                                     <tr>
                                         <th>GAMBAR</th>
-                                        <th>DESCRIPTION</th>
+                                        <th>NAMA BARANG</th>
                                         <th>PN/NSN</th>
-                                        <th>DS NUMBER</th>
-                                        <th>Holding</th>
-                                        <th style="text-align: center;">EQUIPMENT<br>DESCRIPTION</th>
-                                        <th style="text-align: center;">STORE<br>LOCATION</th>
-                                        <th style="text-align: center;">SUPPLEMENTARY<br>LOCATION</th>
-                                        <th style="text-align: center;">UOI</th>
-                                        <th style="text-align: center;">Verwendung</th>
-                                        <th style="text-align: center;">AKSI</th>
+                                        <th>EQUIPMENT<br>DESC</th>
+                                        <th>JUMLAH</th>
+                                        <th>SATUAN</th>
+                                        <th>KETERANGAN</th>
                                     </tr>
                                 </thead>
                                 <tbody>';
                     // menampilkan isi table
-                    $list_brg = $this->model->getAllQ("select * from barang where idjenisbarang = '".$row->idjenisbarang."' and idkapal = '".$idkapal."';");
+                    $list_brg = $this->model->getAllQ("select distinct b.idbarang from brg_masuk a, brg_masuk_detil b where a.idbrg_masuk = b.idbrg_masuk and a.idkapal = '".$idkapal."' and a.idjenisbarang = '".$row->idjenisbarang."';");
                     foreach ($list_brg->getResult() as $row1) {
                         $str .= '<tr>';
+                            // mencari data barang
+                            $brg = $this->model->getAllQR("select * from barang where idbarang = '".$row1->idbarang."'");
+                            
                             $def_foto = base_url() . '/images/noimg.jpg';
-                            if (strlen($row1->foto) > 0) {
-                                if (file_exists($this->modul->getPathApp().$row1->foto)) {
-                                    $def_foto = base_url().'/uploads/'.$row1->foto;
+                            if (strlen($brg->foto) > 0) {
+                                if (file_exists($this->modul->getPathApp().$brg->foto)) {
+                                    $def_foto = base_url().'/uploads/'.$brg->foto;
                                 }
                             }
                             $str .= '<td><img src="'.$def_foto.'" style="width: 50px; height: auto;"></td>';
-                            $str .= '<td>'.$row1->deskripsi.'</td>';
-                            $str .= '<td>'.$row1->pn_nsn.'</td>';
-                            $str .= '<td>'.$row1->ds_number.'</td>';
-                            $str .= '<td>'.$row1->holding.'</td>';
-                            $str .= '<td>'.$row1->equipment_desc.'</td>';
-                            $str .= '<td>'.$row1->store_location.'</td>';
-                            $str .= '<td>'.$row1->supplementary_location.'</td>';
-                            $str .= '<td>'.$row1->uoi.'</td>';
-                            $str .= '<td>'.$row1->verwendung.'</td>';
-                            $str .= '<td><div style="text-align: center;">'
-                                    . '<button type="button" class="btn btn-xs btn-outline-primary btn-fw" onclick="ganti(' . "'" . $row1->idbarang . "'" . ')">Ganti</button>&nbsp;'
-                                    . '<button type="button" class="btn btn-xs btn-outline-danger btn-fw" onclick="hapus(' . "'" . $row1->idbarang . "'" . ',' . "'" . $row1->deskripsi . "'" . ')">Hapus</button>'
-                                    . '</div></td>';
+                            $str .= '<td>'.$brg->deskripsi.'</td>';
+                            $str .= '<td>'.$brg->pn_nsn.'</td>';
+                            $str .= '<td>'.$brg->equipment_desc.'</td>';
+                            $str .= '<td>'.$this->getStok($brg->idbarang, $idkapal, $row->idjenisbarang).'</td>';
+                            $str .= '<td>'.$brg->uoi.'</td>';
+                            $str .= '<td>'.$brg->verwendung.'</td>';
+                            
                         $str .= '</tr>';
                     }
                     $str .= '</tbody></table>';
@@ -477,6 +461,14 @@ class Barang extends BaseController {
         } else {
             $this->modul->halaman('login');
         }
+    }
+    
+    private function getStok($idbarang, $kri, $gudang) {
+        $masuk = $this->model->getAllQR("SELECT ifnull(sum(b.jumlah),0) as masuk FROM brg_masuk a, brg_masuk_detil b where a.idbrg_masuk = b.idbrg_masuk and a.idkapal = '".$kri."' and b.idbarang = '".$idbarang."' and a.idjenisbarang = '".$gudang."';")->masuk;
+        $keluar = $this->model->getAllQR("SELECT ifnull(sum(b.jumlah),0) as keluar FROM brg_keluar a, brg_keluar_detil b where a.idbrg_keluar = b.idbrg_keluar and a.idkapal = '".$kri."' and b.idbarang = '".$idbarang."' and a.idjenisbarang = '".$gudang."';")->keluar;       
+        $stok = $masuk - $keluar;
+        
+        return $stok;
     }
     
     public function display_gudang() {

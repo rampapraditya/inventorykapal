@@ -132,15 +132,19 @@
         <div class="col-md-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">MASTER GUDANG</h4>
-                    <p class="card-description">Maintenance data gudang</p>
-                </div>
-                <div class="card-body">
-                    <button type="button" class="btn btn-primary btn-sm" onclick="add();">Tambah</button>
-                    <button type="button" class="btn btn-secondary btn-sm" onclick="reload();">Reload</button>
-                </div>
-                <div class="card-body">
                     <div class="row">
+                        <div class="col-md-12">
+                            <h4 class="card-title">MASTER GUDANG</h4>
+                            <p class="card-description">Maintenance data gudang</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-primary btn-sm" onclick="add();">Tambah</button>
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="reload();">Reload</button>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 10px;">
                         <div class="col-md-12">
                             <select class="form-control" id="kri_head" name="kri_head" onchange="showbykri();">
                                 <option value="-">- PILIH KRI -</option>
