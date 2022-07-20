@@ -1,12 +1,12 @@
 <?php
-
 namespace App\Controllers;
 
 use App\Models\Mcustom;
 use App\Libraries\Modul;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-
+use Dompdf\Dompdf;
+use Dompdf\Options;
 /**
  * Description of Barangnoadmin
  *
@@ -16,8 +16,7 @@ class Barangnoadmin extends BaseController {
     
     private $model;
     private $modul;
-    private $pdf;
-
+    
     public function __construct() {
         $this->model = new Mcustom();
         $this->modul = new Modul();
@@ -568,6 +567,39 @@ class Barangnoadmin extends BaseController {
             $cek2 = $this->model->getAllQR("select count(*) as jml from kapal where idkapal = '".$kapal."';")->jml;
             if($cek1 > 0 && $cek2 > 0){
                 
+                $def_logo = 'images/noimg.jpg';
+                $identitas = $this->model->getAllQR("select * from identitas;");
+                if (strlen($identitas->logo) > 0) {
+                    if (file_exists($this->modul->getPathApp().$identitas->logo)) {
+                        $def_logo = 'uploads/'.$identitas->logo;
+                    }
+                }
+                $data['logo'] = $def_logo;
+                $data['ins'] = $identitas->instansi;
+                $data['alamat'] = $identitas->alamat;
+                $data['tlp'] = $identitas->tlp;
+                $data['fax'] = $identitas->fax;
+                // mencari nama gudang
+                $data['id_gudang'] = $gudang;
+                $data['nm_gudang'] = $this->model->getAllQR("select nama_jenis from jenisbarang where idjenisbarang = '".$gudang."';")->nama_jenis;
+                // mencari nama kapal
+                $data['id_kapal'] = $kapal;
+                $data['nm_kapal'] = $this->model->getAllQR("select nama_kapal from kapal where idkapal = '".$kapal."';")->nama_kapal;
+                // list data
+                $data['list'] = $list_brg = $this->model->getAllQ("select distinct b.idbarang from brg_masuk a, brg_masuk_detil b where a.idbrg_masuk = b.idbrg_masuk and a.idkapal = '".$kapal."' and a.idjenisbarang = '".$gudang."';");
+                
+                $options = new Options();
+                $options->setChroot(FCPATH);
+                $options->setDefaultFont('courier');
+      
+                $filename = date('Y-m-d-His')."_".trim(str_replace(" ", "_", $data['nm_kapal']));
+                // instantiate and use the dompdf class
+                $dompdf = new Dompdf();
+                $dompdf->setOptions($options);
+                $dompdf->loadHtml(view('barang_non_admin/pdf', $data));
+                $dompdf->setPaper('A4', 'landscape');
+                $dompdf->render();
+                $dompdf->stream($filename, ['Attachment' => 0]);
             }else{
                 $this->modul->halaman('barangnoadmin');
             }

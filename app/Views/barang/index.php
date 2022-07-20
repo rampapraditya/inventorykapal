@@ -232,6 +232,14 @@
             }
         });
     }
+    
+    function cetak(gudang, kapal){
+        window.open("<?php echo base_url(); ?>/barang/cetak/" + gudang + "/" + kapal, "_blank");
+    }
+    
+    function export_excel(gudang, kapal){
+        window.open("<?php echo base_url(); ?>/barang/exportexcel/" + gudang + "/" + kapal, "_blank");
+    }
 
 </script>
 <div class="content-wrapper">
@@ -248,12 +256,6 @@
                     <div class="row">
                         <div class="col-md-12">
                             <h4 class="card-title">MASTER BARANG</h4>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <button type="button" class="btn btn-primary btn-sm" onclick="cetak();">Print</button>
-                            <button type="button" class="btn btn-secondary btn-sm" onclick="exportexcel();">Export Excel</button>
                         </div>
                     </div>
                     <div class="row" style="margin-top: 10px;">

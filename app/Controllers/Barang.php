@@ -3,7 +3,10 @@ namespace App\Controllers;
 
 use App\Models\Mcustom;
 use App\Libraries\Modul;
-
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 /**
  * Description of Barang
  *
@@ -368,6 +371,12 @@ class Barang extends BaseController {
             foreach ($list1->getResult() as $row) {
                 if($counter == 1){
                     $str .= '<div class="tab-pane fade show active" id="nav_'.$row->idjenisbarang.'" role="tabpanel" aria-labelledby="nav_'.$row->idjenisbarang.'">';
+                    
+                    $str .= '<div style="text-align: left; margin-bottom:15px;">';
+                    $str .= '<button type="button" class="btn btn-xs btn-outline-primary btn-fw" onclick="cetak('."'".$this->modul->enkrip_url($row->idjenisbarang)."'".','."'". $this->modul->enkrip_url($idkapal)."'".')">print</button>&nbsp;';
+                    $str .= '<button type="button" class="btn btn-xs btn-outline-primary btn-fw" onclick="export_excel('."'".$this->modul->enkrip_url($row->idjenisbarang)."'".','."'".$this->modul->enkrip_url($idkapal)."'".')">export excel</button>';
+                    $str .= '</div>';
+                    
                     $str .= '<div class="table-responsive">';
                     $str .= '<table class="table table-bordered" style="width: 100%; font-size: 11px;">
                                 <thead>
@@ -410,6 +419,12 @@ class Barang extends BaseController {
                     $str .= '</div>';
                 }else{
                     $str .= '<div class="tab-pane fade" id="nav_'.$row->idjenisbarang.'" role="tabpanel" aria-labelledby="nav_'.$row->idjenisbarang.'">';
+                    
+                    $str .= '<div style="text-align: left; margin-bottom:15px;">';
+                    $str .= '<button type="button" class="btn btn-xs btn-outline-primary btn-fw" onclick="cetak('."'".$this->modul->enkrip_url($row->idjenisbarang)."'".','."'". $this->modul->enkrip_url($idkapal)."'".')">print</button>&nbsp;';
+                    $str .= '<button type="button" class="btn btn-xs btn-outline-primary btn-fw" onclick="export_excel('."'".$this->modul->enkrip_url($row->idjenisbarang)."'".','."'".$this->modul->enkrip_url($idkapal)."'".')">export excel</button>';
+                    $str .= '</div>';
+                    
                     $str .= '<div class="table-responsive">';
                     $str .= '<table class="table table-bordered" style="width: 100%; font-size: 11px;">
                                 <thead>
@@ -484,6 +499,119 @@ class Barang extends BaseController {
             
             $hasil = $str;
             echo json_encode(array("hasil" => $hasil));
+        } else {
+            $this->modul->halaman('login');
+        }
+    }
+    
+    public function exportexcel() {
+        if (session()->get("logged_in")) {
+            $gudang = $this->modul->dekrip_url($this->request->uri->getSegment(3));
+            $kapal = $this->modul->dekrip_url($this->request->uri->getSegment(4));
+            // cek
+            $cek1 = $this->model->getAllQR("select count(*) as jml from jenisbarang where idjenisbarang = '".$gudang."';")->jml;
+            $cek2 = $this->model->getAllQR("select count(*) as jml from kapal where idkapal = '".$kapal."';")->jml;
+            if($cek1 > 0 && $cek2 > 0){
+                $spreadsheet = new Spreadsheet();
+                $spreadsheet->setActiveSheetIndex(0)
+                        ->setCellValue('A1', 'NO')
+                        ->setCellValue('B1', 'DESCRIPTION')
+                        ->setCellValue('C1', 'PN/NSN')
+                        ->setCellValue('D1', 'DS NUMBER')
+                        ->setCellValue('E1', 'Holding')
+                        ->setCellValue('F1', 'EQUIPMENT DESCRIPTION')
+                        ->setCellValue('G1', 'STORE  LOCATION')
+                        ->setCellValue('H1', 'SUPPLEMENTARY LOCATION')
+                        ->setCellValue('I1', 'QUANT')
+                        ->setCellValue('J1', 'UOI')
+                        ->setCellValue('K1', 'KETERANGAN');
+                
+                $baris = 2;
+                $no = 1;
+                $list = $this->model->getAllQ("select distinct b.idbarang from brg_masuk a, brg_masuk_detil b where a.idbrg_masuk = b.idbrg_masuk and a.idkapal = '".$kapal."' and a.idjenisbarang = '".$gudang."';");
+                foreach ($list->getResult() as $row) {
+                    
+                    $brg = $this->model->getAllQR("select * from barang where idbarang = '".$row->idbarang."'");
+                    
+                    $spreadsheet->setActiveSheetIndex(0)
+                            ->setCellValue('A' . $baris, $no)
+                            ->setCellValue('B' . $baris, $brg->deskripsi)
+                            ->setCellValue('C' . $baris, $brg->pn_nsn)
+                            ->setCellValue('D' . $baris, $brg->ds_number)
+                            ->setCellValue('E' . $baris, $brg->holding)
+                            ->setCellValue('F' . $baris, $brg->equipment_desc)
+                            ->setCellValue('G' . $baris, $brg->store_location)
+                            ->setCellValue('H' . $baris, $brg->supplementary_location)
+                            ->setCellValue('I' . $baris, $this->getStok($brg->idbarang, $kapal, $gudang))
+                            ->setCellValue('J' . $baris, $brg->uoi)
+                            ->setCellValue('K' . $baris, $brg->verwendung);
+
+                    $baris++;
+                    $no++;
+                }
+
+                $writer = new Xlsx($spreadsheet);
+                $nama_kapal = $this->model->getAllQR("select nama_kapal from kapal where idkapal = '".$kapal."';")->nama_kapal;
+                $filename = date('Y-m-d-His')."_".trim(str_replace(" ", "_", $nama_kapal));
+
+                header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                header('Content-Disposition: attachment;filename=' . $filename . '.xlsx');
+                header('Cache-Control: max-age=0');
+
+                $writer->save('php://output');
+            }else{
+                $this->modul->halaman('barang');
+            }
+        } else {
+            $this->modul->halaman('login');
+        }
+    }
+    
+    public function cetak() {
+        if (session()->get("logged_in")) {
+            $gudang = $this->modul->dekrip_url($this->request->uri->getSegment(3));
+            $kapal = $this->modul->dekrip_url($this->request->uri->getSegment(4));
+            // cek
+            $cek1 = $this->model->getAllQR("select count(*) as jml from jenisbarang where idjenisbarang = '".$gudang."';")->jml;
+            $cek2 = $this->model->getAllQR("select count(*) as jml from kapal where idkapal = '".$kapal."';")->jml;
+            if($cek1 > 0 && $cek2 > 0){
+                
+                $def_logo = 'images/noimg.jpg';
+                $identitas = $this->model->getAllQR("select * from identitas;");
+                if (strlen($identitas->logo) > 0) {
+                    if (file_exists($this->modul->getPathApp().$identitas->logo)) {
+                        $def_logo = 'uploads/'.$identitas->logo;
+                    }
+                }
+                $data['logo'] = $def_logo;
+                $data['ins'] = $identitas->instansi;
+                $data['alamat'] = $identitas->alamat;
+                $data['tlp'] = $identitas->tlp;
+                $data['fax'] = $identitas->fax;
+                // mencari nama gudang
+                $data['id_gudang'] = $gudang;
+                $data['nm_gudang'] = $this->model->getAllQR("select nama_jenis from jenisbarang where idjenisbarang = '".$gudang."';")->nama_jenis;
+                // mencari nama kapal
+                $data['id_kapal'] = $kapal;
+                $data['nm_kapal'] = $this->model->getAllQR("select nama_kapal from kapal where idkapal = '".$kapal."';")->nama_kapal;
+                // list data
+                $data['list'] = $list_brg = $this->model->getAllQ("select distinct b.idbarang from brg_masuk a, brg_masuk_detil b where a.idbrg_masuk = b.idbrg_masuk and a.idkapal = '".$kapal."' and a.idjenisbarang = '".$gudang."';");
+                
+                $options = new Options();
+                $options->setChroot(FCPATH);
+                $options->setDefaultFont('courier');
+      
+                $filename = date('Y-m-d-His')."_".trim(str_replace(" ", "_", $data['nm_kapal']));
+                // instantiate and use the dompdf class
+                $dompdf = new Dompdf();
+                $dompdf->setOptions($options);
+                $dompdf->loadHtml(view('barang/pdf', $data));
+                $dompdf->setPaper('A4', 'landscape');
+                $dompdf->render();
+                $dompdf->stream($filename, ['Attachment' => 0]);
+            }else{
+                $this->modul->halaman('barangnoadmin');
+            }
         } else {
             $this->modul->halaman('login');
         }
