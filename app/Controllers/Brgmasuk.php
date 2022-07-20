@@ -21,37 +21,36 @@ class Brgmasuk extends BaseController {
 
     public function index() {
         if (session()->get("logged_in")) {
-//            $data['username'] = session()->get("username");
-//            $data['nrp'] = session()->get('nrp');
-//            $data['nama'] = session()->get("nama");
-//            $data['role'] = session()->get("role");
-//
-//            // membaca foto profile
-//            $def_foto = base_url() . '/images/noimg.jpg';
-//            $foto = $this->model->getAllQR("select foto from users where idusers = '" . session()->get("username") . "';")->foto;
-//            if (strlen($foto) > 0) {
-//                if (file_exists(ROOTPATH . 'public/uploads/' . $foto)) {
-//                    $def_foto = base_url() . '/uploads/' . $foto;
-//                }
-//            }
-//            $data['foto_profile'] = $def_foto;
-//
-//            // membaca logo
-//            $def_logo = base_url() . '/images/noimg.jpg';
-//            $logo = $this->model->getAllQR("select logo from identitas;")->logo;
-//            if (strlen($logo) > 0) {
-//                if (file_exists(ROOTPATH . 'public/uploads/' . $logo)) {
-//                    $def_logo = base_url() . '/uploads/' . $logo;
-//                }
-//            }
-//            $data['logo'] = $def_logo;
-//            $data['gudang'] = $this->model->getAll("jenisbarang");
-//
-//            echo view('head', $data);
-//            echo view('menu');
-//            echo view('barang_masuk/index');
-//            echo view('foot');
-            echo "Akses di tutup";
+            $data['username'] = session()->get("username");
+            $data['nrp'] = session()->get('nrp');
+            $data['nama'] = session()->get("nama");
+            $data['role'] = session()->get("role");
+
+            // membaca foto profile
+            $def_foto = base_url() . '/images/noimg.jpg';
+            $foto = $this->model->getAllQR("select foto from users where idusers = '" . session()->get("username") . "';")->foto;
+            if (strlen($foto) > 0) {
+                if (file_exists(ROOTPATH . 'public/uploads/' . $foto)) {
+                    $def_foto = base_url() . '/uploads/' . $foto;
+                }
+            }
+            $data['foto_profile'] = $def_foto;
+
+            // membaca logo
+            $def_logo = base_url() . '/images/noimg.jpg';
+            $logo = $this->model->getAllQR("select logo from identitas;")->logo;
+            if (strlen($logo) > 0) {
+                if (file_exists(ROOTPATH . 'public/uploads/' . $logo)) {
+                    $def_logo = base_url() . '/uploads/' . $logo;
+                }
+            }
+            $data['logo'] = $def_logo;
+            $data['gudang'] = $this->model->getAll("jenisbarang");
+
+            echo view('head', $data);
+            echo view('menu');
+            echo view('barang_masuk/index');
+            echo view('foot');
         } else {
             $this->modul->halaman('login');
         }
@@ -103,66 +102,65 @@ class Brgmasuk extends BaseController {
     
     public function detil() {
         if (session()->get("logged_in")) {
-//            $data['username'] = session()->get("username");
-//            $data['nrp'] = session()->get('nrp');
-//            $data['nama'] = session()->get("nama");
-//            $data['role'] = session()->get("role");
-//
-//            // membaca foto profile
-//            $def_foto = base_url() . '/images/noimg.jpg';
-//            $foto = $this->model->getAllQR("select foto from users where idusers = '" . session()->get("username") . "';")->foto;
-//            if (strlen($foto) > 0) {
-//                if (file_exists(ROOTPATH . 'public/uploads/' . $foto)) {
-//                    $def_foto = base_url() . '/uploads/' . $foto;
-//                }
-//            }
-//            $data['foto_profile'] = $def_foto;
-//
-//            // membaca logo
-//            $def_logo = base_url() . '/images/noimg.jpg';
-//            $logo = $this->model->getAllQR("select logo from identitas;")->logo;
-//            if (strlen($logo) > 0) {
-//                if (file_exists(ROOTPATH . 'public/uploads/' . $logo)) {
-//                    $def_logo = base_url() . '/uploads/' . $logo;
-//                }
-//            }
-//            $data['logo'] = $def_logo;
-//            
-//            $temp = $this->request->uri->getSegment(3);
-//            if(strlen($temp) > 0){
-//                $kode = $this->modul->dekrip_url($temp);
-//                $jml = $this->model->getAllQR("select count(*) as jml from brg_masuk where idbrg_masuk = '".$kode."';")->jml;
-//                if($jml > 0){
-//                    $kondisi['idbrg_masuk'] = $kode;
-//                    $tersimpan = $this->model->get_by_id("brg_masuk", $kondisi);
-//                            
-//                    $data['kode'] = $kode;
-//                    $data['kri'] = $this->model->getAll("kapal");
-//                    $data['kri_tersimpan'] = $tersimpan->idkapal;
-//                    $data['tgl_def'] = $tersimpan->tgl;
-//                    $data['ket'] = "Ganti barang datang";
-//
-//                    echo view('head', $data);
-//                    echo view('menu');
-//                    echo view('barang_masuk/detil');
-//                    echo view('foot');
-//                
-//                }else{
-//                    $this->modul->halaman('brgmasuk');
-//                }
-//            }else{
-//                $data['kode'] = $this->model->autokode('M','idbrg_masuk', 'brg_masuk', 2, 7);
-//                $data['kri'] = $this->model->getAll("kapal");
-//                $data['kri_tersimpan'] = "";
-//                $data['tgl_def'] = $this->modul->TanggalSekarang();
-//                $data['ket'] = "Tambah barang datang";
-//
-//                echo view('head', $data);
-//                echo view('menu');
-//                echo view('barang_masuk/detil');
-//                echo view('foot');
-//            }
-            echo "Akses di tutup";
+            $data['username'] = session()->get("username");
+            $data['nrp'] = session()->get('nrp');
+            $data['nama'] = session()->get("nama");
+            $data['role'] = session()->get("role");
+
+            // membaca foto profile
+            $def_foto = base_url() . '/images/noimg.jpg';
+            $foto = $this->model->getAllQR("select foto from users where idusers = '" . session()->get("username") . "';")->foto;
+            if (strlen($foto) > 0) {
+                if (file_exists(ROOTPATH . 'public/uploads/' . $foto)) {
+                    $def_foto = base_url() . '/uploads/' . $foto;
+                }
+            }
+            $data['foto_profile'] = $def_foto;
+
+            // membaca logo
+            $def_logo = base_url() . '/images/noimg.jpg';
+            $logo = $this->model->getAllQR("select logo from identitas;")->logo;
+            if (strlen($logo) > 0) {
+                if (file_exists(ROOTPATH . 'public/uploads/' . $logo)) {
+                    $def_logo = base_url() . '/uploads/' . $logo;
+                }
+            }
+            $data['logo'] = $def_logo;
+            
+            $temp = $this->request->uri->getSegment(3);
+            if(strlen($temp) > 0){
+                $kode = $this->modul->dekrip_url($temp);
+                $jml = $this->model->getAllQR("select count(*) as jml from brg_masuk where idbrg_masuk = '".$kode."';")->jml;
+                if($jml > 0){
+                    $kondisi['idbrg_masuk'] = $kode;
+                    $tersimpan = $this->model->get_by_id("brg_masuk", $kondisi);
+                            
+                    $data['kode'] = $kode;
+                    $data['kri'] = $this->model->getAll("kapal");
+                    $data['kri_tersimpan'] = $tersimpan->idkapal;
+                    $data['tgl_def'] = $tersimpan->tgl;
+                    $data['ket'] = "Ganti barang datang";
+
+                    echo view('head', $data);
+                    echo view('menu');
+                    echo view('barang_masuk/detil');
+                    echo view('foot');
+                
+                }else{
+                    $this->modul->halaman('brgmasuk');
+                }
+            }else{
+                $data['kode'] = $this->model->autokode('M','idbrg_masuk', 'brg_masuk', 2, 7);
+                $data['kri'] = $this->model->getAll("kapal");
+                $data['kri_tersimpan'] = "";
+                $data['tgl_def'] = $this->modul->TanggalSekarang();
+                $data['ket'] = "Tambah barang datang";
+
+                echo view('head', $data);
+                echo view('menu');
+                echo view('barang_masuk/detil');
+                echo view('foot');
+            }
         } else {
             $this->modul->halaman('login');
         }
@@ -196,136 +194,120 @@ class Brgmasuk extends BaseController {
         }
     }
     
-    public function ajax_platform() {
+    public function loadtable() {
         if (session()->get("logged_in")) {
             $kode_trans = $this->request->uri->getSegment(3);
-            // load data
-            $data = array();
-            $list = $this->model->getAllQ("select * from barang where idjenisbarang = 'J00001' and idbarang not in(select idbarang from brg_masuk_detil where idbrg_masuk = '".$kode_trans."');");
-            foreach ($list->getResult() as $row) {
-                $val = array();
-                // mencari default foto
-                $def_foto = base_url() . '/images/noimg.jpg';
-                if (strlen($row->foto) > 0) {
-                    if (file_exists(ROOTPATH.'public/uploads/'.$row->foto)) {
-                        $def_foto = base_url().'/uploads/'.$row->foto;
-                    }
+            $idkapal = $this->request->uri->getSegment(4);
+            
+            // set tab atas
+            $counter = 1;
+            $str = '<nav><div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">';
+            $list1 = $this->model->getAllQ("select idjenisbarang, nama_jenis from jenisbarang where idkapal = '".$idkapal."';");
+            foreach ($list1->getResult() as $row) {
+                if($counter == 1){
+                    $str .= '<a class="nav-item nav-link active" id="head_nav_'.$row->idjenisbarang.'" data-toggle="tab" href="#nav_'.$row->idjenisbarang.'" role="tab" aria-controls="nav_'.$row->idjenisbarang.'" aria-selected="true">'.$row->nama_jenis.'</a>';
+                }else{
+                    $str .= '<a class="nav-item nav-link" id="head_nav_'.$row->idjenisbarang.'" data-toggle="tab" href="#nav_'.$row->idjenisbarang.'" role="tab" aria-controls="nav_'.$row->idjenisbarang.'" aria-selected="false">'.$row->nama_jenis.'</a>';
                 }
+                $counter++;
                 
-                $val[] = '<img src="'.$def_foto.'" style="width: 50px; height: auto;">';
-                $val[] = $row->deskripsi;
-                $val[] = $row->pn_nsn;
-                $val[] = $row->ds_number;
-                $val[] = $row->holding;
-                $val[] = '<div style="text-align: center;">'
-                        . '<button type="button" class="btn btn-outline-primary btn-fw" onclick="pilih_platform('."'".$row->idbarang."'".','."'".$row->deskripsi."'".','."'Platform'".')">Pilih</button>'
-                        . '</div>';
-
-                $data[] = $val;
             }
-            $output = array("data" => $data);
-            echo json_encode($output);
-        } else {
-            $this->modul->halaman('login');
-        }
-    }
-    
-    public function ajax_sewaco() {
-        if (session()->get("logged_in")) {
-            $kode_trans = $this->request->uri->getSegment(3);
-            // load data
-            $data = array();
-            $list = $this->model->getAllQ("select * from barang where idjenisbarang = 'J00002' and idbarang not in(select idbarang from brg_masuk_detil where idbrg_masuk = '".$kode_trans."');");
-            foreach ($list->getResult() as $row) {
-                $val = array();
-                // mencari default foto
-                $def_foto = base_url() . '/images/noimg.jpg';
-                if (strlen($row->foto) > 0) {
-                    if (file_exists(ROOTPATH.'public/uploads/'.$row->foto)) {
-                        $def_foto = base_url().'/uploads/'.$row->foto;
+            $str .= '</div></nav>';
+            
+            // set tab bawah
+            $counter = 1;
+            $str .= '<div class="tab-content" id="nav-tabContent">';
+            foreach ($list1->getResult() as $row) {
+                if($counter == 1){
+                    $str .= '<div class="tab-pane fade show active" id="nav_'.$row->idjenisbarang.'" role="tabpanel" aria-labelledby="nav_'.$row->idjenisbarang.'">';
+                    $str .= '<div class="table-responsive">';
+                    $str .= '<table class="table table-bordered" style="width: 100%; font-size: 11px;">
+                                <thead>
+                                    <tr>
+                                        <th>GAMBAR</th>
+                                        <th>NAMA BARANG</th>
+                                        <th>PN/NSN</th>
+                                        <th>DS NUMBER</th>
+                                        <th>Holding</th>
+                                        <th style="text-align: center;">AKSI</th>
+                                    </tr>
+                                </thead>
+                                <tbody>';
+                    // menampilkan isi table
+                    $list_brg = $this->model->getAllQ("select distinct b.idbarang from brg_masuk a, brg_masuk_detil b where a.idbrg_masuk = b.idbrg_masuk and a.idkapal = '".$idkapal."' and a.idjenisbarang = '".$row->idjenisbarang."' and idbarang not in(select idbarang from brg_masuk_detil where idbrg_masuk = '".$kode_trans."');");
+                    foreach ($list_brg->getResult() as $row1) {
+                        $str .= '<tr>';
+                            // mencari data barang
+                            $brg = $this->model->getAllQR("select * from barang where idbarang = '".$row1->idbarang."'");
+                            
+                            $def_foto = base_url() . '/images/noimg.jpg';
+                            if (strlen($brg->foto) > 0) {
+                                if (file_exists($this->modul->getPathApp().$brg->foto)) {
+                                    $def_foto = base_url().'/uploads/'.$brg->foto;
+                                }
+                            }
+                            $str .= '<td><img src="'.$def_foto.'" style="width: 50px; height: auto;"></td>';
+                            $str .= '<td>'.$brg->deskripsi.'</td>';
+                            $str .= '<td>'.$brg->pn_nsn.'</td>';
+                            $str .= '<td>'.$brg->ds_number.'</td>';
+                            $str .= '<td>'.$brg->holding.'</td>';
+                            $str .= '<td><div style="text-align: center;">'
+                                        . '<button type="button" class="btn btn-xs btn-outline-primary btn-fw" onclick="pilih_barang('."'".$brg->idbarang."'".','."'".$brg->deskripsi."'".','."'".$row->nama_jenis."'".','."'".$row->idjenisbarang."'".')">Pilih</button>'
+                                        . '</div></td>';
+                        $str .= '</tr>';
                     }
-                }
-                
-                $val[] = '<img src="'.$def_foto.'" style="width: 50px; height: auto;">';
-                $val[] = $row->deskripsi;
-                $val[] = $row->pn_nsn;
-                $val[] = $row->ds_number;
-                $val[] = $row->holding;
-                $val[] = '<div style="text-align: center;">'
-                        . '<button type="button" class="btn btn-outline-primary btn-fw" onclick="pilih_sewaco('."'".$row->idbarang."'".','."'".$row->deskripsi."'".','."'Sewaco'".')">Pilih</button>'
-                        . '</div>';
-
-                $data[] = $val;
-            }
-            $output = array("data" => $data);
-            echo json_encode($output);
-        } else {
-            $this->modul->halaman('login');
-        }
-    }
-    
-    public function ajax_komaliwan() {
-        if (session()->get("logged_in")) {
-            $kode_trans = $this->request->uri->getSegment(3);
-            // load data
-            $data = array();
-            $list = $this->model->getAllQ("select * from barang where idjenisbarang = 'J00003' and idbarang not in(select idbarang from brg_masuk_detil where idbrg_masuk = '".$kode_trans."');");
-            foreach ($list->getResult() as $row) {
-                $val = array();
-                
-                $def_foto = base_url() . '/images/noimg.jpg';
-                if (strlen($row->foto) > 0) {
-                    if (file_exists(ROOTPATH.'public/uploads/'.$row->foto)) {
-                        $def_foto = base_url().'/uploads/'.$row->foto;
+                    $str .= '</tbody></table>';
+                    $str .= '</div>';
+                    $str .= '</div>';
+                }else{
+                    $str .= '<div class="tab-pane fade" id="nav_'.$row->idjenisbarang.'" role="tabpanel" aria-labelledby="nav_'.$row->idjenisbarang.'">';
+                    $str .= '<div class="table-responsive">';
+                    $str .= '<table class="table table-bordered" style="width: 100%; font-size: 11px;">
+                                <thead>
+                                    <tr>
+                                        <th>GAMBAR</th>
+                                        <th>NAMA BARANG</th>
+                                        <th>PN/NSN</th>
+                                        <th>DS NUMBER</th>
+                                        <th>Holding</th>
+                                        <th style="text-align: center;">AKSI</th>
+                                    </tr>
+                                </thead>
+                                <tbody>';
+                    // menampilkan isi table
+                    $list_brg = $this->model->getAllQ("select distinct b.idbarang from brg_masuk a, brg_masuk_detil b where a.idbrg_masuk = b.idbrg_masuk and a.idkapal = '".$idkapal."' and a.idjenisbarang = '".$row->idjenisbarang."' and idbarang not in(select idbarang from brg_masuk_detil where idbrg_masuk = '".$kode_trans."');");
+                    foreach ($list_brg->getResult() as $row1) {
+                        $str .= '<tr>';
+                            // mencari data barang
+                            $brg = $this->model->getAllQR("select * from barang where idbarang = '".$row1->idbarang."'");
+                            
+                            $def_foto = base_url() . '/images/noimg.jpg';
+                            if (strlen($brg->foto) > 0) {
+                                if (file_exists($this->modul->getPathApp().$brg->foto)) {
+                                    $def_foto = base_url().'/uploads/'.$brg->foto;
+                                }
+                            }
+                            $str .= '<td><img src="'.$def_foto.'" style="width: 50px; height: auto;"></td>';
+                            $str .= '<td>'.$brg->deskripsi.'</td>';
+                            $str .= '<td>'.$brg->pn_nsn.'</td>';
+                            $str .= '<td>'.$brg->ds_number.'</td>';
+                            $str .= '<td>'.$brg->holding.'</td>';
+                            $str .= '<td><div style="text-align: center;">'
+                                        . '<button type="button" class="btn btn-xs btn-outline-primary btn-fw" onclick="pilih_barang('."'".$brg->idbarang."'".','."'".$brg->deskripsi."'".','."'".$row->nama_jenis."'".','."'".$row->idjenisbarang."'".')">Pilih</button>'
+                                        . '</div></td>';
+                        $str .= '</tr>';
                     }
+                    $str .= '</tbody></table>';
+                    $str .= '</div>';
+                    $str .= '</div>';
                 }
+                $counter++;
                 
-                $val[] = '<img src="'.$def_foto.'" style="width: 50px; height: auto;">';
-                $val[] = $row->deskripsi;
-                $val[] = $row->pn_nsn;
-                $val[] = $row->ds_number;
-                $val[] = $row->holding;
-                $val[] = '<div style="text-align: center;">'
-                        . '<button type="button" class="btn btn-outline-primary btn-fw" onclick="pilih_komaliwan('."'".$row->idbarang."'".','."'".$row->deskripsi."'".','."'Komaliwan'".')">Pilih</button>'
-                        . '</div>';
-
-                $data[] = $val;
             }
-            $output = array("data" => $data);
-            echo json_encode($output);
-        } else {
-            $this->modul->halaman('login');
-        }
-    }
-    
-    public function ajax_br_umum() {
-        if (session()->get("logged_in")) {
-            $kode_trans = $this->request->uri->getSegment(3);
-            // load data
-            $data = array();
-            $list = $this->model->getAllQ("select * from barang where idjenisbarang = 'J00004' and idbarang not in(select idbarang from brg_masuk_detil where idbrg_masuk = '".$kode_trans."');");
-            foreach ($list->getResult() as $row) {
-                $val = array();
-                $def_foto = base_url() . '/images/noimg.jpg';
-                if (strlen($row->foto) > 0) {
-                    if (file_exists(ROOTPATH.'public/uploads/'.$row->foto)) {
-                        $def_foto = base_url().'/uploads/'.$row->foto;
-                    }
-                }
-                
-                $val[] = '<img src="'.$def_foto.'" style="width: 50px; height: auto;">';
-                $val[] = $row->deskripsi;
-                $val[] = $row->pn_nsn;
-                $val[] = $row->ds_number;
-                $val[] = $row->holding;
-                $val[] = '<div style="text-align: center;">'
-                        . '<button type="button" class="btn btn-outline-primary btn-fw" onclick="pilih_umum('."'".$row->idbarang."'".','."'".$row->deskripsi."'".','."'Umum'".')">Pilih</button>'
-                        . '</div>';
-
-                $data[] = $val;
-            }
-            $output = array("data" => $data);
-            echo json_encode($output);
+            $str .= '</div>';
+            
+            $hasil = $str;
+            echo json_encode(array("hasil" => $hasil));
         } else {
             $this->modul->halaman('login');
         }
@@ -365,14 +347,20 @@ class Brgmasuk extends BaseController {
     
     
     private function simpan_head($username) {
-        $data = array(
-            'idbrg_masuk' => $this->request->getVar('kode'),
-            'idkapal' => $this->request->getVar('kri'),
-            'tgl' => $this->request->getVar('tgl'),
-            'idusers' => $username
-        );
-        $simpan = $this->model->add("brg_masuk",$data);
-        return  $simpan;
+        $cek = $this->model->getAllQR("select count(*) as jml from brg_masuk where idbrg_masuk = '".$this->request->getVar('kode')."' and idusers = '".$username."';")->jml;
+        if($cek < 1){
+            $data = array(
+                'idbrg_masuk' => $this->request->getVar('kode'),
+                'idkapal' => $this->request->getVar('kri'),
+                'tgl' => $this->request->getVar('tgl'),
+                'idusers' => $username,
+                'idjenisbarang' => $this->request->getVar('gudang')
+            );
+            $simpan = $this->model->add("brg_masuk",$data);
+        }else{
+            $simpan = 1;
+        }
+        return $simpan;
     }
     
     private function simpan_detil() {
@@ -488,9 +476,10 @@ class Brgmasuk extends BaseController {
     
     private function simpan_dengan_file($username) {
         $file = $this->request->getFile('file');
+        $fileName = $file->getRandomName();
         $info_file = $this->modul->info_file($file);
 
-        if (file_exists(ROOTPATH . 'public/uploads/' . $info_file['name'])) {
+        if (file_exists($this->modul->getPathApp().$fileName)) {
             $status = "Gunakan nama file lain";
         } else {
             $status = false;
@@ -506,14 +495,14 @@ class Brgmasuk extends BaseController {
             }
 
             if($status){
-                $status_upload = $file->move(ROOTPATH . 'public/uploads');
+                $status_upload = $file->move($this->modul->getPathApp(), $fileName);
                 if ($status_upload) {
                     // upload header terlebih dahulu
                     $this->simpan_head($username);
                     $kri = $this->request->getVar('kri');
                     
                     // extrak kulit manggis
-                    $path = ROOTPATH.'public/uploads/'.$info_file['name'];
+                    $path = $this->modul->getPathApp().$fileName;
                     $spreadsheet = $render->load($path);
                     $data = $spreadsheet->getActiveSheet()->toArray();
                     foreach ($data as $x => $row) {
@@ -521,23 +510,55 @@ class Brgmasuk extends BaseController {
                         $nama_brg = trim(addslashes($row[0]));
                         $jumlah = trim(addslashes($row[7]));
                         
-                        
-                        // cek barang ini sudah masuk master apa belum
-                        $jml = $this->model->getAllQR("select count(*) as jml from barang where idkapal = '".$kri."' and deskripsi = '".$nama_brg."';")->jml;
-                        if($jml > 0){
-                            $idbrg = $this->model->getAllQR("select idbarang from barang where idkapal = '".$kri."' and deskripsi = '".$nama_brg."';")->idbarang;
-                            // klo barangnya sudah ada baru di masukkan ke stok
-                            $data_detil = array(
-                                'idbrg_m_detil' => $this->model->autokode("MD","idbrg_m_detil","brg_masuk_detil", 3, 9),
-                                'idbarang' => $idbrg,
-                                'jumlah' => $jumlah,
-                                'satuan' => '',
-                                'idbrg_masuk' => $this->request->getVar('kode')
-                            );
-                            $this->model->add("brg_masuk_detil",$data_detil);
+                        if (strlen($nama_brg) > 0 && strlen($jumlah) > 0) {
+                            // cek barang ini sudah masuk master apa belum
+                            $jml = $this->model->getAllQR("select count(*) as jml from barang where idkapal = '".$kri."' and deskripsi = '".$nama_brg."';")->jml;
+                            if($jml > 0){
+                                $idbrg = $this->model->getAllQR("select idbarang from barang where idkapal = '".$kri."' and deskripsi = '".$nama_brg."';")->idbarang;
+                                // klo barangnya sudah ada baru di masukkan ke stok
+                                $data_detil = array(
+                                    'idbrg_m_detil' => $this->model->autokode("MD","idbrg_m_detil","brg_masuk_detil", 3, 9),
+                                    'idbarang' => $idbrg,
+                                    'jumlah' => $jumlah,
+                                    'satuan' => trim(addslashes($row[8])),
+                                    'idbrg_masuk' => $this->request->getVar('kode')
+                                );
+                                $this->model->add("brg_masuk_detil",$data_detil);
+                            }else{
+                                // masukkan master
+                                $data = array(
+                                    'idbarang' => $this->model->autokode("B", "idbarang", "barang", 2, 7),
+                                    'foto' => '',
+                                    'deskripsi' => trim(addslashes($row[0])),
+                                    'pn_nsn' => trim(addslashes($row[1])),
+                                    'ds_number' => trim(addslashes($row[2])),
+                                    'holding' => trim(addslashes($row[3])),
+                                    'equipment_desc' => trim(addslashes($row[4])),
+                                    'store_location' => trim(addslashes($row[5])),
+                                    'supplementary_location' => trim(addslashes($row[6])),
+                                    'qty' => 0,
+                                    'uoi' => trim(addslashes($row[8])),
+                                    'verwendung' => trim(addslashes($row[9])),
+                                    'idkapal' => $kri
+                                );
+                                $this->model->add("barang", $data);
+                                
+                                // setelah masukin barang mestinya masukin jumlah
+                                $idbrg = $this->model->getAllQR("select idbarang from barang where idkapal = '".$kri."' and deskripsi = '".$nama_brg."';")->idbarang;
+                                // klo barangnya sudah ada baru di masukkan ke stok
+                                $data_detil = array(
+                                    'idbrg_m_detil' => $this->model->autokode("MD","idbrg_m_detil","brg_masuk_detil", 3, 9),
+                                    'idbarang' => $idbrg,
+                                    'jumlah' => $jumlah,
+                                    'satuan' => trim(addslashes($row[8])),
+                                    'idbrg_masuk' => $this->request->getVar('kode')
+                                );
+                                $this->model->add("brg_masuk_detil",$data_detil);
+                            }
                         }
+                        
                     }
-                    unlink(ROOTPATH.'public/uploads/'.$info_file['name']);
+                    unlink($this->modul->getPathApp().$fileName);
                     
                     $hasil = "Terupload";
                 } else {
@@ -548,5 +569,20 @@ class Brgmasuk extends BaseController {
             }
         }
         return $hasil;
+    }
+    
+    public function getgudang() {
+        if(session()->get("logged_in")){
+            $idkapal = $this->request->uri->getSegment(3);
+            
+            $str = '<option value="-">- PILIH GUDANG -</option>';
+            $list = $this->model->getAllQ("select idjenisbarang, nama_jenis from jenisbarang where idkapal = '".$idkapal."';");
+            foreach ($list->getresult() as $row) {
+                $str .= '<option value="'.$row->idjenisbarang.'">'.$row->nama_jenis.'</option>';
+            }
+            echo json_encode(array("hasil" => $str));
+        }else{
+            $this->modul->halaman('login');
+        }
     }
 }

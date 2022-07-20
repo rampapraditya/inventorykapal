@@ -2,7 +2,6 @@
 
     var save_method = "";
     var table;
-    var tb_platform, tb_sewaco, tb_komaliwan, tb_br_umum;
 
     $(document).ready(function () {
         table = $('#tb').DataTable({
@@ -35,79 +34,28 @@
         $('#modal_barang').modal('hide');
     }
     
-    function load_tb_platform(){
-        var kri = document.getElementById('kri').value;
-        tb_platform = $('#tb_platform').DataTable({
-            ajax: "<?php echo base_url(); ?>/brgkeluar/ajax_platform/<?php echo $kode; ?>/" + kri,
-            ordering: false,
-            retrieve:true
-        });
-        tb_platform.destroy();
-        tb_platform = $('#tb_platform').DataTable({
-            ajax: "<?php echo base_url(); ?>/brgkeluar/ajax_platform/<?php echo $kode; ?>/" + kri,
-            ordering: false,
-            retrieve:true
-        });
-    }
-    
-    function load_tb_sewaco(){
-        var kri = document.getElementById('kri').value;
-        tb_sewaco = $('#tb_sewaco').DataTable({
-            ajax: "<?php echo base_url(); ?>/brgkeluar/ajax_sewaco/<?php echo $kode; ?>/" + kri,
-            ordering: false,
-            retrieve:true
-        });
-        tb_sewaco.destroy();
-        tb_sewaco = $('#tb_sewaco').DataTable({
-            ajax: "<?php echo base_url(); ?>/brgkeluar/ajax_sewaco/<?php echo $kode; ?>/" + kri,
-            ordering: false,
-            retrieve:true
-        });
-    }
-    
-    function load_tb_komaliwan(){
-        var kri = document.getElementById('kri').value;
-        tb_komaliwan = $('#tb_komaliwan').DataTable({
-            ajax: "<?php echo base_url(); ?>/brgkeluar/ajax_komaliwan/<?php echo $kode; ?>/" + kri,
-            ordering: false,
-            retrieve:true
-        });
-        tb_komaliwan.destroy();
-        tb_komaliwan = $('#tb_komaliwan').DataTable({
-            ajax: "<?php echo base_url(); ?>/brgkeluar/ajax_komaliwan/<?php echo $kode; ?>/" + kri,
-            ordering: false,
-            retrieve:true
-        });
-    }
-    
-    function load_tb_br_umum(){
-        var kri = document.getElementById('kri').value;
-        tb_br_umum = $('#tb_br_umum').DataTable({
-            ajax: "<?php echo base_url(); ?>/brgkeluar/ajax_br_umum/<?php echo $kode; ?>/" + kri,
-            ordering: false,
-            retrieve:true
-        });
-        tb_br_umum.destroy();
-        tb_br_umum = $('#tb_br_umum').DataTable({
-            ajax: "<?php echo base_url(); ?>/brgkeluar/ajax_br_umum/<?php echo $kode; ?>/" + kri,
-            ordering: false,
-            retrieve:true
-        });
-    }
-    
     function showBarang(){
+        var kri = document.getElementById('kri').value;
         $('#modal_barang').modal('show');
-        
-        load_tb_platform();
-        load_tb_sewaco();
-        load_tb_komaliwan();
-        load_tb_br_umum();
+        $.ajax({
+            url: "<?php echo base_url(); ?>/brgkeluar/load_table/" + kri,
+            type: "POST",
+            dataType: "JSON",
+            success: function (data) {
+                $('#wadah_tab').html(data.hasil);
+            }, error: function (jqXHR, textStatus, errorThrown) {
+                alert('Error load data');
+            }
+        });
     }
     
-    function pilih(kode, nama, stok){
+    function pilih(kode, nama, stok, satuan, gudang){
         $('[name="kode_barang"]').val(kode);
         $('[name="nama"]').val(nama);
         $('[name="stok"]').val(stok);
+        $('[name="satuan"]').val(satuan);
+        $('[name="idjenisbarang"]').val(gudang);
+        
         $('#modal_barang').modal('hide');
     }
     
@@ -120,6 +68,8 @@
         var stok = document.getElementById('stok').value;
         var jumlah = document.getElementById('jumlah').value;
         var satuan = document.getElementById('satuan').value;
+        var gudang = document.getElementById('idjenisbarang').value;
+        var alasan = document.getElementById('alasan').value;
         
         if (kode === "") {
             alert("Kode tidak boleh kosong");
@@ -157,6 +107,8 @@
                 form_data.append('kode_barang', kode_barang);
                 form_data.append('jumlah', jumlah);
                 form_data.append('satuan', satuan);
+                form_data.append('gudang', gudang);
+                form_data.append('alasan', alasan);
 
                 // ajax adding data to database
                 $.ajax({
@@ -223,6 +175,7 @@
                     $('[name="jumlah"]').val(data.jumlah);
                     $('[name="satuan"]').val(data.satuan);
                     $('[name="stok"]').val(data.stok);
+                    $('[name="alasan"]').val(data.alasan);
                 }, error: function (jqXHR, textStatus, errorThrown) {
                     alert('Error get data');
                 }
@@ -238,8 +191,7 @@
                 <div class="card-body">
                     <h4 class="card-title">TRANSAKSI BARANG KELUAR</h4>
                     <p class="card-description"><?php echo $ket; ?></p>
-                </div>
-                <div class="card-body">
+                    <hr>
                     <input type="hidden" id="kode" name="kode" value="<?php echo $kode; ?>">
                     <div class="forms-sample">
                         <div class="row">
@@ -274,8 +226,8 @@
         <div class="col-md-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-header">
-                    <button type="button" class="btn btn-primary" onclick="add();">Tambah</button>
-                    <button type="button" class="btn btn-secondary" onclick="reload();">Reload</button>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="add();">Tambah</button>
+                    <button type="button" class="btn btn-sm btn-secondary" onclick="reload();">Reload</button>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -314,7 +266,9 @@
                     <div class="form-group">
                         <label>Barang</label>
                         <div class="input-group mb-3">
-                            <input type="hidden" id="kode_barang" name="kode_barang">
+                            <input type="hidden" id="kode_barang" name="kode_barang" readonly>
+                            <input type="hidden" id="idjenisbarang" name="idjenisbarang" readonly>
+                            
                             <input type="text" class="form-control" aria-describedby="btnShow" id="nama" name="nama" readonly>
                             <div class="input-group-append">
                                 <button class="btn btn-outline-secondary" type="button" id="btnShow" onclick="showBarang()">...</button>
@@ -332,6 +286,10 @@
                     <div class="form-group">
                         <label>Satuan</label>
                         <input id="satuan" name="satuan" class="form-control" type="text" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label>Alasan</label>
+                        <input id="alasan" name="alasan" class="form-control" type="text" autocomplete="off">
                     </div>
                 </form>
             </div>
@@ -353,91 +311,8 @@
                 </button>
             </div>
             <div class="modal-body">
-                <nav>
-                    <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
-                        <a class="nav-item nav-link active" id="head_nav_platform" data-toggle="tab" href="#nav_platform" role="tab" aria-controls="nav_platform" aria-selected="true">Platform</a>
-                        <a class="nav-item nav-link" id="head_nav_sewaco" data-toggle="tab" href="#nav_sewaco" role="tab" aria-controls="nav_sewaco" aria-selected="false">Sewaco</a>
-                        <a class="nav-item nav-link" id="head_nav_komaliwan" data-toggle="tab" href="#nav_komaliwan" role="tab" aria-controls="nav_komaliwan" aria-selected="false">Komaliwan</a>
-                        <a class="nav-item nav-link" id="head_nav_nav_barangumum" data-toggle="tab" href="#nav_barangumum" role="tab" aria-controls="nav_barangumum" aria-selected="false">Barang Umum</a>
-                    </div>
-                </nav>
-                <div class="tab-content" id="nav-tabContent">
-                    <div class="tab-pane fade show active" id="nav_platform" role="tabpanel" aria-labelledby="nav_platform">
-                        <div class="table-responsive">
-                            <table id="tb_platform" class="table table-bordered" style="width: 100%; font-size: 10px;">
-                                <thead>
-                                    <tr>
-                                        <th>GAMBAR</th>
-                                        <th>DESCRIPTION</th>
-                                        <th>PN/NSN</th>
-                                        <th>DS NUMBER</th>
-                                        <th>Holding</th>
-                                        <th>Stok</th>
-                                        <th style="text-align: center;">AKSI</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="nav_sewaco" role="tabpanel" aria-labelledby="nav_sewaco">
-                        <div class="table-responsive">
-                            <table id="tb_sewaco" class="table table-bordered" style="width: 100%; font-size: 10px;">
-                                <thead>
-                                    <tr>
-                                        <th>GAMBAR</th>
-                                        <th>DESCRIPTION</th>
-                                        <th>PN/NSN</th>
-                                        <th>DS NUMBER</th>
-                                        <th>Holding</th>
-                                        <th>Stok</th>
-                                        <th style="text-align: center;">AKSI</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="nav_komaliwan" role="tabpanel" aria-labelledby="nav_komaliwan">
-                        <div class="table-responsive">
-                            <table id="tb_komaliwan" class="table table-bordered" style="width: 100%; font-size: 10px;">
-                                <thead>
-                                    <tr>
-                                        <th>GAMBAR</th>
-                                        <th>DESCRIPTION</th>
-                                        <th>PN/NSN</th>
-                                        <th>DS NUMBER</th>
-                                        <th>Holding</th>
-                                        <th>Stok</th>
-                                        <th style="text-align: center;">AKSI</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="nav_barangumum" role="tabpanel" aria-labelledby="nav_barangumum">
-                        <div class="table-responsive">
-                            <table id="tb_br_umum" class="table table-bordered" style="width: 100%; font-size: 10px;">
-                                <thead>
-                                    <tr>
-                                        <th>GAMBAR</th>
-                                        <th>DESCRIPTION</th>
-                                        <th>PN/NSN</th>
-                                        <th>DS NUMBER</th>
-                                        <th>Holding</th>
-                                        <th>Stok</th>
-                                        <th style="text-align: center;">AKSI</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                <div id="wadah_tab" class="col-md-12">
+                    
                 </div>
             </div>
         </div>

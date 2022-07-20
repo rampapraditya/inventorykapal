@@ -49,10 +49,11 @@
         });
     }
     
-    function pilih_barang(kode, nama, jenis){
+    function pilih_barang(kode, nama, jenis, gudang){
         $('[name="kode_barang"]').val(kode);
         $('[name="jenis_barang"]').val(jenis);
         $('[name="nama"]').val(nama);
+        $('[name="gudang_manual"]').val(gudang);
         
         $('#modal_barang').modal('hide');
     }
@@ -287,8 +288,9 @@
                     <div class="form-group">
                         <label>Barang</label>
                         <div class="input-group mb-3">
-                            <input type="hidden" id="kode_barang" name="kode_barang">
-                            <input type="hidden" id="jenis_barang" name="jenis_barang">
+                            <input type="hidden" id="kode_barang" name="kode_barang" readonly>
+                            <input type="hidden" id="jenis_barang" name="jenis_barang" readonly>
+                            <input type="hidden" id="gudang_manual" name="gudang_manual" readonly>
                             <input type="text" class="form-control" aria-describedby="btnShow" id="nama" name="nama" readonly>
                             <div class="input-group-append">
                                 <button class="btn btn-outline-secondary" type="button" id="btnShow" onclick="showBarang()">...</button>
@@ -302,19 +304,6 @@
                     <div class="form-group">
                         <label>Satuan</label>
                         <input id="satuan" name="satuan" class="form-control" type="text" autocomplete="off">
-                    </div>
-                    <div class="form-group">
-                        <label>Gudang</label>
-                        <select id="gudang_manual" name="gudang_manual" class="form-control">
-                            <option value="-">- PILIH GUDANG -</option>
-                            <?php
-                            foreach ($gudang->getResult() as $row) {
-                                ?>
-                            <option value="<?php echo $row->idjenisbarang; ?>"><?php echo $row->nama_jenis; ?></option>
-                                <?php
-                            }
-                            ?>
-                        </select>
                     </div>
                 </form>
             </div>

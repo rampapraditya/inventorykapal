@@ -269,7 +269,7 @@ class Brgmnadmin extends BaseController {
                             $str .= '<td>'.$brg->ds_number.'</td>';
                             $str .= '<td>'.$brg->holding.'</td>';
                             $str .= '<td><div style="text-align: center;">'
-                                        . '<button type="button" class="btn btn-xs btn-outline-primary btn-fw" onclick="pilih_barang('."'".$brg->idbarang."'".','."'".$brg->deskripsi."'".','."'".$row->nama_jenis."'".')">Pilih</button>'
+                                        . '<button type="button" class="btn btn-xs btn-outline-primary btn-fw" onclick="pilih_barang('."'".$brg->idbarang."'".','."'".$brg->deskripsi."'".','."'".$row->nama_jenis."'".','."'".$row->idjenisbarang."'".')">Pilih</button>'
                                         . '</div></td>';
                         $str .= '</tr>';
                     }
@@ -310,7 +310,7 @@ class Brgmnadmin extends BaseController {
                             $str .= '<td>'.$brg->ds_number.'</td>';
                             $str .= '<td>'.$brg->holding.'</td>';
                             $str .= '<td><div style="text-align: center;">'
-                                        . '<button type="button" class="btn btn-xs btn-outline-primary btn-fw" onclick="pilih_barang('."'".$brg->idbarang."'".','."'".$brg->deskripsi."'".','."'".$row->nama_jenis."'".')">Pilih</button>'
+                                        . '<button type="button" class="btn btn-xs btn-outline-primary btn-fw" onclick="pilih_barang('."'".$brg->idbarang."'".','."'".$brg->deskripsi."'".','."'".$row->nama_jenis."'".','."'".$row->idjenisbarang."'".')">Pilih</button>'
                                         . '</div></td>';
                         $str .= '</tr>';
                     }
@@ -392,7 +392,6 @@ class Brgmnadmin extends BaseController {
     
     
     private function simpan_head($username) {
-        // cek apa sudah masuk apa belum
         $cek = $this->model->getAllQR("select count(*) as jml from brg_masuk where idbrg_masuk = '".$this->request->getVar('kode')."' and idusers = '".$username."';")->jml;
         if($cek < 1){
             $data = array(
