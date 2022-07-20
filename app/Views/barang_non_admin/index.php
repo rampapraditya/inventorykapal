@@ -195,6 +195,14 @@
             });
         }
     }
+    
+    function cetak(gudang, kapal){
+        window.open("<?php echo base_url(); ?>/barangnoadmin/cetak/" + gudang + "/" + kapal, "_blank");
+    }
+    
+    function export_excel(gudang, kapal){
+        window.open("<?php echo base_url(); ?>/barangnoadmin/exportexcel/" + gudang + "/" + kapal, "_blank");
+    }
 
 </script>
 <div class="content-wrapper">
