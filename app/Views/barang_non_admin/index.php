@@ -13,9 +13,7 @@
             dataType: "JSON",
             success: function (data) {
                 $('#wadah_tab').html(data.hasil);
-                $('.table').DataTable({
-                    scrollX: true
-                });
+                $('.table').DataTable();
             }, error: function (jqXHR, textStatus, errorThrown) {
                 alert('Error load data');
             }

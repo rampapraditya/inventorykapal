@@ -207,6 +207,7 @@
             type: 'POST',
             success: function (data) {
                 $('#wadah_tab').html(data.hasil);
+                $('.table').DataTable();
             }, error: function (jqXHR, textStatus, errorThrown) {
                 alert("Error json " + errorThrown);
             }
