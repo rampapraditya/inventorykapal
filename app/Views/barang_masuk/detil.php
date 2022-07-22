@@ -23,6 +23,16 @@
             $('#form')[0].reset();
             $('#modal_form').modal('show');
             $('.modal-title').text('Tambah barang datang');
+            $.ajax({
+                url: "<?php echo base_url(); ?>/brgmasuk/getgudang/" + kri,
+                type: "POST",
+                dataType: "JSON",
+                success: function (data) {
+                    $('#gudang_manual').html(data.hasil);
+                }, error: function (jqXHR, textStatus, errorThrown) {
+                    alert('Error load gudang');
+                }
+            });
         }
     }
     
@@ -66,6 +76,7 @@
         var kri = document.getElementById('kri').value;
         var kode_detil = document.getElementById('kode_detil').value;
         var kode_barang = document.getElementById('kode_barang').value;
+        var nm_barang = document.getElementById('nama').value;
         var jumlah = document.getElementById('jumlah').value;
         var satuan = document.getElementById('satuan').value;
         var gudang = document.getElementById('gudang_manual').value;
@@ -76,8 +87,8 @@
             alert("Tanggal tidak boleh kosong");
         }else if(kri === "-"){
             alert("Harap pilih KRI terlebih dahulu");
-        }else if(kode_barang === ""){
-            alert("Kode barang tidak boleh kosong");
+        }else if(nm_barang === ""){
+            alert("Barang tidak boleh kosong");
         }else if(jumlah === ""){
             alert("Jumlah tidak boleh kosong");
         }else if(satuan === ""){
@@ -99,6 +110,7 @@
             form_data.append('kri', kri);
             form_data.append('kode_detil', kode_detil);
             form_data.append('kode_barang', kode_barang);
+            form_data.append('nm_barang', nm_barang);
             form_data.append('jumlah', jumlah);
             form_data.append('satuan', satuan);
             form_data.append('gudang', gudang);
@@ -326,8 +338,7 @@
                         <div class="input-group mb-3">
                             <input type="hidden" id="kode_barang" name="kode_barang" readonly>
                             <input type="hidden" id="jenis_barang" name="jenis_barang" readonly>
-                            <input type="hidden" id="gudang_manual" name="gudang_manual" readonly>
-                            <input type="text" class="form-control" aria-describedby="btnShow" id="nama" name="nama" readonly>
+                            <input type="text" class="form-control" aria-describedby="btnShow" id="nama" name="nama">
                             <div class="input-group-append">
                                 <button class="btn btn-outline-secondary" type="button" id="btnShow" onclick="showBarang()">...</button>
                             </div>
@@ -340,6 +351,12 @@
                     <div class="form-group">
                         <label>Satuan</label>
                         <input id="satuan" name="satuan" class="form-control" type="text" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label>GUDANG</label>
+                        <select id="gudang_manual" name="gudang_manual" class="form-control">
+                            <option value="-">- PILIH GUDANG -</option>
+                        </select>
                     </div>
                 </form>
             </div>

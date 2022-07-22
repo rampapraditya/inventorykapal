@@ -409,9 +409,37 @@ class Brgmnadmin extends BaseController {
     }
     
     private function simpan_detil() {
+        $username = session()->get("username");
+        $idkapal = $this->model->getAllQR("select idkapal from users where idusers = '".$username."';")->idkapal;
+        
+        // cek nama barang klo belum ada masukkan dulu ke master barang
+        $cek = $this->model->getAllQR("SELECT count(*) as jml FROM barang where deskripsi = '".$this->request->getVar('nm_barang')."' and idkapal = '".$idkapal."';")->jml;
+        if($cek > 0){
+            $kodebarang = $this->model->getAllQR("SELECT idbarang FROM barang where deskripsi = '".$this->request->getVar('nm_barang')."' and idkapal = '".$idkapal."';")->idbarang;
+        }else{
+            // masukkan ke master barang
+            $kodebarang = $this->model->autokode("B", "idbarang", "barang", 2, 7);
+            $data = array(
+                'idbarang' => $kodebarang,
+                'foto' => '',
+                'deskripsi' => $this->request->getVar('nm_barang'),
+                'pn_nsn' => '',
+                'ds_number' => '',
+                'holding' => '',
+                'equipment_desc' => '',
+                'store_location' => '',
+                'supplementary_location' => '',
+                'qty' => 0,
+                'uoi' => $this->request->getVar('satuan'),
+                'verwendung' => '',
+                'idkapal' => $idkapal
+            );
+            $simpan = $this->model->add("barang", $data);
+        }
+        
         $data = array(
             'idbrg_m_detil' => $this->model->autokode("MD","idbrg_m_detil","brg_masuk_detil", 3, 9),
-            'idbarang' => $this->request->getVar('kode_barang'),
+            'idbarang' => $kodebarang,
             'jumlah' => $this->request->getVar('jumlah'),
             'satuan' => $this->request->getVar('satuan'),
             'idbrg_masuk' => $this->request->getVar('kode')
