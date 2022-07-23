@@ -105,6 +105,7 @@ class Barangnoadmin extends BaseController {
                                         <th>EQUIPMENT<br>DESC</th>
                                         <th>JUMLAH</th>
                                         <th>SATUAN</th>
+                                        <th>RAK</th>
                                         <th>KETERANGAN</th>
                                         <th style="text-align: center;">AKSI</th>
                                     </tr>
@@ -129,6 +130,7 @@ class Barangnoadmin extends BaseController {
                             $str .= '<td>'.$brg->equipment_desc.'</td>';
                             $str .= '<td>'.$this->getStok($brg->idbarang, $idkapal, $row->idjenisbarang).'</td>';
                             $str .= '<td>'.$brg->uoi.'</td>';
+                            $str .= '<td>'.$brg->rak.'</td>';
                             $str .= '<td>'.$brg->verwendung.'</td>';
                             $str .= '<td><div style="text-align: center;">'
                                     . '<button type="button" class="btn btn-xs btn-outline-primary btn-fw" onclick="ganti(' . "'" . $brg->idbarang . "'" . ')">Ganti</button>&nbsp;'
@@ -157,6 +159,7 @@ class Barangnoadmin extends BaseController {
                                         <th>EQUIPMENT<br>DESC</th>
                                         <th>JUMLAH</th>
                                         <th>SATUAN</th>
+                                        <th>RAK</th>
                                         <th>KETERANGAN</th>
                                         <th style="text-align: center;">AKSI</th>
                                     </tr>
@@ -181,6 +184,7 @@ class Barangnoadmin extends BaseController {
                             $str .= '<td>'.$brg->equipment_desc.'</td>';
                             $str .= '<td>'.$this->getStok($brg->idbarang, $idkapal, $row->idjenisbarang).'</td>';
                             $str .= '<td>'.$brg->uoi.'</td>';
+                            $str .= '<td>'.$brg->rak.'</td>';
                             $str .= '<td>'.$brg->verwendung.'</td>';
                             $str .= '<td><div style="text-align: center;">'
                                     . '<button type="button" class="btn btn-xs btn-outline-primary btn-fw" onclick="ganti(' . "'" . $brg->idbarang . "'" . ')">Ganti</button>&nbsp;'

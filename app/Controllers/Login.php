@@ -21,7 +21,17 @@ class Login extends BaseController {
     }
     
     public function index(){
-        echo view('login');
+        // membaca logo
+        $def_logo = base_url().'/images/noimg.jpg';
+        $logo = $this->model->getAllQR("select logo from identitas;")->logo;
+        if (strlen($logo) > 0) {
+            if (file_exists($this->modul->getPathApp().$logo)) {
+                $def_logo = base_url().'/uploads/'.$logo;
+            }
+        }
+        $data['logo'] = $def_logo;
+            
+        echo view('login', $data);
     }
     
     public function proses() {

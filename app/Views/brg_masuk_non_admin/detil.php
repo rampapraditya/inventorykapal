@@ -69,6 +69,9 @@
         var jumlah = document.getElementById('jumlah').value;
         var satuan = document.getElementById('satuan').value;
         var gudang = document.getElementById('gudang_manual').value;
+        var pn_sn = document.getElementById('pn_sn').value;
+        var ed = document.getElementById('ed').value;
+        var rak = document.getElementById('rak').value;
         
         if (kode === "") {
             alert("Kode tidak boleh kosong");
@@ -105,6 +108,9 @@
             form_data.append('jumlah', jumlah);
             form_data.append('satuan', satuan);
             form_data.append('gudang', gudang);
+            form_data.append('pn_sn', pn_sn);
+            form_data.append('ed', ed);
+            form_data.append('rak', rak);
             
             // ajax adding data to database
             $.ajax({
@@ -163,6 +169,10 @@
                 $('[name="nama"]').val(data.deskripsi);
                 $('[name="jumlah"]').val(data.jumlah);
                 $('[name="satuan"]').val(data.satuan);
+                $('[name="pn_sn"]').val(data.pn_nsn);
+                $('[name="ed"]').val(data.equipment_desc);
+                $('[name="gudang_manual"]').val(data.idjenisbarang);
+                $('[name="rak"]').val(data.rak);
             }, error: function (jqXHR, textStatus, errorThrown) {
                 alert('Error get data');
             }
@@ -300,12 +310,24 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <label>PN/SN</label>
+                        <input id="pn_sn" name="pn_sn" class="form-control" type="text" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label>EQUIPMENT DESCRIPTION</label>
+                        <input id="ed" name="ed" class="form-control" type="text" autocomplete="off">
+                    </div>
+                    <div class="form-group">
                         <label>JUMLAH</label>
                         <input id="jumlah" name="jumlah" class="form-control" type="text" autocomplete="off" onkeypress="return hanyaAngka(event,false);">
                     </div>
                     <div class="form-group">
                         <label>SATUAN</label>
                         <input id="satuan" name="satuan" class="form-control" type="text" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label>RAK</label>
+                        <input id="rak" name="rak" class="form-control" type="text" autocomplete="off">
                     </div>
                     <div class="form-group">
                         <label>GUDANG</label>

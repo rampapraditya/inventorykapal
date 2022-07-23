@@ -423,16 +423,17 @@ class Brgmnadmin extends BaseController {
                 'idbarang' => $kodebarang,
                 'foto' => '',
                 'deskripsi' => $this->request->getVar('nm_barang'),
-                'pn_nsn' => '',
+                'pn_nsn' => $this->request->getVar('pn_sn'),
                 'ds_number' => '',
                 'holding' => '',
-                'equipment_desc' => '',
+                'equipment_desc' => $this->request->getVar('ed'),
                 'store_location' => '',
                 'supplementary_location' => '',
                 'qty' => 0,
                 'uoi' => $this->request->getVar('satuan'),
                 'verwendung' => '',
-                'idkapal' => $idkapal
+                'idkapal' => $idkapal,
+                'rak' => $this->request->getVar('rak')
             );
             $simpan = $this->model->add("barang", $data);
         }
@@ -466,7 +467,8 @@ class Brgmnadmin extends BaseController {
     public function gantidetil(){
         if(session()->get("logged_no_admin")){
             $kode_detil = $this->request->uri->getSegment(3);
-            $data = $this->model->getAllQR("SELECT a.idbrg_m_detil, a.idbarang, b.deskripsi, a.jumlah, a.satuan FROM brg_masuk_detil a, barang b where a.idbarang = b.idbarang and a.idbrg_m_detil = '".$kode_detil."';");
+            $data = $this->model->getAllQR("SELECT a.idbrg_m_detil, a.idbarang, b.deskripsi, "
+                    . "a.jumlah, a.satuan, b.pn_nsn, b.equipment_desc, c.idjenisbarang, b.rak FROM brg_masuk_detil a, barang b, brg_masuk c where a.idbrg_masuk = c.idbrg_masuk and a.idbarang = b.idbarang and a.idbrg_m_detil = '".$kode_detil."';");
             echo json_encode($data);
         }else{
             $this->modul->halaman('login');
@@ -601,7 +603,8 @@ class Brgmnadmin extends BaseController {
                                     'supplementary_location' => trim(addslashes($row[6])),
                                     'qty' => 0,
                                     'uoi' => trim(addslashes($row[8])),
-                                    'verwendung' => trim(addslashes($row[9])),
+                                    'rak' => trim(addslashes($row[9])),
+                                    'verwendung' => trim(addslashes($row[10])),
                                     'idkapal' => $kri
                                 );
                                 $this->model->add("barang", $data);

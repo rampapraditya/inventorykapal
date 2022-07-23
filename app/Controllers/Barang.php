@@ -324,7 +324,8 @@ class Barang extends BaseController {
                                     'supplementary_location' => trim(addslashes($row[6])),
                                     'qty' => 0,
                                     'uoi' => trim(addslashes($row[8])),
-                                    'verwendung' => trim(addslashes($row[9])),
+                                    'rak' => trim(addslashes($row[9])),
+                                    'verwendung' => trim(addslashes($row[10])),
                                     'idjenisbarang' => $this->request->getVar('gudang'),
                                     'idkapal' => $this->request->getVar('idkapal')
                                 );
@@ -387,6 +388,7 @@ class Barang extends BaseController {
                                         <th>EQUIPMENT<br>DESC</th>
                                         <th>JUMLAH</th>
                                         <th>SATUAN</th>
+                                        <th>RAK</th>
                                         <th>KETERANGAN</th>
                                     </tr>
                                 </thead>
@@ -410,6 +412,7 @@ class Barang extends BaseController {
                             $str .= '<td>'.$brg->equipment_desc.'</td>';
                             $str .= '<td>'.$this->getStok($brg->idbarang, $idkapal, $row->idjenisbarang).'</td>';
                             $str .= '<td>'.$brg->uoi.'</td>';
+                            $str .= '<td>'.$brg->rak.'</td>';
                             $str .= '<td>'.$brg->verwendung.'</td>';
                             
                         $str .= '</tr>';
@@ -435,6 +438,7 @@ class Barang extends BaseController {
                                         <th>EQUIPMENT<br>DESC</th>
                                         <th>JUMLAH</th>
                                         <th>SATUAN</th>
+                                        <th>RAK</th>
                                         <th>KETERANGAN</th>
                                     </tr>
                                 </thead>
@@ -458,6 +462,7 @@ class Barang extends BaseController {
                             $str .= '<td>'.$brg->equipment_desc.'</td>';
                             $str .= '<td>'.$this->getStok($brg->idbarang, $idkapal, $row->idjenisbarang).'</td>';
                             $str .= '<td>'.$brg->uoi.'</td>';
+                            $str .= '<td>'.$brg->rak.'</td>';
                             $str .= '<td>'.$brg->verwendung.'</td>';
                             
                         $str .= '</tr>';

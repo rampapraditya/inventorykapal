@@ -17,7 +17,8 @@
                         <div class="col-lg-4 mx-auto" >
                             <div class="auth-form-light text-left py-5 px-4 px-sm-5" style="background-color: #fff; background-color: rgba(255,255,255, 0.9);">
                                 <div class="brand-logo">
-                                    <img src="<?php echo base_url(); ?>/images/logo.jpg" alt="logo" style="width: 70px;">
+                                    <img src="<?php echo $logo; ?>" alt="logo" style="width: 70px;">
+                                    <img src="<?php echo base_url(); ?>/images/kapal.png" alt="logo" style="height: 60px; float: right;">
                                 </div>
                                 <h4>INVENTORY</h4>
                                 <h6 class="font-weight-light">Login untuk melanjutkan.</h6>
