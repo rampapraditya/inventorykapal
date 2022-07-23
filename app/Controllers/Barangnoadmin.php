@@ -564,12 +564,28 @@ class Barangnoadmin extends BaseController {
     
     public function cetak() {
         if (session()->get("logged_no_admin")) {
+            $role = session()->get("role");
+            
             $gudang = $this->modul->dekrip_url($this->request->uri->getSegment(3));
             $kapal = $this->modul->dekrip_url($this->request->uri->getSegment(4));
             // cek
             $cek1 = $this->model->getAllQR("select count(*) as jml from jenisbarang where idjenisbarang = '".$gudang."';")->jml;
             $cek2 = $this->model->getAllQR("select count(*) as jml from kapal where idkapal = '".$kapal."';")->jml;
             if($cek1 > 0 && $cek2 > 0){
+                
+                // mencari yang bertanda tangan
+                $cek_ttd = $this->model->getAllQR("select count(*) as jml from users where idkapal = '".$kapal."';")->jml;
+                if($cek_ttd > 0){
+                    $ttd = $this->model->getAllQR("select nrp, nama, pangkat from users where idkapal = '".$kapal."';");
+                    $data['nrp'] = $ttd->nrp;
+                    $data['nama'] = $ttd->nama;
+                    $data['pangkat'] = $ttd->pangkat;
+                }else{
+                    $data['nrp'] = $ttd->nrp;
+                    $data['nama'] = $ttd->nama;
+                    $data['pangkat'] = $ttd->pangkat;
+                }
+                $data['jabatan'] = $this->model->getAllQR("select nama_role from role where idrole = '".$role."';")->nama_role;
                 
                 $def_logo = 'images/noimg.jpg';
                 $identitas = $this->model->getAllQR("select * from identitas;");

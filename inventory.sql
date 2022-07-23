@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jul 18, 2022 at 03:37 PM
+-- Generation Time: Jul 23, 2022 at 08:09 AM
 -- Server version: 5.7.31
--- PHP Version: 7.3.21
+-- PHP Version: 7.4.9
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -42,20 +42,10 @@ CREATE TABLE IF NOT EXISTS `barang` (
   `uoi` varchar(45) CHARACTER SET latin1 DEFAULT NULL,
   `verwendung` varchar(150) CHARACTER SET latin1 DEFAULT NULL,
   `idkapal` varchar(6) NOT NULL,
+  `rak` varchar(10) DEFAULT '0',
   PRIMARY KEY (`idbarang`),
   KEY `FK_barang_kapal` (`idkapal`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `barang`
---
-
-INSERT INTO `barang` (`idbarang`, `foto`, `deskripsi`, `pn_nsn`, `ds_number`, `holding`, `equipment_desc`, `store_location`, `supplementary_location`, `qty`, `uoi`, `verwendung`, `idkapal`) VALUES
-('B00001', '', 'TROPONG LAPANGAN DENGAN KOMP', '', '', '', '', '', 'NAVAL STORE', 0, 'UNIT', 'BP/230/III/2020 Sprin/1310/IX/2019 tanggal 09 September 2019', 'K00007'),
-('B00002', '', 'TROPONG NIGHT VICION', '', '', '', '', '', 'NAVAL STORE', 0, 'UNIT', 'BP/230/III/2020 Sprin/1310/IX/2019 tanggal 09 September 2020', 'K00007'),
-('B00003', '', 'DRY CABINET', '', '', '', '', '', 'NAVAL STORE', 0, 'UNIT', 'BP/230/III/2020 Sprin/1310/IX/2019 tanggal 09 September 2021', 'K00007'),
-('B00004', '', 'BATTERY', '', '', '', '', '', 'NAVAL STORE', 0, 'UNIT', 'BP/230/III/2020 Sprin/1310/IX/2019 tanggal 09 September 2022', 'K00007'),
-('B00005', '', 'coba cair', '', '', '', '', '', '', 0, 'Liter', '', 'K00007');
 
 -- --------------------------------------------------------
 
@@ -166,7 +156,7 @@ CREATE TABLE IF NOT EXISTS `identitas` (
 --
 
 INSERT INTO `identitas` (`kode`, `instansi`, `slogan`, `tahun`, `pimpinan`, `alamat`, `kdpos`, `tlp`, `fax`, `website`, `email`, `logo`, `lat`, `lon`) VALUES
-('K00001', 'KOARMADA 2', 'Ghora Wira Madya Jala', 1985, 'Laksamana Muda TNI Dr. T.S.N.B. Hutabarat, M.M.S.', 'Dermaga Ujung Surabaya, Jawa Timur', '60178', '08', '-', 'https://koarmada2.tnial.mil.id/', 'rampa@gmail.com', '1658118779_b44c1d7a2da2eb73e0be.png', '-7.4063726', '112.5841074');
+('K00001', 'KOARMADA 2', 'Ghora Wira Madya Jala', 1985, 'Laksamana Muda TNI Dr. T.S.N.B. Hutabarat, M.M.S.', 'Dermaga Ujung Surabaya, Jawa Timur', '60178', '08', '-', 'https://koarmada2.tnial.mil.id/', 'rampa@gmail.com', '1658501509_9c3f19fc490fd20d7e87.png', '-7.4063726', '112.5841074');
 
 -- --------------------------------------------------------
 
@@ -364,6 +354,8 @@ CREATE TABLE IF NOT EXISTS `users` (
   `satuan_kerja` varchar(45) CHARACTER SET utf8mb4 DEFAULT NULL,
   `idrole` varchar(6) CHARACTER SET utf8mb4 NOT NULL,
   `idkapal` varchar(6) DEFAULT NULL,
+  `username` varchar(45) NOT NULL,
+  `pangkat` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`idusers`),
   KEY `FK_users_role` (`idrole`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -372,11 +364,11 @@ CREATE TABLE IF NOT EXISTS `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`idusers`, `nrp`, `pass`, `nama`, `tgl_lahir`, `agama`, `kota_asal`, `foto`, `satuan_kerja`, `idrole`, `idkapal`) VALUES
-('U00001', 'ADMIN', 'aGtq', 'ADMIN', '1991-01-30', 'Islam', 'Surabaya', './assets/images/e7118256aaf4d1de09199e2b6cbe667c.png', 'TNI ANGKATAN LAUT', 'R00001', NULL),
-('U00008', 'KRI DPN-365', 'aGtq', 'Naratama Yoga', NULL, NULL, NULL, NULL, NULL, 'R00003', 'K00005'),
-('U00009', 'BSC-945', 'aGtqbZZo', 'mico prama', NULL, NULL, NULL, NULL, NULL, 'R00004', 'K00006'),
-('U00010', 'KRI MDU-621', 'aGtq', 'MURDIANTO', '0000-00-00', '-', 'SURABAYA', NULL, 'SATKAT KOARMADA II', 'R00004', 'K00007');
+INSERT INTO `users` (`idusers`, `nrp`, `pass`, `nama`, `tgl_lahir`, `agama`, `kota_asal`, `foto`, `satuan_kerja`, `idrole`, `idkapal`, `username`, `pangkat`) VALUES
+('U00001', '', 'aGtq', 'ADMIN', '1991-01-30', 'Islam', 'Surabaya', './assets/images/e7118256aaf4d1de09199e2b6cbe667c.png', 'TNI ANGKATAN LAUT', 'R00001', NULL, 'ADMIN', NULL),
+('U00008', '', 'aGtq', 'Naratama Yoga', NULL, NULL, NULL, NULL, NULL, 'R00003', 'K00005', 'KRI DPN-365', ''),
+('U00009', '', 'aGtqbZZo', 'mico prama', NULL, NULL, NULL, NULL, NULL, 'R00004', 'K00006', 'BSC-945', ''),
+('U00010', '', 'aGtq', 'MURDIANTO', '0000-00-00', '-', 'SURABAYA', NULL, 'SATKAT KOARMADA II', 'R00004', 'K00007', 'KRI MDU-621', '');
 
 --
 -- Constraints for dumped tables

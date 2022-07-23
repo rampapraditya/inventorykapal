@@ -117,7 +117,33 @@ use App\Models\Mcustom;
                 }
                 ?>
             </table>
-            
+            <table style="width: 100%; margin-top: 30px; font-size: 11px;" border="0">
+                <tr>
+                    <td style="width: 25%; text-align: center;"></td>
+                    <td style="width: 50%;"></td>
+                    <td style="width: 25%; text-align: center;">Surabaya , <?php echo date('d M Y'); ?></td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;"></td>
+                    <td></td>
+                    <td style="text-align: center;"><?php echo $jabatan; ?>,</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; height: 100px;"></td>
+                    <td></td>
+                    <td style="text-align: center; height: 100px;"></td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;"></td>
+                    <td></td>
+                    <td style="text-align: center;"><?php echo $nama; ?></td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;"></td>
+                    <td></td>
+                    <td style="text-align: center;"><?php echo $pangkat.' / NRP ' . $nrp; ?></td>
+                </tr>
+            </table>
         </main>
     </body>
 </html>

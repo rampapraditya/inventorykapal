@@ -62,11 +62,13 @@ class Pengguna extends BaseController{
     public function ajaxlist() {
         if(session()->get("logged_in")){
             $data = array();
-            $list = $this->model->getAllQ("select a.idusers, a.nrp, b.nama_role, a.nama, a.idkapal from users a, role b where a.idrole = b.idrole;");
+            $list = $this->model->getAllQ("select a.idusers, a.username, a.nrp, b.nama_role, a.pangkat, a.nama, a.idkapal from users a, role b where a.idrole = b.idrole;");
             foreach ($list->getResult() as $row) {
                 $val = array();
-                $val[] = $row->nrp;
+                $val[] = $row->username;
                 $val[] = $row->nama_role;
+                $val[] = $row->nrp;
+                $val[] = $row->pangkat;
                 $val[] = $row->nama;
                 $jml_kapal = $this->model->getAllQR("select count(*) as jml from kapal where idkapal = '".$row->idkapal."';")->jml;
                 if($jml_kapal > 0){
@@ -101,8 +103,10 @@ class Pengguna extends BaseController{
             } else {
                 $data = array(
                     'idusers' => $this->model->autokode("U","idusers","users", 2, 7),
+                    'username' => $this->request->getVar('username'),
                     'nrp' => $this->request->getVar('nrp'),
                     'pass' => $this->modul->enkrip_pass($this->request->getVar('pass')),
+                    'pangkat' => $this->request->getVar('pangkat'),
                     'nama' => $this->request->getVar('nama'),
                     'idrole' => $this->request->getVar('role'),
                     'idkapal' => $this->request->getVar('kapal')
@@ -127,8 +131,10 @@ class Pengguna extends BaseController{
             
             echo json_encode(array(
                 "kode" => $data->idusers,
+                "username" => $data->username,
                 "nrp" => $data->nrp,
                 "nama" => $data->nama,
+                "pangkat" => $data->pangkat,
                 "pass" => $this->modul->dekrip_pass($data->pass),
                 "idrole" => $data->idrole,
                 "idkapal" => $data->idkapal
@@ -142,7 +148,9 @@ class Pengguna extends BaseController{
         if(session()->get("logged_in")){
             $data = array(
                 'pass' => $this->modul->enkrip_pass($this->request->getVar('pass')),
+                'username' => $this->request->getVar('username'),
                 'nama' => $this->request->getVar('nama'),
+                'pangkat' => $this->request->getVar('pangkat'),
                 'idrole' => $this->request->getVar('role'),
                 'idkapal' => $this->request->getVar('kapal')
             );

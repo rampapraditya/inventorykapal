@@ -19,13 +19,15 @@
         $('#form')[0].reset();
         $('#modal_form').modal('show');
         $('.modal-title').text('Tambah pengguna');
-        $('[name="nrp"]').attr("readonly", false);
+        $('[name="username"]').attr("readonly", false);
     }
 
     function save() {
         var kode = document.getElementById('kode').value;
-        var nrp = document.getElementById('nrp').value;
+        var username = document.getElementById('username').value;
         var pass = document.getElementById('pass').value;
+        var nrp = document.getElementById('nrp').value;
+        var pangkat = document.getElementById('pangkat').value;
         var nama = document.getElementById('nama').value;
         var role = document.getElementById('role').value;
         var kapal = document.getElementById('kapal').value;
@@ -53,7 +55,9 @@
             
             var form_data = new FormData();
             form_data.append('kode', kode);
+            form_data.append('username', username);
             form_data.append('nrp', nrp);
+            form_data.append('pangkat', pangkat);
             form_data.append('nama', nama);
             form_data.append('role', role);
             form_data.append('pass', pass);
@@ -106,19 +110,19 @@
         $('#form')[0].reset();
         $('#modal_form').modal('show');
         $('.modal-title').text('Ganti pengguna');
-        $('[name="nrp"]').attr("readonly", true);
+        $('[name="username"]').attr("readonly", true);
         $.ajax({
             url: "<?php echo base_url(); ?>/pengguna/ganti/" + id,
             type: "POST",
             dataType: "JSON",
             success: function (data) {
                 $('[name="kode"]').val(data.kode);
+                $('[name="username"]').val(data.username);
                 $('[name="nama"]').val(data.nama);
                 $('[name="nrp"]').val(data.nrp);
                 $('[name="pass"]').val(data.pass);
                 $('[name="role"]').val(data.idrole);
-                $('[name="korps"]').val(data.idkorps);
-                $('[name="pangkat"]').val(data.idpangkat);
+                $('[name="pangkat"]').val(data.pangkat);
                 $('[name="kapal"]').val(data.idkapal);
             }, error: function (jqXHR, textStatus, errorThrown) {
                 alert('Error get data');
@@ -146,8 +150,10 @@
                         <table id="tb" class="table table-hover" style="width: 100%;">
                             <thead>
                                 <tr>
-                                    <th>NRP</th>
+                                    <th>USERNAME</th>
                                     <th>ROLE</th>
+                                    <th>NRP</th>
+                                    <th>PANGKAT</th>
                                     <th>NAMA</th>
                                     <th>KRI</th>
                                     <th style="text-align: center;">Aksi</th>
@@ -176,12 +182,20 @@
                 <form id="form" class="form-horizontal">
                     <input type="hidden" name="kode" id="kode">
                     <div class="form-group">
-                        <label>NRP</label>
-                        <input id="nrp" name="nrp" class="form-control" type="text" autocomplete="off">
+                        <label>USERNAME</label>
+                        <input id="username" name="username" class="form-control" type="text" autocomplete="off">
                     </div>
                     <div class="form-group">
                         <label>Password</label>
                         <input id="pass" name="pass" class="form-control" type="password" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label>NRP</label>
+                        <input id="nrp" name="nrp" class="form-control" type="text" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label>Pangkat</label>
+                        <input id="pangkat" name="pangkat" class="form-control" type="text" autocomplete="off">
                     </div>
                     <div class="form-group">
                         <label>Nama Personil</label>

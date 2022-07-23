@@ -41,15 +41,15 @@ class Login extends BaseController {
         $pass = trim($this->request->getVar('pass'));
         
         $enkrip_pass = $this->modul->enkrip_pass($pass);
-        $jml = $this->model->getAllQR("SELECT count(*) as jml FROM users where nrp = '".$user."';")->jml;
+        $jml = $this->model->getAllQR("SELECT count(*) as jml FROM users where username = '".$user."';")->jml;
         if($jml > 0){
-            $jml1 = $this->model->getAllQR("select count(*) as jml from users where nrp = '".$user."' and pass = '".$enkrip_pass."';")->jml;
+            $jml1 = $this->model->getAllQR("select count(*) as jml from users where username = '".$user."' and pass = '".$enkrip_pass."';")->jml;
             if($jml1 > 0){
-                $data = $this->model->getAllQR("select idusers, nrp, nama, idrole from users where nrp = '".$user."';");
+                $data = $this->model->getAllQR("select idusers, username, nama, idrole from users where username = '".$user."';");
                 if($data->idrole == "R00001"){
                     session()->set([
                         'username' => $data->idusers,
-                        'nrp' => $data->nrp,
+                        'nrp' => $data->username,
                         'nama' => $data->nama,
                         'role' => $data->idrole,
                         'logged_in' => TRUE
@@ -58,7 +58,7 @@ class Login extends BaseController {
                 }else{
                     session()->set([
                         'username' => $data->idusers,
-                        'nrp' => $data->nrp,
+                        'nrp' => $data->username,
                         'nama' => $data->nama,
                         'role' => $data->idrole,
                         'logged_no_admin' => TRUE

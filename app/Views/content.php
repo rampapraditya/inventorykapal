@@ -7,7 +7,7 @@
             </marquee>
         </div>
     </div>
-    <div class="row">
+    <div class="row" style="margin-top: -30px;">
         <div class="col-md-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body" style="text-align: center;">
